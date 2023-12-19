@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -60,26 +61,26 @@ class ControllerEtiqueta extends Controller
 
         return view('etiquetas.show', compact('etiqueta'));
     }
-    
+
     public function imprimir($id_tag)
     {
         $etiqueta = Etiqueta::find($id_tag);
 
         // Generar código de barras
         $barcode = QrCode::format('png')->size(300)->generate($etiqueta->barcode);
-    
+
         // Convierte la imagen a base64
         $barcodeImage = base64_encode($barcode);
-    
+
         // Generar el PDF con la librería PDF de Laravel
         $pdf = PDF::loadView('etiquetas.imprimir', compact('etiqueta', 'qrCodeImage'));
-    
+
         // Obtener el contenido del PDF
         $pdfContent = $pdf->output();
-    
+
         // Retorna la respuesta con el contenido del PDF
-  // Retorna la vista con los datos
-  return view('etiquetas.imprimir', compact('etiqueta', 'barcodeImage'));
+        // Retorna la vista con los datos
+        return view('etiquetas.imprimir', compact('etiqueta', 'barcodeImage'));
     }
 
     public function edit(string $id)

@@ -80,7 +80,9 @@
                     <li class="list-group-item"><strong>Contenido:</strong> {{ $etiqueta->content }}</li>
                     <li class="list-group-item"><strong>Estado del Producto:</strong> {{ $etiqueta->product_status }}</li>
                     <li class="list-group-item"><strong>Color:</strong> {{ $etiqueta->color }}</li>
-
+                    <li class="list-group-item"><strong>Código de Barras:</strong>
+                        <img src="data:image/png;base64,{{ $barcodeImage }}" alt="Código de barras">
+                    </li>
                 </ul>
             </div>
         </div>
