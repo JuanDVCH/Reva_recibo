@@ -39,9 +39,7 @@
                                     <td>{{ $producto->packaging_weight }}</td>
                                     <td>{{ $producto->net_weight }}</td>
                                     <td>{{ optional($producto->recibo)->order_num }}</td>
-                                    <td>
-                                        <!-- Agrega aquí los botones de acciones si es necesario -->
-                                    </td>
+
                                 </tr>
                             @empty
                                 <tr>

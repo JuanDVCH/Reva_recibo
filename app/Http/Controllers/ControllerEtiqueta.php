@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 use Illuminate\Http\Request;
 use App\Models\Model_Receipt;
 use App\Models\Model_Products;
 use App\Models\Etiqueta;
 use PDF;
-use Imagick;
+//use Imagick;
 
 class ControllerEtiqueta extends Controller
 {
@@ -47,11 +45,14 @@ class ControllerEtiqueta extends Controller
         $etiqueta->content = $request->content;
         $etiqueta->product_status = $request->product_status;
         $etiqueta->color = $request->color;
+
         $etiqueta->barcode = $request->barcode;
+        
         $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
         $etiqueta->save();
-
-        return redirect(route('etiqueta.index'))->with('agregar', 'continuar');
+        
+        return redirect()->route('etiqueta.index');
+        //return redirect(route('etiqueta.index'))->with('agregar', 'continuar');
     }
 
     public function show(string $order_num)
@@ -63,78 +64,12 @@ class ControllerEtiqueta extends Controller
 
     public function imprimir($id_tag)
     {
-        /*
         $etiqueta = Etiqueta::find($id_tag);
-    
-        // Generate QR code with BaconQrCode
-        $qrCode = new QrCode($etiqueta->barcode);
-    
-        // Render the QR code to a PNG image
-        $renderer = new Png();
-        $renderer->setWidth(300);  // Set the width of the QR code
-        $renderer->setHeight(300); // Set the height of the QR code
-    
-        $writer = new Writer($renderer);
-        $barcode = $writer->write($qrCode);
-    
-        // Convert the image to base64
-        $barcodeImage = base64_encode($barcode);
-    
-        // Crear una nueva imagen GD desde el código de barras base64
-        $barcodeGd = imagecreatefromstring(base64_decode($barcodeImage));
-    
-        // Crear una nueva imagen GD en blanco del mismo tamaño que la etiqueta
-        $etiquetaImage = imagecreatetruecolor($etiqueta->width, $etiqueta->height);
-    
-        // Copiar la imagen del código de barras en la imagen de la etiqueta
-        imagecopy($etiquetaImage, $barcodeGd, 0, 0, 0, 0, imagesx($barcodeGd), imagesy($barcodeGd));
-    
-        // Liberar la memoria de las imágenes GD
-        imagedestroy($barcodeGd);
-    
+
         // Generar el PDF con la librería PDF de Laravel
-        $pdf = PDF::loadView('etiquetas.imprimir', compact('etiqueta', 'etiquetaImage'));
-    
-        // Obtener el contenido del PDF
-        $pdfContent = $pdf->output();
-    
-        // Retorna la vista con los datos
-        return view('etiquetas.imprimir', compact('etiqueta', 'etiquetaImage'));
-        */
+        $pdf = PDF::loadView('etiquetas.imprimir', compact('etiqueta'));
 
-        $barcode = 'Aqui colocas el codigo';
-
-        $imagick = new Imagick();
-
-        $imagick->barcode($barcode, Imagick::BARCODE_CODE39);
-
-        $imagick->setImageFormat("png");
-        
-        $imageBlob = $imagick->getImageBlob();
-        
-        return response($imageBlob)->header('Content-Type','image/png');
-    }
-    public function edit(string $id)
-    {
-        $etiqueta = Etiqueta::find($id);
-
-        return view('etiquetas.edit', compact('etiqueta', 'barcodeImage'));
-    }
-
-    public function update(Request $request, string $id)
-    {
-        $etiqueta = Etiqueta::find($id);
-
-        // Lógica de actualización aquí
-
-        return redirect()->route('etiquetas.index')->with('success', 'Etiqueta actualizada exitosamente');
-    }
-
-    public function destroy(string $id)
-    {
-        $etiqueta = Etiqueta::find($id);
-        $etiqueta->delete();
-
-        return redirect()->route('etiquetas.index')->with('success', 'Etiqueta eliminada exitosamente');
+        // Descargar el PDF directamente
+        return $pdf->stream('etiqueta.pdf');
     }
 }

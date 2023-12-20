@@ -31,32 +31,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($etiquetas as $etiqueta)
-                                <tr>
-                                    <td>{{ $etiqueta->order_num }}</td>
-                                    <td>{{ $etiqueta->code_product }}</td>
-                                    <td>{{ $etiqueta->description }}</td>
-                                    <td>{{ $etiqueta->delivery_date }}</td>
-                                    <td>{{ $etiqueta->origin }}</td>
-                                    <td>{{ $etiqueta->amount }}</td>
-                                    <td>{{ $etiqueta->weight }}</td>
-                                    <td>{{ $etiqueta->type }}</td>
-                                    <td>{{ $etiqueta->content }}</td>
-                                    <td>{{ $etiqueta->product_status }}</td>
-                                    <td>{{ $etiqueta->color }}</td>
-                                    <td>
-                                        {!! DNS1D::getBarcodeHTML($etiqueta->barcode, 'C128') !!}
-                                        {{ $etiqueta->barcode }}
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0)" onclick="openPdfModal('{{ route('etiquetas.imprimir', ['id_tag' => $etiqueta->id_tag]) }}')" class="btn btn-info">Imprimir</a>
-                                    </td>
-                                </tr>
-                            @empty
+                            @if(count($etiquetas) > 0)
+                                <div>
+                                    @foreach($etiquetas as $etiqueta)
+                                        <tr>
+                                            <td>{{ $etiqueta->order_num }}</td>
+                                            <td>{{ $etiqueta->code_product }}</td>
+                                            <td>{{ $etiqueta->description }}</td>
+                                            <td>{{ $etiqueta->delivery_date }}</td>
+                                            <td>{{ $etiqueta->origin }}</td>
+                                            <td>{{ $etiqueta->amount }}</td>
+                                            <td>{{ $etiqueta->weight }}</td>
+                                            <td>{{ $etiqueta->type }}</td>
+                                            <td>{{ $etiqueta->content }}</td>
+                                            <td>{{ $etiqueta->product_status }}</td>
+                                            <td>{{ $etiqueta->color }}</td>
+                                            <td>
+                                                {!! DNS1D::getBarcodeHTML($etiqueta->barcode, 'C128') !!}
+                                                {{ $etiqueta->barcode }}
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="openPdfModal('{{ route('etiquetas.imprimir', ['id_tag' => $etiqueta->id_tag]) }}')" class="btn btn-info">Imprimir</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </div>
+                            @else
                                 <tr>
                                     <td colspan="13">No hay datos disponibles</td>
                                 </tr>
-                            @endforelse
+                            @endif
                         </tbody>
                     </table>
                 </div>

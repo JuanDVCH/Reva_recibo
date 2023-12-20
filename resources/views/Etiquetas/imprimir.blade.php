@@ -5,56 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imprimir Etiqueta</title>
+    <!-- Add Bootstrap CSS link here -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
+        /* Agrega estilos CSS personalizados aquí */
         .card {
-            width: 400px;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 15px; /* Ajusta el radio para que sea redondo */
+            overflow: hidden;
+            /* Evita que la imagen sobresalga del contenedor */
         }
 
-        .card-header {
-            background-color: #007bff;
-            color: #fff;
-            text-align: center;
-            border-bottom: 1px solid #dee2e6;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            padding: 15px;
+        .card-body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Establece una fuente más moderna */
+        }
+
+        .rounded-img {
+            border-radius: 50%; /* Hace que la imagen sea redonda */
+            overflow: hidden;
+            margin: 0 auto; /* Centra la imagen dentro del contenedor */
+            max-width: 100px; /* Ajusta el tamaño máximo de la imagen */
+            margin-top: -80px; /* Ajusta la posición de la imagen debajo del contenido */
+            position: relative; /* Permite ajustar la posición de manera relativa */
+            z-index: 1; /* Coloca la imagen por encima del contenido */
+            float: right; /* Alinea la imagen a la derecha */
+            margin-right: 20px; /* Ajusta el margen derecho para separar del contenido */
+        }
+
+        .rounded-img img {
             width: 100%;
-        }
-
-        .list-group-item {
-            border: none;
-            padding: 10px;
-        }
-
-        #qrcode-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        @media print {
-            #qrcode-container img {
-                display: block !important;
-            }
+            height: auto;
         }
     </style>
 </head>
@@ -62,37 +42,39 @@
 <body>
 
     <div class="container mt-5">
-        <div class="card border-primary">
-            <div class="card-header">
-                <h3>Formato de Etiqueta</h3>
-            </div>
+        <div class="card mb-3">
             <div class="card-body">
-                <ul class="list-group">
-                    <!-- Ajusta las etiquetas según tus necesidades -->
-                    <li class="list-group-item"><strong>Número de Orden:</strong> {{ $etiqueta->order_num }}</li>
-                    <li class="list-group-item"><strong>Código del Producto:</strong> {{ $etiqueta->code_product }}</li>
-                    <li class="list-group-item"><strong>Descripción:</strong> {{ $etiqueta->description }}</li>
-                    <li class="list-group-item"><strong>Fecha:</strong> {{ $etiqueta->delivery_date }}</li>
-                    <li class="list-group-item"><strong>Origen:</strong> {{ $etiqueta->origin }}</li>
-                    <li class="list-group-item"><strong>Amount:</strong> {{ $etiqueta->amount }}</li>
-                    <li class="list-group-item"><strong>Peso:</strong> {{ $etiqueta->weight }}</li>
-                    <li class="list-group-item"><strong>Tipo:</strong> {{ $etiqueta->type }}</li>
-                    <li class="list-group-item"><strong>Contenido:</strong> {{ $etiqueta->content }}</li>
-                    <li class="list-group-item"><strong>Estado del Producto:</strong> {{ $etiqueta->product_status }}</li>
-                    <li class="list-group-item"><strong>Color:</strong> {{ $etiqueta->color }}</li>
-                    <li class="list-group-item"><strong>Código de Barras:</strong>
-                        <img src="data:image/png;base64,{{ $barcodeImage }}" alt="Código de barras">
-                    </li>
-                </ul>
+                <h5 class="card-title">Formato de Etiqueta</h5>
+                <p class="card-text"><strong>Número de Orden:</strong> {{ $etiqueta->order_num }}</p>
+                <p class="card-text"><strong>Código del Producto:</strong> {{ $etiqueta->code_product }}</p>
+                <p class="card-text"><strong>Descripción:</strong> {{ $etiqueta->description }}</p>
+                <p class="card-text"><strong>Fecha:</strong> {{ $etiqueta->delivery_date }}</p>
+                <p class="card-text"><strong>Origen:</strong> {{ $etiqueta->origin }}</p>
+                <p class="card-text"><strong>Cantidad:</strong> {{ $etiqueta->amount }}</p>
+                <p class="card-text"><strong>Peso:</strong> {{ $etiqueta->weight }}</p>
+                <p class="card-text"><strong>Tipo:</strong> {{ $etiqueta->type }}</p>
+                <p class="card-text"><strong>Contenido:</strong> {{ $etiqueta->content }}</p>
+                <p class="card-text"><strong>Estado del Producto:</strong> {{ $etiqueta->product_status }}</p>
+                <p class="card-text"><strong>Color:</strong> {{ $etiqueta->color }}</p>
+                <p class="card-text">
+                    <strong>Código de Barras:</strong>
+                    <div class="d-flex align-items-center">
+                        <div>{!! DNS1D::getBarcodeHTML($etiqueta->barcode, 'C128') !!}</div>
+                        <div class="ml-2">{{ $etiqueta->barcode }}</div>
+                    </div>
+                </p>
+            </div>
+            <div class="rounded-img">
+                <!-- Agrega la ruta correcta de tu logo -->
+                <img src="img/logo_reva-01.png" class="img-fluid" alt="Logo">
             </div>
         </div>
     </div>
 
-    <script>
-        // Agrega un script aquí si necesitas personalizar algo antes de imprimir
-        // Por ejemplo, ocultar ciertos elementos o realizar ajustes específicos.
-    </script>
-
+    <!-- Add Bootstrap JS and Popper.js scripts here -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
