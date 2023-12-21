@@ -1,5 +1,5 @@
 <div class="container mt-5">
-    <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="row g-3">
+    <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
         <div class="col-md-4">
             <label for="inputCodigo" class="form-label">Código</label>

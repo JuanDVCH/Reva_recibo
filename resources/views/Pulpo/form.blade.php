@@ -1,6 +1,6 @@
 <!-- resources/views/pulpo/_form.blade.php -->
 
-<form method="POST" action="{{ route('pulpo.store') }}" id="pulpoForm">
+<form class="formulario-estilos" method="POST" action="{{ route('pulpo.store') }}" id="pulpoForm">
     @csrf
     <div class="col-md-12">
         <label for="inputOrderNum">Número de recibo</label>

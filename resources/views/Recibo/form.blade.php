@@ -1,6 +1,5 @@
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Formato de recibo</h2>
-    <form method="POST" action="{{ route('recibo.store') }}"   class="row g-3">
+    <form method="POST" action="{{ route('recibo.store') }}"   class="formulario-estilos row g-3">
         @csrf
         <div class="col-md-6">
             <label for="inputdelivery_date" class="form-label">Fecha</label>

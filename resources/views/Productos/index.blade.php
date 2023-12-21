@@ -51,13 +51,16 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="createProductsModal" tabindex="-1" role="dialog"
-            aria-labelledby="createProductsModal" aria-hidden="true">
+        <div class="modal fade" id="createProductsModal" tabindex="-1" role="dialog" aria-labelledby="createProductsModal"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createProductsModalLabel">Crear Producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="closePdfModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         @include('productos.form') <!-- Asegúrate de tener un formulario aquí -->
@@ -69,4 +72,4 @@
 
     <!-- Incluye el archivo de estilos -->
     <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
-    @endsection
+@endsection

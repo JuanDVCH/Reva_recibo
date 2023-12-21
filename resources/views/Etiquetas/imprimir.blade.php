@@ -7,36 +7,7 @@
     <title>Imprimir Etiqueta</title>
     <!-- Add Bootstrap CSS link here -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Agrega estilos CSS personalizados aquí */
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 15px; /* Ajusta el radio para que sea redondo */
-            overflow: hidden;
-            /* Evita que la imagen sobresalga del contenedor */
-        }
-
-        .card-body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Establece una fuente más moderna */
-        }
-
-        .rounded-img {
-            border-radius: 50%; /* Hace que la imagen sea redonda */
-            overflow: hidden;
-            margin: 0 auto; /* Centra la imagen dentro del contenedor */
-            max-width: 100px; /* Ajusta el tamaño máximo de la imagen */
-            margin-top: -80px; /* Ajusta la posición de la imagen debajo del contenido */
-            position: relative; /* Permite ajustar la posición de manera relativa */
-            z-index: 1; /* Coloca la imagen por encima del contenido */
-            float: right; /* Alinea la imagen a la derecha */
-            margin-right: 20px; /* Ajusta el margen derecho para separar del contenido */
-        }
-
-        .rounded-img img {
-            width: 100%;
-            height: auto;
-        }
-    </style>
+    <link href="{{ asset('css/imprimir.css') }}" rel="stylesheet">
 </head>
 
 <body>

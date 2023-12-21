@@ -44,3 +44,4 @@ Route::get('/productos/form/{order_num}', 'Controller_Create_Products@show')->na
 Route::get('/pulpo/form/{order_num}', 'ControllerPulpo@showPulpo')->name('pulpo.form');
 
 
+

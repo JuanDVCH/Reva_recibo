@@ -6,7 +6,8 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Pulpo WMS</h3>
                 <div class="d-flex">
-                    <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal" data-bs-target="#createPulpoModal">
+                    <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal"
+                        data-bs-target="#createPulpoModal">
                         Crear Pulpo
                     </button>
                     <a href="{{ route('home') }}" class="btn btn-secondary ml-2">Volver Atrás</a>
@@ -51,12 +52,15 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="createPulpoModal" tabindex="-1" role="dialog" aria-labelledby="createPulpoModalLabel" aria-hidden="true">
+        <div class="modal fade" id="createPulpoModal" tabindex="-1" role="dialog" aria-labelledby="createPulpoModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createPulpoModalLabel">Crear Pulpo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         @include('pulpo.form') <!-- Asegúrate de tener un formulario aquí -->
@@ -68,4 +72,5 @@
 
     <!-- Enlace al archivo de estilos -->
     <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
+    <script src="{{ asset('js/Modals.js') }}"></script>
 @endsection

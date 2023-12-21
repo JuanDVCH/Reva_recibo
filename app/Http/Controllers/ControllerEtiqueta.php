@@ -19,9 +19,13 @@ class ControllerEtiqueta extends Controller
             ->join('product as prod', 'tags.code_product', '=', 'prod.code_product')
             ->where('tags.state', '1')
             ->distinct()
-            ->get();
+            ->orderBy('delivery_date', 'desc') // Ordenar por fecha de entrega de forma descendente
+            ->paginate(15);
 
-        return view('etiquetas.index', compact('etiquetas'));
+            $recibos = Model_Receipt::where('state', 1)->get();
+            $productos = Model_Products::where('state', 1)->get();
+
+        return view('etiquetas.index', compact('etiquetas','productos','recibos'));
     }
 
     public function create()
@@ -72,4 +76,9 @@ class ControllerEtiqueta extends Controller
         // Descargar el PDF directamente
         return $pdf->stream('etiqueta.pdf');
     }
+
 }
+    
+    
+
+
