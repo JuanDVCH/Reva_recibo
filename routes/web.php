@@ -42,6 +42,7 @@ Route::resource('Pulpo', ControllerPulpo::class)->names('pulpo');
 
 Route::get('/productos/form/{order_num}', 'Controller_Create_Products@show')->name('productos.form');
 Route::get('/pulpo/form/{order_num}', 'ControllerPulpo@showPulpo')->name('pulpo.form');
+Route::get('pulpo/exportar/{order_num}/{sku}/{supplier_code}', 'ControllerPulpo@show')->name('pulpo.exportar');
 
 
 

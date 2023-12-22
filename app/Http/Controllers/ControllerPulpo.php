@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Model_Products;
 use Illuminate\Http\Request;
 use App\Models\Pulpo;
 use App\Models\Model_Receipt;
@@ -50,4 +51,20 @@ class ControllerPulpo extends Controller
 
         return redirect(route('pulpo.index'));
     }
+    public function show($order_num, $sku, $supplier_code)
+{
+    // Obtener el producto seleccionado
+    $selectedProduct = Model_Products::where('order_num', $order_num)
+        ->where('sku', $$sku)
+        ->where('supplier_code', $supplier_code)
+        ->first();
+
+    // Obtener otros productos relacionados
+    $relatedProducts = Model_Products::where('order_num', $order_num)
+        ->where('sku', $$sku)
+        ->where('supplier_code', '!=', $supplier_code) // Excluir el producto seleccionado
+        ->get();
+
+    return view('pulpo.exportar', compact('selectedProduct', 'relatedProducts'));
+}
 }

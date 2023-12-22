@@ -1,6 +1,9 @@
+
 @extends('layouts.app')
 
 @section('content')
+
+
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12">
@@ -161,3 +164,4 @@
     <script src="{{ asset('js/filters.js') }}"></script>
     <script src="{{ asset('js/pagination.js') }}"></script>
 @endsection
+
