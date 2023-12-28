@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -16,69 +15,70 @@
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center">
-                                            <!-- Contenedor del menú de filtros a la izquierda -->
-                                            <div class="col-md-3">
-                                                <div class="card mb-4">
-                                                    <div class="card-header">
-                                                        <h4 class="mb-0">Filtros</h4>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <!-- Campos de filtro -->
-                                                        <div class="form-group">
-                                                            <label for="filtroOrden">Número de Orden:</label>
-                                                            <input type="text" id="filtroOrden" class="form-control">
-                                                        </div>
-                
-                                                        <div class="form-group">
-                                                            <label for="filtroCodigoProducto">Código de Producto:</label>
-                                                            <input type="text" id="filtroCodigoProducto" class="form-control">
-                                                        </div>
-                
-                                                        <div class="form-group">
-                                                            <label for="filtroFecha">Fecha:</label>
-                                                            <input type="date" id="filtroFecha" class="form-control">
-                                                        </div>
-                
-                                                        <div class="form-group">
-                                                            <button class="btn btn-danger btn-block" onclick="limpiarFiltros()">Eliminar
-                                                                Filtros</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                 <div class="table-responsive" style="width: 80%;">
                     <table class="table table-striped table-hover table-bordered">
                         <thead>
                             <tr>
-                                <th>Código de Proveedor</th>
-                                <th>Número de Orden</th>
-                                <th>Notas</th>
-                                <th>Fecha de Entrega</th>
-                                <th>SKU</th>
-                                <th>Cantidad Solicitada</th>
-                                <th>Criterio</th>
-                                <th>Slug del Comerciante</th>
-                                <th>Slug del Canal del Comerciante</th>
+                                <th>supplier_code</th>
+                                <th>order_num<input type="text" id="filterOrderNum"></th>
+                                <th>notes</th>
+                                <th>delivery_date</th>
+                                <th>sku<input type="text" id="filterSKU"></th>
+                                <th>requested_quantity</th>
+                                <th>criterium</th>
+                                <th>merchant_slug</th>
+                                <th>merchant_channel_slug</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $orders = [];
+                            @endphp
+
                             @forelse ($pulpos as $order)
-                                <tr>
-                                    <td>{{ $order->supplier_code }}</td>
-                                    <td>{{ $order->order_num }}</td>
-                                    <td>{{ $order->notes }}</td>
-                                    <td>{{ $order->delivery_date }}</td>
-                                    <td>{{ $order->sku }}</td>
-                                    <td>{{ $order->requested_quantity }}</td>
-                                    <td>{{ $order->criterium }}</td>
-                                    <td>{{ $order->merchant_slug }}</td>
-                                    <td>{{ $order->merchant_channel_slug }}</td>
-                                </tr>
+                                @php
+                                    $orderKey = $order->order_num . '-' . $order->sku;
+                                @endphp
+
+                                @if (isset($orders[$orderKey]))
+                                    @php
+                                        $orders[$orderKey]['requested_quantity'] += $order->requested_quantity;
+                                    @endphp
+                                @else
+                                    @php
+                                        $orders[$orderKey] = [
+                                            'supplier_code' => $order->supplier_code,
+                                            'order_num' => $order->order_num,
+                                            'notes' => $order->notes,
+                                            'delivery_date' => $order->delivery_date,
+                                            'sku' => $order->sku,
+                                            'requested_quantity' => $order->requested_quantity,
+                                            'criterium' => $order->criterium,
+                                            'merchant_slug' => $order->merchant_slug,
+                                            'merchant_channel_slug' => $order->merchant_channel_slug,
+                                        ];
+                                    @endphp
+                                @endif
                             @empty
                                 <tr>
                                     <td colspan="9" class="text-center">No hay datos disponibles</td>
                                 </tr>
                             @endforelse
+
+                            @foreach ($orders as $order)
+                                <tr>
+                                    <td>{{ $order['supplier_code'] }}</td>
+                                    <td>{{ $order['order_num'] }}</td>
+                                    <td>{{ $order['notes'] }}</td>
+                                    <td>{{ $order['delivery_date'] }}</td>
+                                    <td>{{ $order['sku'] }}</td>
+                                    <td>{{ $order['requested_quantity'] }}</td>
+                                    <td>{{ $order['criterium'] }}</td>
+                                    <td>{{ $order['merchant_slug'] }}</td>
+                                    <td>{{ $order['merchant_channel_slug'] }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -105,27 +105,53 @@
     <!-- Enlace al archivo de estilos -->
     <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
     <script src="{{ asset('js/Modals.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        function exportarCSV() {
-            var rows = [];
+        document.getElementById("filterOrderNum").addEventListener("input", function() {
+            applyFilters();
+        });
 
-            // Obtén todas las filas de la tabla
+        document.getElementById("filterSKU").addEventListener("input", function() {
+            applyFilters();
+        });
+
+        function applyFilters() {
+            
+            var filterOrderNum = document.getElementById("filterOrderNum").value.toLowerCase();
+            var filterSKU = document.getElementById("filterSKU").value.toLowerCase();
+
             var tableRows = document.querySelectorAll("table tbody tr");
 
-            // Itera sobre las filas y agrega los datos al array 'rows'
-            tableRows.forEach(function (row) {
-                var rowData = [];
-                row.querySelectorAll("td").forEach(function (cell) {
-                    rowData.push(cell.innerText);
-                });
-                rows.push(rowData.join(","));
+            tableRows.forEach(function(row) {
+                var orderNum = row.cells[1].innerText.toLowerCase();
+                var sku = row.cells[4].innerText.toLowerCase();
+
+                row.style.display = orderNum.includes(filterOrderNum) && sku.includes(filterSKU) ? "" : "none";
+            });
+        }
+
+        function exportarCSV() {
+            var filteredRows = [];
+
+            var tableHeader = Array.from(document.querySelectorAll("table thead tr th")).map(function(cell) {
+                return cell.innerText;
             });
 
-            // Crea el contenido del archivo CSV
-            var csvContent = "data:text/csv;charset=utf-8," + rows.join("\n");
+            filteredRows.push(tableHeader.join(","));
 
-            // Crea un elemento de enlace temporal y simula el clic para descargar el archivo
+            var tableRows = document.querySelectorAll("table tbody tr");
+
+            tableRows.forEach(function (row) {
+                if (row.style.display !== "none") {
+                    var rowData = [];
+                    row.querySelectorAll("td").forEach(function (cell) {
+                        rowData.push(cell.innerText);
+                    });
+                    filteredRows.push(rowData.join(","));
+                }
+            });
+
+            var csvContent = "data:text/csv;charset=utf-8," + filteredRows.join("\n");
+
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
@@ -135,6 +161,4 @@
             document.body.removeChild(link);
         }
     </script>
-        <script src="{{ asset('js/filters.js') }}"></script>
-
 @endsection

@@ -19,4 +19,8 @@ class Model_Receipt extends Model
     {
         return $this->hasMany(Etiqueta::class, 'order_num', 'order_num');
     }
+    public function codeProducts()
+    {
+        return $this->hasMany(Code_products::class, 'sku', 'order_num');
+    }
 }

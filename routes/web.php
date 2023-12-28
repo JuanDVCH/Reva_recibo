@@ -44,5 +44,6 @@ Route::get('/productos/form/{order_num}', 'Controller_Create_Products@show')->na
 Route::get('/pulpo/form/{order_num}', 'ControllerPulpo@showPulpo')->name('pulpo.form');
 Route::get('pulpo/exportar/{order_num}/{sku}/{supplier_code}', 'ControllerPulpo@show')->name('pulpo.exportar');
 
+Route::get('/obtener-skus', [ControllerPulpo::class, 'obtenerSkus'])->name('obtener.skus');
 
 
