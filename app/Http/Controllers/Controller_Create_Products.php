@@ -2,90 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Session;
+use App\Models\Code_products;
 use App\Models\Model_Products;
 use App\Models\Model_Receipt;
 use Illuminate\Http\Request;
 
 class Controller_Create_Products extends Controller
 {
-
     public function index(Request $request)
     {
-        $order_number = $request->input('order_num');
-    
-        $productos = Model_Products::where('state', 1)
-            ->whereHas('recibo', function ($query) use ($order_number) {
-                $query->where('order_num', $order_number);
-            })
-            ->get();
-    
+        $order_number = $request->input('order_num', null);
+
+        $productos = $order_number
+            ? Model_Products::where('state', 1)
+                ->whereHas('recibo', function ($query) use ($order_number) {
+                    $query->where('order_num', $order_number);
+                })
+                ->with('code_products')
+                ->get()
+            : collect();
+
         $recibos = Model_Receipt::where('state', 1)->get();
-    
-        return view('Productos.index', compact('productos', 'order_number', 'recibos'));
+        $skus = Code_products::pluck('sku');
+        $descripciones = Code_products::pluck('description');
+
+        // Almacena los SKUs y descripciones en la sesión
+        session(['skus' => $skus]);
+        session(['descriptions' => $descripciones]);
+
+        // Pasa $skus y $descripciones a la vista
+        return view('Productos.index', compact('productos', 'order_number', 'recibos', 'skus', 'descripciones'));
     }
-    
 
+    public function create()
+    {
+        // Recuperar los SKUs almacenados en la sesión
+        $skus = session('skus', collect());
 
-public function create()
-{
-    // Obtener recibos con estado 1 (asumiendo que 'estado' es un campo en el modelo Model_Receipt)
-    $recibos = Model_Receipt::where('state', 1)->get();
+        // Obtener descripciones asociadas a SKUs
+        $descripciones = Code_products::pluck('description')->toArray(); // Convertir a array
 
-    // Crear una instancia del modelo de producto (reemplaza Model_Product con el nombre real de tu modelo)
-    $producto = new Model_Products();
+        // Almacenar las descripciones en la sesión para su uso posterior
+        session(['descripciones' => $descripciones]);
 
-    // Configurar la vista con los datos necesarios antes de la condición
-    return view('Productos.create', compact('recibos'));
-}
+        // Obtener recibos con estado 1
+        $recibos = Model_Receipt::where('state', 1)->get();
 
-public function store(Request $request)
-{
-    $producto = new Model_Products();
-    $producto->code_product = $request->code_product;
-    $producto->description = $request->description;
-    $producto->unit_measurement = $request->unit_measurement;
-    $producto->amount = $request->amount;
-    $producto->gross_weight = $request->gross_weight;
-    $producto->packaging_weight = $request->packaging_weight;
-    $producto->net_weight = $request->net_weight;
-    $producto->order_num = $request->orden_num; // Asegúrate de usar 'orden_num' aquí si es el nombre correcto
-    $producto->state = 1;
-    $producto->save();
-    
-    return redirect(route('recibo.index'));
-}
+        // Configurar la vista con los datos necesarios antes de la condición
+        return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
+    }
+    public function obtenerDescripcionPorSku(Request $request)
+    {
+        $sku = $request->input('sku');
+        $descripcion = Code_products::where('sku', $sku)->value('description');
 
+        return response()->json(['descripcion' => $descripcion]);
+    }
 
+    public function store(Request $request)
+    {
+        try {
+            // Validación de datos
+            $request->validate([
+                'sku' => 'required',
+                'unit_measurement' => 'required',
+                'amount' => 'required|numeric',
+                'gross_weight' => 'required|numeric',
+                'packaging_weight' => 'required|numeric',
+                'net_weight' => 'required|numeric',
+                'orden_num' => 'required',
+                'description' => 'required', // Asegúrate de que el campo 'description' esté presente en las reglas de validación
+            ]);
 
-    /**
-     * Display the specified resource.
-     */
+            // Crear instancia del modelo y asignar valores
+            $producto = new Model_Products();
+            $producto->sku = $request->sku;
+            $producto->description = $request->description;
+            $producto->unit_measurement = $request->unit_measurement;
+            $producto->amount = $request->amount;
+            $producto->gross_weight = $request->gross_weight;
+            $producto->packaging_weight = $request->packaging_weight;
+            $producto->net_weight = $request->net_weight;
+            $producto->order_num = $request->orden_num;
+            $producto->state = 1;
+
+            // Intentar guardar el producto
+            $producto->save();
+
+            // Redirección después de guardar
+            return redirect(route('recibo.index'));
+        } catch (\Exception $e) {
+            // Manejo del error
+            dd($e->getMessage());
+        }
+    }
     public function show(string $order_number)
     {
         // Puedes implementar la lógica para mostrar un producto específico si es necesario.
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        // Puedes implementar la lógica para editar un producto específico si es necesario.
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Puedes implementar la lógica para actualizar un producto específico si es necesario.
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        // Puedes implementar la lógica para eliminar un producto específico si es necesario.
     }
 }

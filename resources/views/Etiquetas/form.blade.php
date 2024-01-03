@@ -17,10 +17,10 @@
         <!-- Código del Producto -->
         <div class="col-md-4">
             <label for="inputcode_product">Código del Producto</label>
-            <select class="form-control" name="code_product" id="inputcode_product" required>
+            <select class="form-control" name="sku" id="inputcode_product" required>
                 <option disabled selected>Seleccionar Código</option>
                 @foreach ($productos as $producto)
-                    <option value="{{ $producto->code_product }}">{{ $producto->code_product }}</option>
+                    <option value="{{ $producto->sku }}">{{ $producto->sku }}</option>
                 @endforeach
             </select>
             <div id="codeError" class="text-danger"></div>

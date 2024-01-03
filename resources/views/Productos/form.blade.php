@@ -1,16 +1,35 @@
 <div class="container mt-5">
     <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
-        <div class="col-md-4">
-            <label for="inputCodigo" class="form-label">Código</label>
-            <input type="text" class="form-control" id="inputCodigo" name="code_product" required>
-            <div id="codigoError" class="text-danger"></div>
+        <div class="col-md-6">
+            <label for="inputConsecutivo" class="form-label">Número de recibo</label>
+            <select class="form-control" name="orden_num" id="inputConsecutivo" required>
+                <option disabled selected>Selecciona un recibo</option>
+                @foreach ($recibos as $recibo)
+                    <option value="{{ $recibo->order_num }}">{{ $recibo->order_num }}</option>
+                @endforeach
+            </select>
+            <div id="consecutivoError" class="text-danger"></div>
         </div>
+        <div class="col-md-4">
+            <label for="inputSku" class="form-label">SKU</label>
+            <select class="form-control" id="inputSku" name="sku" required>
+                <option value="" disabled selected>Seleccionar SKU</option>
+                @foreach ($skus as $sku)
+                    <option value="{{ $sku }}">{{ $sku }}</option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="col-md-4">
             <label for="inputDescripcion" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="inputDescripcion" name="description">
+            <select class="form-control" id="inputDescripcion" name="description" disabled>
+                <option value="" selected>Selecciona un SKU primero</option>
+            </select>
             <div id="descripcionError" class="text-danger"></div>
         </div>
+        <!-- Campo oculto para almacenar la descripción -->
+
         <div class="col-md-4">
             <label for="inputumb" class="form-label">Unidad de medida básica</label>
             <input type="text" class="form-control" id="inputumb" name="unit_measurement">
@@ -23,107 +42,81 @@
         </div>
         <div class="col-md-4">
             <label for="inputbruto" class="form-label">Peso Bruto</label>
-            <input type="number" step="any" class="form-control" id="inputbruto" name="gross_weight">
+            <input type="number" step="any" class="form-control" id="inputbruto" name="gross_weight"
+                oninput="actualizarPesoNeto()">
             <div id="brutoError" class="text-danger"></div>
         </div>
-        <div class="col-md-4">
+
+        <div class="col-md-6">
             <label for="inputEmpaque" class="form-label">Peso de empaque</label>
-            <input type="number" step="any" class="form-control" id="inputEmpaque" name="packaging_weight">
+            <input type="number" step="any" class="form-control" id="inputEmpaque" name="packaging_weight"
+                oninput="actualizarPesoNeto()">
             <div id="empaqueError" class="text-danger"></div>
         </div>
         <div class="col-md-6">
             <label for="inputNeto" class="form-label">Peso neto</label>
-            <input type="number" step="any" class="form-control" id="inputNeto" name="net_weight">
+            <label id="resultadoNeto" class="form-control"></label>
             <div id="netoError" class="text-danger"></div>
+            <!-- Campo oculto para almacenar el valor del peso neto -->
+            <input type="hidden" name="net_weight" id="inputNeto">
         </div>
-
-        
-        <div class="col-md-6">
-            <label for="inputConsecutivo" class="form-label">Numero de recibo</label>
-            <select class="form-control" name="orden_num" id="inputConsecutivo" required>
-                <option disabled selected>Selecciona un recibo</option>
-                @foreach ($recibos as $recibo)
-                    <option value="{{ $recibo->order_num }}">{{ $recibo->order_num }}</option>
-                @endforeach
-            </select>
-            <div id="consecutivoError" class="text-danger"></div>
-        </div>
-
         <div class="col-12 mt-3 text-center">
-            <button type="button" onclick="validarFormulario()" class="btn btn-success mx-2">Enviar</button>
+            <button type="submit" class="btn btn-success mx-2" id="enviarBtn">Enviar</button>
             <button type="reset" class="btn btn-danger mx-2">Limpiar</button>
         </div>
     </form>
-
 </div>
 
-<script>
-    function validarFormulario() {
-        // Obtener los valores de los campos
-        var codigo = document.getElementById('inputCodigo').value.trim();
-        var descripcion = document.getElementById('inputDescripcion').value.trim();
-        var umb = document.getElementById('inputumb').value.trim();
-        var cantidad = document.getElementById('inputcantidad').value.trim();
-        var bruto = document.getElementById('inputbruto').value.trim();
-        var empaque = document.getElementById('inputEmpaque').value.trim();
-        var neto = document.getElementById('inputNeto').value.trim();
-        var consecutivo = document.getElementById('inputConsecutivo').value.trim();
-
-        // Limpiar mensajes de error anteriores
-        limpiarMensajesError();
-
-        // Validar cada campo
-        if (codigo === '') {
-            mostrarError('codigoError', 'El código es requerido.');
-            return;
-        }
-
-        if (descripcion === '') {
-            mostrarError('descripcionError', 'La descripción es requerida.');
-            return;
-        }
-
-        if (umb === '') {
-            mostrarError('umbError', 'La unidad de medida básica es requerida.');
-            return;
-        }
-
-        if (cantidad === '') {
-            mostrarError('cantidadError', 'La cantidad es requerida.');
-            return;
-        }
-
-        if (bruto === '') {
-            mostrarError('brutoError', 'El peso bruto es requerido.');
-            return;
-        }
-
-        if (empaque === '') {
-            mostrarError('empaqueError', 'El peso de empaque es requerido.');
-            return;
-        }
-
-        if (neto === '') {
-            mostrarError('netoError', 'El peso neto es requerido.');
-            return;
-        }
-
-        if (consecutivo === '') {
-            mostrarError('consecutivoError', 'El número de recibo es requerido.');
-            return;
-        }
-
-        document.getElementById('productoForm').submit();
-    }
-
-    function limpiarMensajesError() {
-        var errores = document.querySelectorAll('.text-danger');
-        errores.forEach(function(elemento) {
-            elemento.innerText = '';
+    
+    <!-- Script JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#inputSku').on('input', function() {
+                var sku = $(this).val().trim();
+                var $descripcionSelect = $('#inputDescripcion');
+    
+                if (sku !== '') {
+                    // Obtener el token CSRF
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    
+                    // Solicitud Ajax al controlador
+                    $.ajax({
+                        url: '{{ route("obtenerDescripcionPorSku") }}',
+                        method: 'POST',
+                        data: {
+                            sku: sku,
+                            _token: csrfToken
+                        },
+                        success: function(response) {
+                            var descripcion = response.descripcion;
+    
+                            // Habilitar el select y actualizar opciones
+                            $descripcionSelect.prop('disabled', false);
+                            $descripcionSelect.html('<option value="' + descripcion + '" selected>' + descripcion + '</option>');
+                        },
+                        error: function() {
+                            // Manejar el error si es necesario
+                            $descripcionSelect.prop('disabled', true).html('<option value="" selected>Error al obtener la descripción</option>');
+                        }
+                    });
+                } else {
+                    // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
+                    $descripcionSelect.prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
+                }
+            });
         });
-    }
+    </script>
+<script>
+    function actualizarPesoNeto() {
+        // Actualizar peso neto
+        var bruto = parseFloat($('#inputbruto').val()) || 0;
+        var empaque = parseFloat($('#inputEmpaque').val()) || 0;
 
-    function mostrarError(idCampoError, mensaje) {
-        document.getElementById(idCampoError).innerText = mensaje;
+        var pesoNeto = bruto + empaque;
+        $('#resultadoNeto').text(pesoNeto.toFixed(2));
+
+        // Asignar valor al campo oculto
+        $('#inputNeto').val(pesoNeto.toFixed(2));
     }
 </script>

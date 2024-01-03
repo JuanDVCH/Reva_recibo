@@ -14,9 +14,9 @@ class ControllerEtiqueta extends Controller
 
     public function index()
     {
-        $etiquetas = Etiqueta::select('rec.order_num as ctgnombre', 'prod.code_product as prodcode_product', 'tags.*')
+        $etiquetas = Etiqueta::select('rec.order_num as ctgnombre', 'prod.sku as prodcode_product', 'tags.*')
             ->join('receipts as rec', 'tags.order_num', '=', 'rec.order_num')
-            ->join('product as prod', 'tags.code_product', '=', 'prod.code_product')
+            ->join('product as prod', 'tags.sku', '=', 'prod.sku')
             ->where('tags.state', '1')
             ->distinct()
             ->orderBy('delivery_date', 'desc') // Ordenar por fecha de entrega de forma descendente
@@ -39,7 +39,7 @@ class ControllerEtiqueta extends Controller
     {
         $etiqueta = new Etiqueta($request->all());
         $etiqueta->order_num = $request->order_num;
-        $etiqueta->code_product = $request->code_product;
+        $etiqueta->sku = $request->sku;
         $etiqueta->description = $request->description;
         $etiqueta->delivery_date = $request->delivery_date;
         $etiqueta->origin = $request->origin;

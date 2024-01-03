@@ -78,7 +78,7 @@
                                             @forelse ($etiquetas as $etiqueta)
                                                 <tr>
                                                     <td>{{ $etiqueta->order_num }}</td>
-                                                    <td>{{ $etiqueta->code_product }}</td>
+                                                    <td>{{ $etiqueta->sku }}</td>
                                                     <td>{{ $etiqueta->description }}</td>
                                                     <td>{{ $etiqueta->delivery_date }}</td>
                                                     <td>{{ $etiqueta->origin }}</td>

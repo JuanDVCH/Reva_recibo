@@ -27,8 +27,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Rutas para el recurso "Recibo"
 Route::resource('Recibo', Controller_Format_Receipt::class)->names('recibo');
 
+
 // Rutas para el recurso "Productos"
 Route::resource('Productos', Controller_Create_Products::class)->names('productos');
+Route::post('/obtener-descripcion-por-sku', [Controller_Create_Products::class, 'obtenerDescripcionPorSku'])->name('obtenerDescripcionPorSku');
 
 // Rutas para el recurso "Etiquetas"
 Route::resource('Etiquetas', ControllerEtiqueta::class)->names('etiqueta');

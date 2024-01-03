@@ -10,11 +10,6 @@
                         data-bs-target="#createReceiptModal">
                         Crear nuevo recibo
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal"
-                        data-bs-target="#createProductsModal">
-                        Crear nuevo producto
-                    </button>
-                    <a href="{{ route('home') }}" class="btn btn-secondary btn-sm ms-2">Volver Atrás</a>
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center">
@@ -33,7 +28,7 @@
                         </thead>
                         <tbody>
                             @forelse ($recibos as $recibo)
-                                <tr>
+                                <tr data-recibo="{{ $recibo->order_num }}">
                                     <td>{{ $recibo->order_num }}</td>
                                     <td>{{ $recibo->delivery_date }}</td>
                                     <td>{{ $recibo->origin }}</td>
@@ -56,20 +51,7 @@
                     </table>
                 </div>
             </div>
-            <div class="modal fade" id="createProductsModal" tabindex="-1" role="dialog"
-                aria-labelledby="createProductsModal" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="createProductsModalLabel">Crear un nuevo producto</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            @include('productos.form') <!-- Asegúrate de tener un formulario aquí -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog"
                 aria-labelledby="createReceiptModal" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">

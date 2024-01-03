@@ -31,7 +31,7 @@
                         <tbody>
                             @forelse ($productos as $producto)
                                 <tr>
-                                    <td>{{ $producto->code_product }}</td>
+                                    <td>{{ $producto->sku }}</td>
                                     <td>{{ $producto->description }}</td>
                                     <td>{{ $producto->unit_measurement }}</td>
                                     <td>{{ $producto->amount }}</td>

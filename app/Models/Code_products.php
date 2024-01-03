@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Code_products extends Model
@@ -17,5 +16,15 @@ class Code_products extends Model
     public function receipts()
     {
         return $this->hasMany(Model_Receipt::class, 'order_num', 'sku');
+    }
+    public static function obtenerDescripcionPorSku($sku)
+    {
+        $producto = self::where('sku', $sku)->first();
+
+        return $producto ? $producto->description : null;
+    }
+    public function products()
+    {
+        return $this->hasMany(Model_Products::class, 'sku', 'sku');
     }
 }
