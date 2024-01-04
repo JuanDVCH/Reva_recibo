@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,7 +12,9 @@
 
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+    <script src="{{ asset('js/Modals.js') }}"></script>
+    <script src="{{ asset('js/filters.js') }}"></script>
+    <script src="{{ asset('js/pagination.js') }}"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -33,27 +33,21 @@
         body {
             display: grid;
             grid-template-rows: 1fr auto;
-            /* Una fila que ocupa todo el espacio restante y otra para el pie de página */
             min-height: 100vh;
-            /* Altura mínima del 100% de la ventana */
             margin: 0;
-            /* Eliminar el margen predeterminado del cuerpo */
         }
 
         #app {
             grid-row: 1;
-            /* Coloca #app en la primera fila (la que ocupa todo el espacio restante) */
         }
 
         footer {
             grid-row: 2;
-            /* Coloca el footer en la segunda fila (la del pie de página) */
         }
     </style>
 </head>
 
 <body>
-    <!-- resources/views/tu_vista.blade.php -->
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
@@ -69,7 +63,6 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -106,7 +99,6 @@
         </main>
     </div>
 
-
     <footer class="footer py-3 bg-dark text-white">
         <div class="container text-center">
             <span>&copy; {{ date('Y') }} Reva - Todos los derechos reservados</span>
@@ -116,15 +108,14 @@
     <!-- Scripts -->
     <script src="{{ asset('js/form-validation.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+    <!-- Script JavaScript -->
+    <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
     <!-- Script para el código de barras -->
     <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
-
     <!-- Script para el filtros -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/Modals.js') }}"></script>
     <script src="{{ asset('js/filters.js') }}"></script>
     <script src="{{ asset('js/pagination.js') }}"></script>

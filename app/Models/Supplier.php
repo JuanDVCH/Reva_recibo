@@ -14,6 +14,10 @@ class Supplier extends Model
     {
         return $this->hasMany(Pulpo::class, 'supplier_code', 'code');
     }
+    public function receipts()
+    {
+        return $this->hasMany(Model_Receipt::class, 'supplier_id'); // Ajusta 'supplier_id' según la columna real en tu tabla 'receipts'
+    }
 
 }
 

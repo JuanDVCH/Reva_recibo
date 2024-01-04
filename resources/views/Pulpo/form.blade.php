@@ -5,7 +5,7 @@
     <div class="form-group row g-2">
         <div class="form-group col-md-6">
             <label for="inputOrderNum">Número de recibo</label>
-            <select class="form-control" name="orden_num" id="inputOrderNum" required>
+            <select class="form-control" name="order_num" id="inputOrderNum" required>
                 <option disabled selected value="">Selecciona un recibo</option>
                 @foreach ($recibos as $recibo)
                     <option value="{{ $recibo->order_num }}">{{ $recibo->order_num }}</option>
@@ -13,12 +13,10 @@
             </select>
         </div>
         <div class="form-group col-md-6">
-            <label for="inputSupplierCode">Código de Proveedor</label>
-            <select class="form-control" name="supplier_code" id="inputSupplierCode" required>
-                <option value="" disabled selected>Seleccionar proveedor</option>
-                @foreach ($suppliers as $supplier)
-                    <option value="{{ $supplier->code }}">{{ $supplier->code }}</option>
-                @endforeach
+            <label for="inputSku">Sku</label>
+            <select class="form-control" name="sku" id="inputSku" required>
+                <option value="" disabled selected>Seleccionar código del producto</option>
+                <!-- Opciones del SKU se llenarán dinámicamente mediante JavaScript -->
             </select>
         </div>
     </div>
@@ -28,13 +26,12 @@
             <label for="deliveryDate">Fecha de Entrega:</label>
             <input type="date" name="delivery_date" class="form-control" required>
         </div>
-
         <div class="form-group col-md-6">
-            <label for="inputSku">Sku</label>
-            <select class="form-control" name="sku" id="inputSku" required>
-                <option value="" disabled selected>Seleccionar código del producto</option>
-                @foreach ($skus as $sku)
-                    <option value="{{ $sku->sku }}">{{ $sku->sku }}</option>
+            <label for="inputSupplierCode">Código de Proveedor</label>
+            <select class="form-control" name="supplier_code" id="inputSupplierCode" required>
+                <option value="" disabled selected>Seleccionar proveedor</option>
+                @foreach ($suppliers as $supplier)
+                    <option value="{{ $supplier->code }}">{{ $supplier->code }}</option>
                 @endforeach
             </select>
         </div>
@@ -52,7 +49,7 @@
         </div>
         <div class="col-md-6">
             <label for="criterium">Criterio:</label>
-            <input type="text" name="criterium" class="form-control">
+            <input type="text" name="criterium" class="form-control" required>
         </div>
     </div>
 
@@ -78,28 +75,36 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Almacena las opciones originales del campo SKU
         var originalSkuOptions = $('#inputSku').html();
 
         // Maneja el cambio en el campo Número de recibo
-        $('#inputOrderNum').on('change', function () {
+        $('#inputOrderNum').on('change', function() {
             var selectedOrderNum = $(this).val();
 
-            // Restaura las opciones originales del campo SKU
-            $('#inputSku').html(originalSkuOptions);
-
-            // Filtra las opciones del campo SKU basado en el número de recibo seleccionado
-            $('#inputSku option').each(function () {
-                if ($(this).val() === "" || $(this).val().startsWith(selectedOrderNum)) {
-                    $(this).prop('disabled', false);
-                } else {
-                    $(this).prop('disabled', true);
+            // Realiza una solicitud Ajax para obtener los SKUs relacionados con el número de recibo seleccionado
+            $.ajax({
+                url: '{{ route('pulpo.obtener-skus') }}', // Ajusta el nombre de la ruta según sea necesario
+                type: 'GET',
+                data: {
+                    orderNum: selectedOrderNum
+                },
+                success: function(data) {
+                    // Limpia y llena el select de SKU con las opciones obtenidas
+                    $('#inputSku').empty();
+                    $('#inputSku').append(
+                        '<option value="" disabled selected>Seleccionar código del producto</option>'
+                        );
+                    $.each(data, function(key, value) {
+                        $('#inputSku').append('<option value="' + value + '">' +
+                            value + '</option>');
+                    });
+                },
+                error: function(error) {
+                    console.error(error);
                 }
             });
-
-            // Selecciona la opción por defecto en el campo SKU
-            $('#inputSku').val('');
         });
     });
 </script>

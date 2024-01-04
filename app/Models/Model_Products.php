@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Model_Products extends Model
 {
+    // No es necesario especificar primaryKey y timestamps si sigues las convenciones de Laravel
 
-    public $timestamps = false;
     protected $table = "product";
-    protected $primaryKey = 'id_product';
     protected $fillable = ['sku', 'description', 'unit_measurement', 'amount', 'gross_weight', 'packaging_weight', 'net_weight', 'order_num', 'state'];
 
     public function recibo()
@@ -21,10 +20,9 @@ class Model_Products extends Model
     {
         return $this->hasMany(Etiqueta::class, 'sku', 'sku');
     }
+
     public function code_products()
     {
         return $this->belongsTo(Code_products::class, 'sku', 'sku');
     }
 }
-
-

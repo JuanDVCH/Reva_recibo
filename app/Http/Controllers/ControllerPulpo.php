@@ -52,34 +52,30 @@ class ControllerPulpo extends Controller
         return view('pulpo.create', compact('pulpo', 'recibos', 'skus'));
     }
 
+
     public function store(Request $request)
     {
         $pulpo = new Pulpo();
-        $pulpo->order_num = $request->orden_num;
-        $pulpo->notes = $request->notes;
-        $pulpo->delivery_date = $request->delivery_date;
-        $pulpo->sku = $request->sku;
-        $pulpo->requested_quantity = $request->requested_quantity;
-        $pulpo->criterium = $request->criterium;
-        $pulpo->merchant_slug = $request->merchant_slug;
-        $pulpo->merchant_channel_slug = $request->merchant_channel_slug;
+        $pulpo->fill($request->except('supplier_code', 'sku')); // Rellenar datos básicos
         $pulpo->state = 1;
         $pulpo->save();
+    
+        // Asociar relaciones
         $supplier = Supplier::where('code', $request->supplier_code)->first();
+        $sku = Code_products::where('sku', $request->sku)->first();
+    
         if ($supplier) {
             $pulpo->supplier()->associate($supplier);
-            $pulpo->save(); // Guardar nuevamente para actualizar la relación
         }
-        $skus = Code_products::where('sku', $request->sku)->first();
-        if ($skus) {
-            $pulpo->code_products()->associate($skus);
-            $pulpo->save(); // Guardar nuevamente para actualizar la relación
+    
+        if ($sku) {
+            $pulpo->code_products()->associate($sku);
         }
-
+    
+        $pulpo->save(); // Guardar nuevamente para actualizar las relaciones
+    
         return redirect(route('pulpo.index'));
     }
-
-
     public function show($order_num, $sku, $supplier_code)
     {
         // Obtener el producto seleccionado
@@ -110,12 +106,12 @@ class ControllerPulpo extends Controller
     }
 
     public function obtenerSkus(Request $request)
-{
-    $orderNum = $request->input('orderNum');
+    {
+        $orderNum = $request->input('orderNum');
 
-    // Obtener los SKUs asociados al número de orden
-    $skus = Code_products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
+        // Obtén los SKUs asociados al número de recibo
+        $skus = Model_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
 
-    return response()->json($skus);
-}
+        return response()->json($skus);
+    }
 }

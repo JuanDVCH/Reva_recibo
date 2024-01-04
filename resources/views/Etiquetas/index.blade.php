@@ -1,9 +1,6 @@
-
 @extends('layouts.app')
 
 @section('content')
-
-
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12">
@@ -20,6 +17,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="card-body">
                         <div class="row">
                             <!-- Contenedor del menú de filtros a la izquierda -->
@@ -64,7 +62,7 @@
                                                 <th>Descripción</th>
                                                 <th>Fecha</th>
                                                 <th>Origen</th>
-                                                <th>Amount</th>
+                                                <th>Cantidad</th>
                                                 <th>Peso</th>
                                                 <th>Tipo</th>
                                                 <th>Contenido</th>
@@ -145,7 +143,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title" id="createTagsModalLabel">Crear Etiqueta</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closecreateTagsModal()">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        onclick="closecreateTagsModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -155,13 +154,5 @@
             </div>
         </div>
     </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/Modals.js') }}"></script>
-    <script src="{{ asset('js/filters.js') }}"></script>
-    <script src="{{ asset('js/pagination.js') }}"></script>
+    </div>   
 @endsection
-

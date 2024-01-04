@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Model_Receipt;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class Controller_Format_Receipt extends Controller
@@ -12,7 +14,9 @@ class Controller_Format_Receipt extends Controller
     public function index()
     {
         $recibos = Model_Receipt::where('state', '1')->get();
-        return view('Recibo.index', compact('recibos'));
+        $suppliers = Supplier::all(); // Obtén todos los proveedores
+    
+        return view('Recibo.index', compact('recibos', 'suppliers'));
     }
 
     /**
@@ -20,7 +24,9 @@ class Controller_Format_Receipt extends Controller
      */
     public function create()
     {
-        return view('Recibo.create');
+        $suppliers = Supplier::all(); // Obtén todos los proveedores
+    
+        return view('Recibo.create', compact('suppliers'));
     }
 
     /**
@@ -31,8 +37,11 @@ class Controller_Format_Receipt extends Controller
         $recibo = new Model_Receipt();
         $recibo->delivery_date = $request->delivery_date;
         $recibo->origin = $request->origin;
+
+        // Asignar el cliente y el código del cliente desde la tabla suppliers
         $recibo->customer = $request->customer;
         $recibo->code_customer = $request->code_customer;
+
         $recibo->driver = $request->driver;
         $recibo->plate = $request->plate;
         $recibo->num_vehicle = $request->num_vehicle;
@@ -42,43 +51,11 @@ class Controller_Format_Receipt extends Controller
         return redirect(route('recibo.index'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($order_num)
+    public function obtenerCodigosCliente($id)
     {
-        $recibo = Model_Receipt::where('order_num', $order_num)->firstOrFail();
-        return view('Productos.modal', compact('recibo'));
+        $codigosClientes = Supplier::where('id', $id)->pluck('code', 'id');
+
+        return response()->json($codigosClientes);
     }
 
-    public function showPulpo($order_num)
-    {
-        $recibo = Model_Receipt::where('order_num', $order_num)->firstOrFail();
-        return view('pulpo.modal', compact('recibo'));
-    }
-    
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        // Implementar lógica para mostrar el formulario de edición
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        // Implementar lógica para actualizar el recibo
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        // Implementar lógica para eliminar un recibo
-    }
 }

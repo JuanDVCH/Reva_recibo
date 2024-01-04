@@ -12,6 +12,7 @@
                     </button>
                 </div>
             </div>
+            
             <div class="card-body d-flex justify-content-center">
                 <div class="table-responsive" style="width: 80%;">
                     <table class="table table-striped table-hover table-bordered">

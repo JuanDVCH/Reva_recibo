@@ -23,4 +23,8 @@ class Model_Receipt extends Model
     {
         return $this->hasMany(Code_products::class, 'sku', 'order_num');
     }
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id'); // Ajusta 'supplier_id' según la columna real en tu tabla 'receipts'
+    }
 }

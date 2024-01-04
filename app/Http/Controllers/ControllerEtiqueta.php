@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Model_Receipt;
+use App\Models\Code_products;
 use App\Models\Model_Products;
 use App\Models\Etiqueta;
 use PDF;
@@ -11,21 +12,22 @@ use PDF;
 
 class ControllerEtiqueta extends Controller
 {
-
     public function index()
     {
-        $etiquetas = Etiqueta::select('rec.order_num as ctgnombre', 'prod.sku as prodcode_product', 'tags.*')
+        // Usar alias más descriptivos para mejorar la legibilidad
+        $etiquetas = Etiqueta::select('rec.order_num as recibo_numero', 'prod.sku as sku_producto', 'tags.*')
             ->join('receipts as rec', 'tags.order_num', '=', 'rec.order_num')
             ->join('product as prod', 'tags.sku', '=', 'prod.sku')
-            ->where('tags.state', '1')
+            ->where('tags.state', 1)
             ->distinct()
-            ->orderBy('delivery_date', 'desc') // Ordenar por fecha de entrega de forma descendente
+            ->orderBy('tags.delivery_date', 'desc') // Corregir el orden por fecha de entrega
             ->paginate(15);
-
-            $recibos = Model_Receipt::where('state', 1)->get();
-            $productos = Model_Products::where('state', 1)->get();
-
-        return view('etiquetas.index', compact('etiquetas','productos','recibos'));
+    
+        // Obtener la lista de recibos y productos solo si es necesario
+        $recibos = Model_Receipt::where('state', 1)->get();
+        $productos = Model_Products::where('state', 1)->get();
+    
+        return view('etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
     }
 
     public function create()
@@ -75,6 +77,45 @@ class ControllerEtiqueta extends Controller
 
         // Descargar el PDF directamente
         return $pdf->stream('etiqueta.pdf');
+    }
+
+    
+    public function obtenerSkus(Request $request)
+    {
+        $orderNum = $request->input('orderNum');
+
+        // Obtén los SKUs asociados al número de recibo
+        $skus = Model_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
+
+        return response()->json($skus);
+    }
+    public function obtenerDescripcionPorSku(Request $request)
+    {
+        try {
+            $sku = $request->input('sku');
+            $descripcion = Code_products::where('sku', $sku)->value('description');
+
+            if ($descripcion === null) {
+                throw new \Exception("No se encontró descripción para el SKU: $sku");
+            }
+
+            return response()->json(['descripcion' => $descripcion]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function obtenerFechas(Request $request)
+    {
+        $request->validate([
+            'orderNum' => 'required|exists:nombre_de_la_tabla_del_recibo,numero_de_recibo_columna',
+        ]);
+    
+        $fechas = Etiqueta::where('numero_de_recibo_columna', $request->orderNum)
+            ->distinct('delivery_date')
+            ->pluck('delivery_date')
+            ->toArray();
+    
+        return response()->json($fechas);
     }
 
 }

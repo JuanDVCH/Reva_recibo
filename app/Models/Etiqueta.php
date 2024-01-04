@@ -22,6 +22,10 @@ class Etiqueta extends Model
     {
         return $this->belongsTo(Model_Products::class, 'sku', 'sku')->select('sku', 'description');
     }
+    public function code_products()
+    {
+        return $this->belongsTo(Code_products::class, 'sku', 'sku');
+    }
 }
 
 

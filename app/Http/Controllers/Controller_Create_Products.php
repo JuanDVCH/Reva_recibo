@@ -52,12 +52,31 @@ class Controller_Create_Products extends Controller
         // Configurar la vista con los datos necesarios antes de la condición
         return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
     }
+
+
+    public function obtenerSkus(Request $request)
+    {
+        $orderNum = $request->input('orderNum');
+
+        // Obtén los SKUs asociados al número de recibo
+        $skus = Model_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
+
+        return response()->json($skus);
+    }
     public function obtenerDescripcionPorSku(Request $request)
     {
-        $sku = $request->input('sku');
-        $descripcion = Code_products::where('sku', $sku)->value('description');
+        try {
+            $sku = $request->input('sku');
+            $descripcion = Code_products::where('sku', $sku)->value('description');
 
-        return response()->json(['descripcion' => $descripcion]);
+            if ($descripcion === null) {
+                throw new \Exception("No se encontró descripción para el SKU: $sku");
+            }
+
+            return response()->json(['descripcion' => $descripcion]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request)
@@ -65,14 +84,14 @@ class Controller_Create_Products extends Controller
         try {
             // Validación de datos
             $request->validate([
-                'sku' => 'required',
+                'sku' => 'required|exists:code_products,sku',
                 'unit_measurement' => 'required',
                 'amount' => 'required|numeric',
                 'gross_weight' => 'required|numeric',
                 'packaging_weight' => 'required|numeric',
                 'net_weight' => 'required|numeric',
                 'orden_num' => 'required',
-                'description' => 'required', // Asegúrate de que el campo 'description' esté presente en las reglas de validación
+                'description' => 'required|exists:code_products,description', // Asegúrate de que el campo 'description' esté presente en las reglas de validación
             ]);
 
             // Crear instancia del modelo y asignar valores
@@ -97,8 +116,6 @@ class Controller_Create_Products extends Controller
             dd($e->getMessage());
         }
     }
-    public function show(string $order_number)
-    {
-        // Puedes implementar la lógica para mostrar un producto específico si es necesario.
-    }
+
+
 }

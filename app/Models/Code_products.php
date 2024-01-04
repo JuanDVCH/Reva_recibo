@@ -13,6 +13,10 @@ class Code_products extends Model
     {
         return $this->hasMany(Pulpo::class, 'sku', 'sku');
     }
+    public function etiqueta()
+    {
+        return $this->hasMany(Etiqueta::class, 'sku', 'sku');
+    }
     public function receipts()
     {
         return $this->hasMany(Model_Receipt::class, 'order_num', 'sku');
@@ -22,6 +26,13 @@ class Code_products extends Model
         $producto = self::where('sku', $sku)->first();
 
         return $producto ? $producto->description : null;
+    }
+
+    public static function obtenerSkusPorOrden($orderNum)
+    {
+        return self::whereHas('receipts', function ($query) use ($orderNum) {
+            $query->where('order_num', $orderNum);
+        })->pluck('sku');
     }
     public function products()
     {
