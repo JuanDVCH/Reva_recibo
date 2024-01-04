@@ -7,7 +7,7 @@
         </div>
         <div class="col-md-6">
             <label for="inputorigin" class="form-label">Origen</label>
-            <input type="text" class="form-control" id="inputorigin" name="origin" required>
+            <input type="text" class="form-control" id="inputorigin" name="origin" >
         </div>
         <div class="col-md-6">
             <label for="inputcustomer" class="form-label">Cliente</label>

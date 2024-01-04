@@ -31,18 +31,15 @@
 
         <!-- Campo oculto para almacenar la descripción -->
         <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
-
-        <div class="col-md-4">
+        <div class="col-md-6">
+            <label for="inputumb" class="form-label">Unidad de medida básica</label>
+            <input type="text" class="form-control" id="inputumb" name="unit_measurement" required>
+            <div id="umbError" class="text-danger"></div>
+        </div>
+        <div class="col-md-6">
             <label for="inputcantidad" class="form-label">Cantidad</label>
             <input type="number" class="form-control" id="inputcantidad" name="amount" required>
             <div id="cantidadError" class="text-danger"></div>
-        </div>
-        
-        <div class="col-md-4">
-            <label for="inputEmpaque" class="form-label">Peso de empaque</label>
-            <input type="number" step="any" class="form-control" id="inputEmpaque" name="packaging_weight"
-                oninput="actualizarPesoNeto()" required>
-            <div id="empaqueError" class="text-danger"></div>
         </div>
         <div class="col-md-4">
             <label for="inputbruto" class="form-label">Peso Bruto</label>
@@ -50,18 +47,21 @@
                 oninput="actualizarPesoNeto()" required>
             <div id="brutoError" class="text-danger"></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <label for="inputEmpaque" class="form-label">Peso de empaque</label>
+            <input type="number" step="any" class="form-control" id="inputEmpaque" name="packaging_weight"
+                oninput="actualizarPesoNeto()" required>
+            <div id="empaqueError" class="text-danger"></div>
+        </div>
+
+        <div class="col-md-4">
             <label for="inputNeto" class="form-label">Peso neto</label>
             <label id="resultadoNeto" class="form-control"></label>
             <div id="netoError" class="text-danger"></div>
             <!-- Campo oculto para almacenar el valor del peso neto -->
             <input type="hidden" name="net_weight" id="inputNeto" required>
         </div>
-        <div class="col-md-6">
-            <label for="inputumb" class="form-label">Unidad de medida básica</label>
-            <input type="text" class="form-control" id="inputumb" name="unit_measurement" required>
-            <div id="umbError" class="text-danger"></div>
-        </div>
+
         <div class="col-12 mt-3 text-center">
             <button type="submit" class="btn btn-success mx-2" id="enviarBtn">Enviar</button>
             <button type="button" class="btn btn-danger mx-2" id="limpiarBtn">Limpiar</button>
@@ -144,7 +144,7 @@
         var bruto = parseFloat($('#inputbruto').val()) || 0;
         var empaque = parseFloat($('#inputEmpaque').val()) || 0;
 
-        var pesoNeto = bruto + empaque;
+        var pesoNeto = bruto - empaque;
         $('#resultadoNeto').text(pesoNeto.toFixed(2));
 
         // Asignar valor al campo oculto
