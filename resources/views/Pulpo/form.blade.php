@@ -1,3 +1,4 @@
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <form class="formulario-estilos" method="POST" action="{{ route('pulpo.store') }}" id="pulpoForm">
@@ -44,9 +45,10 @@
 
     <div class="form-group row g-2">
         <div class="col-md-6">
-            <label for="requestedQuantity">Cantidad Solicitada:</label>
-            <input type="number" name="requested_quantity" class="form-control" required min="0">
+            <label for="requested_quantity">Peso Neto:</label>
+            <input type="text" name="requested_quantity" id="pesoNeto" class="form-control" readonly>
         </div>
+
         <div class="col-md-6">
             <label for="criterium">Criterio:</label>
             <input type="text" name="criterium" class="form-control" required>
@@ -95,11 +97,69 @@
                     $('#inputSku').empty();
                     $('#inputSku').append(
                         '<option value="" disabled selected>Seleccionar código del producto</option>'
-                        );
+                    );
                     $.each(data, function(key, value) {
                         $('#inputSku').append('<option value="' + value + '">' +
                             value + '</option>');
                     });
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Almacena las opciones originales del campo SKU
+        var originalSkuOptions = $('#inputSku').html();
+
+        // Maneja el cambio en el campo Número de recibo
+        $('#inputOrderNum').on('change', function() {
+            var selectedOrderNum = $(this).val();
+
+            // Realiza una solicitud Ajax para obtener los SKUs relacionados con el número de recibo seleccionado
+            $.ajax({
+                url: '{{ route('pulpo.obtener-skus') }}',
+                type: 'GET',
+                data: {
+                    orderNum: selectedOrderNum
+                },
+                success: function(data) {
+                    // Limpia y llena el select de SKU con las opciones obtenidas
+                    $('#inputSku').empty();
+                    $('#inputSku').append(
+                        '<option value="" disabled selected>Seleccionar código del producto</option>'
+                    );
+                    $.each(data, function(key, value) {
+                        $('#inputSku').append('<option value="' + value + '">' +
+                            value + '</option>');
+                    });
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        // Maneja el cambio en el campo SKU
+        $('#inputSku').on('change', function() {
+            var selectedSku = $(this).val();
+            var selectedOrderNum = $('#inputOrderNum').val();
+
+            // Realiza una solicitud Ajax para obtener el peso neto de los productos asociados al SKU y número de orden
+            $.ajax({
+                url: '{{ route('pulpo.obtener-peso-neto') }}',
+                type: 'GET',
+                data: {
+                    orderNum: selectedOrderNum,
+                    sku: selectedSku
+                },
+                success: function(data) {
+                    // Actualiza el campo de peso neto con el valor obtenido
+                    $('#pesoNeto').val(data);
                 },
                 error: function(error) {
                     console.error(error);

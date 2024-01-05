@@ -37,22 +37,22 @@ class Controller_Create_Products extends Controller
 
     public function create()
     {
-        // Recuperar los SKUs almacenados en la sesión
-        $skus = session('skus', collect());
-
-        // Obtener descripciones asociadas a SKUs
-        $descripciones = Code_products::pluck('description')->toArray(); // Convertir a array
-
+        // Recuperar los SKUs almacenados en la sesión y ordenar alfabéticamente
+        $skus = session('skus', collect())->sort()->values();
+        
+        // Obtener descripciones asociadas a SKUs y ordenar alfabéticamente
+        $descripciones = Code_products::pluck('description')->sort()->values()->toArray();
+        
+        // Obtener recibos con estado 1 y ordenarlos por número de recibo
+        $recibos = Model_Receipt::where('state', 1)->orderBy('order_num')->get();
+        
         // Almacenar las descripciones en la sesión para su uso posterior
         session(['descripciones' => $descripciones]);
-
-        // Obtener recibos con estado 1
-        $recibos = Model_Receipt::where('state', 1)->get();
-
+        
         // Configurar la vista con los datos necesarios antes de la condición
         return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
     }
-
+    
 
     public function obtenerSkus(Request $request)
     {
@@ -113,7 +113,6 @@ class Controller_Create_Products extends Controller
             return redirect(route('recibo.index'));
         } catch (\Exception $e) {
             // Manejo del error
-            dd($e->getMessage());
         }
     }
 

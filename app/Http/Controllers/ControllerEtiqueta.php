@@ -104,19 +104,7 @@ class ControllerEtiqueta extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function obtenerFechas(Request $request)
-    {
-        $request->validate([
-            'orderNum' => 'required|exists:nombre_de_la_tabla_del_recibo,numero_de_recibo_columna',
-        ]);
-    
-        $fechas = Etiqueta::where('numero_de_recibo_columna', $request->orderNum)
-            ->distinct('delivery_date')
-            ->pluck('delivery_date')
-            ->toArray();
-    
-        return response()->json($fechas);
-    }
+
 
 }
     

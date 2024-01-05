@@ -1,3 +1,5 @@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+
 <div class="container mt-5">
     <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
@@ -14,8 +16,8 @@
         <div class="col-md-6">
             <label for="inputSku" class="form-label">SKU</label>
             <select class="form-control" id="inputSku" name="sku" required>
-                <option value="" disabled selected>Seleccionar SKU</option>
-                @foreach ($skus as $sku)
+                <option value="" disabled selected>Selecciona un SKU</option>
+                @foreach ($skus->sort() as $sku)
                     <option value="{{ $sku }}">{{ $sku }}</option>
                 @endforeach
             </select>

@@ -41,15 +41,20 @@ class ControllerPulpo extends Controller
     {
         $recibos = Model_Receipt::where('state', 1)->get();
         $pulpo = new Pulpo();
-        
+
         // Obtener todos los SKU asociados al número de orden seleccionado
         $skus = [];
         $selectedOrderNum = $request->input('selectedOrderNum');
         if ($selectedOrderNum) {
             $skus = Model_Products::where('order_num', $selectedOrderNum)->distinct('sku')->pluck('sku');
         }
-    
-        return view('pulpo.create', compact('pulpo', 'recibos', 'skus'));
+
+        // Calcular la suma de la cantidad solicitada para los productos que coinciden con SKU y número de orden
+        $sumRequestedQuantity = Model_Products::where('order_num', $selectedOrderNum)
+            ->whereIn('sku', $skus)
+            ->sum('requested_quantity');
+
+        return view('pulpo.create', compact('pulpo', 'recibos', 'skus', 'sumRequestedQuantity'));
     }
 
 
@@ -59,21 +64,21 @@ class ControllerPulpo extends Controller
         $pulpo->fill($request->except('supplier_code', 'sku')); // Rellenar datos básicos
         $pulpo->state = 1;
         $pulpo->save();
-    
+
         // Asociar relaciones
         $supplier = Supplier::where('code', $request->supplier_code)->first();
         $sku = Code_products::where('sku', $request->sku)->first();
-    
+
         if ($supplier) {
             $pulpo->supplier()->associate($supplier);
         }
-    
+
         if ($sku) {
             $pulpo->code_products()->associate($sku);
         }
-    
+
         $pulpo->save(); // Guardar nuevamente para actualizar las relaciones
-    
+
         return redirect(route('pulpo.index'));
     }
     public function show($order_num, $sku, $supplier_code)
@@ -114,4 +119,16 @@ class ControllerPulpo extends Controller
 
         return response()->json($skus);
     }
+    public function obtenerPesoNeto(Request $request)
+{
+    $orderNum = $request->input('orderNum');
+    $sku = $request->input('sku');
+
+    // Realiza la lógica necesaria para obtener el peso neto de los productos asociados al SKU y número de orden
+    $pesoNeto = Model_Products::where('order_num', $orderNum)
+        ->where('sku', $sku)
+        ->sum('net_weight');
+
+    return response()->json($pesoNeto);
+}
 }

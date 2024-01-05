@@ -17,7 +17,7 @@
             <div class="card-body">
                 <h5 class="card-title">Formato de Etiqueta</h5>
                 <p class="card-text"><strong>Número de Orden:</strong> {{ $etiqueta->order_num }}</p>
-                <p class="card-text"><strong>Código del Producto:</strong> {{ $etiqueta->code_product }}</p>
+                <p class="card-text"><strong>Código del Producto:</strong> {{ $etiqueta->sku }}</p>
                 <p class="card-text"><strong>Descripción:</strong> {{ $etiqueta->description }}</p>
                 <p class="card-text"><strong>Fecha:</strong> {{ $etiqueta->delivery_date }}</p>
                 <p class="card-text"><strong>Origen:</strong> {{ $etiqueta->origin }}</p>

@@ -24,7 +24,7 @@ class Controller_Format_Receipt extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all(); // Obtén todos los proveedores
+        $suppliers = Supplier::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
     
         return view('Recibo.create', compact('suppliers'));
     }
@@ -34,20 +34,20 @@ class Controller_Format_Receipt extends Controller
      */
     public function store(Request $request)
     {
-        $recibo = new Model_Receipt();
-        $recibo->delivery_date = $request->delivery_date;
-        $recibo->origin = $request->origin;
-
-        // Asignar el cliente y el código del cliente desde la tabla suppliers
-        $recibo->customer = $request->customer;
-        $recibo->code_customer = $request->code_customer;
-
-        $recibo->driver = $request->driver;
-        $recibo->plate = $request->plate;
-        $recibo->num_vehicle = $request->num_vehicle;
+        $request->validate([
+            'delivery_date' => 'required|date',
+            'origin' => 'required',
+            'customer' => 'required',
+            'code_customer' => 'required',
+            'driver' => 'required',
+            'plate' => 'required',
+            'num_vehicle' => 'required',
+        ]);
+    
+        $recibo = new Model_Receipt($request->all());
         $recibo->state = 1;
         $recibo->save();
-
+    
         return redirect(route('recibo.index'));
     }
 

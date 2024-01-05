@@ -75,6 +75,8 @@
                 <option value="rigido_G">Rigido G</option>
                 <option value="flexible_P">Flexible P</option>
                 <option value="flexible_G">Flexible G</option>
+                <option value="No_aplica">No aplica</option>
+
             </select>
             <div id="typeError" class="text-danger"></div>
         </div>
@@ -86,7 +88,8 @@
                 <option value="" disabled selected>Seleccionar contenido</option>
                 <option value="aderezos">Aderezos</option>
                 <option value="limpieza">Limpieza</option>
-                <option value="otros">Otros</option>
+                <option value="No_aplica">No aplica</option>
+
             </select>
             <div id="contentError" class="text-danger"></div>
         </div>
@@ -98,6 +101,8 @@
                 <option value="" disabled selected>Seleccionar estado del producto</option>
                 <option value="sucio">Sucio</option>
                 <option value="limpio">Limpio</option>
+                <option value="No_aplica">No aplica</option>
+
             </select>
             <div id="productStatusError" class="text-danger"></div>
         </div>
@@ -109,6 +114,8 @@
                 <option value="" disabled selected>Seleccionar color</option>
                 <option value="colores">Colores</option>
                 <option value="neutro">Neutro</option>
+                <option value="No_aplica">No aplica</option>
+
             </select>
             <div id="colorError" class="text-danger"></div>
         </div>
