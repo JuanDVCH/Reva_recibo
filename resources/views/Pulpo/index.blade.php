@@ -15,6 +15,8 @@
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center">
+            </div>
+            <div class="card-body d-flex justify-content-center">
 
                 <div class="table-responsive" style="width: 80%;">
                     <table class="table table-striped table-hover table-bordered">
@@ -83,20 +85,21 @@
                     </table>
                 </div>
             </div>
+            </div>
         </div>
-        <div class="modal fade" id="createPulpoModal" tabindex="-1" role="dialog" aria-labelledby="createPulpoModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createPulpoModalLabel">Crear Pulpo</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @include('pulpo.form') <!-- Asegúrate de tener un formulario aquí -->
-                    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createPulpoModal" tabindex="-1" role="dialog" aria-labelledby="createPulpoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPulpoModalLabel">Crear Pulpo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @include('pulpo.form') <!-- Asegúrate de tener un formulario aquí -->
                 </div>
             </div>
         </div>
@@ -104,7 +107,9 @@
 
     <!-- Enlace al archivo de estilos -->
     <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
-    <script src="{{ asset('js/Modals.js') }}"></script>
+    <!-- Bootstrap JS (asegúrate de que se haya cargado antes de tu script Modals.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
     <script>
         document.getElementById("filterOrderNum").addEventListener("input", function() {
             applyFilters();
@@ -159,6 +164,21 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+    </script>
+    <script>
+        document.getElementById("filterSupplier").addEventListener("input", function() {
+            filterSuppliers();
+        });
+    
+        function filterSuppliers() {
+            var filterValue = document.getElementById("filterSupplier").value.toLowerCase();
+            var options = document.getElementById("supplierSelect").options;
+    
+            for (var i = 0; i < options.length; i++) {
+                var optionText = options[i].text.toLowerCase();
+                options[i].style.display = optionText.includes(filterValue) ? "" : "none";
+            }
         }
     </script>
 @endsection

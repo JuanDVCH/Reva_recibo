@@ -34,15 +34,7 @@ class Controller_Format_Receipt extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'delivery_date' => 'required|date',
-            'origin' => 'required',
-            'customer' => 'required',
-            'code_customer' => 'required',
-            'driver' => 'required',
-            'plate' => 'required',
-            'num_vehicle' => 'required',
-        ]);
+
     
         $recibo = new Model_Receipt($request->all());
         $recibo->state = 1;

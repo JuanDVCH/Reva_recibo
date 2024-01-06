@@ -54,15 +54,12 @@
             </div>
 
             <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog"
-                aria-labelledby="createReceiptModal" aria-hidden="true">
+                aria-labelledby="createReceiptModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="createReceiptModalLabel">Crear un nuevo recibo</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            onclick="closePdfModal()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             @include('recibo.form') <!-- Asegúrate de tener un formulario aquí -->
@@ -72,6 +69,5 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/Modals.js') }}"></script>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -7,18 +7,27 @@
         </div>
         <div class="col-md-6">
             <label for="inputorigin" class="form-label">Origen</label>
-            <input type="text" class="form-control" id="inputorigin" name="origin" >
+            <input type="text" class="form-control" id="inputorigin" name="origin">
         </div>
-        <div class="col-md-6">
-            <label for="inputcustomer" class="form-label">Cliente</label>
-            <select class="form-select" id="inputcustomer" name="customer" required>
-                <option value="" disabled selected>Seleccione una opción</option>
-                @foreach($suppliers as $supplier)
-                    <option value="{{ $supplier->id }}" data-code="{{ $supplier->code }}">{{ $supplier->name }}</option>
-                @endforeach
-            </select>
+        <div class="col-md-6 d-flex">
+            <div class="me-2 flex-grow-1">
+                <label for="customer" class="form-label">Buscar</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="customerFilter" placeholder="Buscar clientes">
+                </div>
+            </div>
+            <div class="flex-grow-1">
+                <label for="customer" class="form-label">Seleccionar Cliente</label>
+                <select class="form-select custom-select" id="customer" name="customer" style="width: 100%;" required>
+                    <option value="" disabled selected>Seleccione un cliente</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->name }}" data-code="{{ $supplier->code }}">{{ $supplier->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
-        
+
         <div class="col-md-6">
             <label for="inputcode_customer" class="form-label">Código del cliente</label>
             <input type="text" class="form-control" id="inputcode_customer" name="code_customer" required readonly>
@@ -45,15 +54,26 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    // Script para seleccionar automáticamente el código del cliente
-    $(document).ready(function () {
-        $('#inputcustomer').change(function () {
+    $(document).ready(function() {
+        // Evento para el filtrado de opciones del select
+        $('#customerFilter').on('input', function() {
+            var filterValue = $(this).val().toLowerCase();
+
+            // Filtrar opciones del select
+            $('#customer option').filter(function() {
+                var optionText = $(this).text().toLowerCase();
+                $(this).toggle(optionText.indexOf(filterValue) > -1);
+            });
+        });
+
+        // Script para seleccionar automáticamente el código del cliente
+        $('#customer').change(function() {
             var selectedCode = $(this).find(':selected').data('code');
             $('#inputcode_customer').val(selectedCode);
         });
 
         // Seleccionar automáticamente al cargar la página
-        var selectedCode = $('#inputcustomer').find(':selected').data('code');
+        var selectedCode = $('#customer').find(':selected').data('code');
         $('#inputcode_customer').val(selectedCode);
     });
 </script>

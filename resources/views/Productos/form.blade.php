@@ -4,6 +4,11 @@
     <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
         <div class="col-md-6">
+            <label for="inputFiltrarOrderNum" class="form-label">Filtrar Número de recibo</label>
+            <input type="text" class="form-control" id="inputFiltrarOrderNum" placeholder="Buscar recibo">
+        </div>
+        
+        <div class="col-md-6">
             <label for="inputOrderNum" class="form-label">Número de recibo</label>
             <select class="form-control" name="orden_num" id="inputOrderNum" required>
                 <option disabled selected value="">Selecciona un recibo</option>
@@ -14,6 +19,11 @@
         </div>
 
         <div class="col-md-6">
+            <label for="inputFiltrarSku" class="form-label">Filtrar SKU</label>
+            <input type="text" class="form-control" id="inputFiltrarSku" placeholder="Buscar SKU">
+        </div>
+        
+        <div class="col-md-6">
             <label for="inputSku" class="form-label">SKU</label>
             <select class="form-control" id="inputSku" name="sku" required>
                 <option value="" disabled selected>Selecciona un SKU</option>
@@ -22,7 +32,6 @@
                 @endforeach
             </select>
         </div>
-
         <div class="col-md-12">
             <label for="inputDescripcion" class="form-label">Descripción</label>
             <select class="form-control" id="inputDescripcion" name="description" disabled required>
@@ -78,6 +87,42 @@
         // Evento para el cambio en el número de recibo
         $('#inputConsecutivo').on('change', function() {
             // ... (tu código existente)
+        });
+
+        // Evento para la entrada en el campo de filtrado de Número de recibo
+        $('#inputFiltrarOrderNum').on('input', function() {
+            var filtroOrderNum = $(this).val().trim().toLowerCase();
+            var $selectOrderNum = $('#inputOrderNum');
+
+            // Filtrar opciones del select
+            $selectOrderNum.find('option').filter(function() {
+                var orderNum = $(this).text().toLowerCase();
+                $(this).toggle(orderNum.indexOf(filtroOrderNum) > -1);
+            });
+
+            // Si hay solo una opción después del filtrado, seleccionarla automáticamente
+            var opcionesVisibles = $selectOrderNum.find('option:visible');
+            if (opcionesVisibles.length === 1) {
+                opcionesVisibles.prop('selected', true);
+            }
+        });
+
+        // Evento para la entrada en el campo de filtrado de SKU
+        $('#inputFiltrarSku').on('input', function() {
+            var filtroSku = $(this).val().trim().toLowerCase();
+            var $selectSku = $('#inputSku');
+
+            // Filtrar opciones del select
+            $selectSku.find('option').filter(function() {
+                var sku = $(this).text().toLowerCase();
+                $(this).toggle(sku.indexOf(filtroSku) > -1);
+            });
+
+            // Si hay solo una opción después del filtrado, seleccionarla automáticamente
+            var opcionesVisibles = $selectSku.find('option:visible');
+            if (opcionesVisibles.length === 1) {
+                opcionesVisibles.prop('selected', true);
+            }
         });
 
         // Evento para la entrada en el campo SKU
@@ -140,6 +185,7 @@
         });
     });
 </script>
+
 <script>
     function actualizarPesoNeto() {
         // Actualizar peso neto
