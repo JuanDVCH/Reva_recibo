@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modals.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -56,9 +58,10 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/home') }}">
-                    Inicio
-                </a>
+               <a class="navbar-brand" href="{{ url('/home') }}">Inicio</a>
+                <a href="{{ route('recibo.index') }}" class="btn btn-dark">Recibos</a>
+                <a href="{{ route('etiqueta.index') }}" class="btn btn-dark">Etiquetas</a>
+                <a href="{{ route('pulpo.index') }}" class="btn btn-dark">Pulpo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="{{ __('Toggle navigation') }}">

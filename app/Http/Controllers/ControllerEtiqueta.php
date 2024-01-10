@@ -8,6 +8,8 @@ use App\Models\Code_products;
 use App\Models\Model_Products;
 use App\Models\Etiqueta;
 use PDF;
+use Illuminate\Support\Facades\Log; // Add this line
+
 //use Imagick;
 
 class ControllerEtiqueta extends Controller
@@ -39,27 +41,31 @@ class ControllerEtiqueta extends Controller
 
     public function store(Request $request)
     {
-        $etiqueta = new Etiqueta($request->all());
-        $etiqueta->order_num = $request->order_num;
-        $etiqueta->sku = $request->sku;
-        $etiqueta->description = $request->description;
-        $etiqueta->delivery_date = $request->delivery_date;
-        $etiqueta->origin = $request->origin;
-        $etiqueta->amount = $request->amount;
-        $etiqueta->weight = $request->weight;
-        $etiqueta->type = $request->type;
-        $etiqueta->content = $request->content;
-        $etiqueta->product_status = $request->product_status;
-        $etiqueta->color = $request->color;
-
-        $etiqueta->barcode = $request->barcode;
-        
-        $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
-        $etiqueta->save();
-        
-        return redirect()->route('etiqueta.index');
-        //return redirect(route('etiqueta.index'))->with('agregar', 'continuar');
+        try {
+            $etiqueta = new Etiqueta($request->all());
+            $etiqueta->order_num = $request->order_num;
+            $etiqueta->sku = $request->sku;
+            $etiqueta->description = $request->description;
+            $etiqueta->delivery_date = $request->delivery_date;
+            $etiqueta->origin = $request->origin;
+            $etiqueta->amount = $request->amount;
+            $etiqueta->weight = $request->weight;
+            $etiqueta->type = $request->type;
+            $etiqueta->content = $request->content;
+            $etiqueta->product_status = $request->product_status;
+            $etiqueta->color = $request->color;
+            $etiqueta->barcode = $request->barcode;
+            $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
+            $etiqueta->save();
+    
+            return redirect()->route('etiqueta.index');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Ocurrió un error al intentar guardar el producto.']);
+        }
     }
+
+    
 
     public function show(string $order_num)
     {

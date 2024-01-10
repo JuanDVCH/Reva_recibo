@@ -1,43 +1,76 @@
-/* Estilos mejorados para la tarjeta (card) */
-.card {
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
-    transition: box-shadow 0.3s ease-in-out; /* Transición suave para la sombra */
-}
-
-.card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Cambia la sombra al hacer hover */
-}
-
-.card-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
     padding: 20px;
 }
 
-/* Estilos mejorados para la imagen redonda (rounded-img) */
-.rounded-img {
-    border-radius: 50%;
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
     overflow: hidden;
+    width: 80%;
+    display: flex;
     margin: 0 auto;
-    max-width: 120px; /* Aumenta el tamaño máximo de la imagen */
-    margin-top: -80px; /* Ajusta la posición de la imagen debajo del contenido */
-    position: relative;
-    z-index: 1;
-    float: right;
-    margin-right: 20px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra más suave */
 }
 
-.rounded-img img {
+.col-md-4 {
+    max-width: 200px;
+    overflow: hidden;
+    border-radius: 10px 0 0 10px;
+}
+
+.col-md-4 img {
     width: 100%;
-    height: auto;
-    border: 3px solid #fff; /* Borde más grueso y blanco */
-    transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
+    border-radius: 10px 0 0 10px;
 }
 
-.rounded-img:hover img {
-    transform: scale(1.1);
-    border: 3px solid #3498db; /* Cambia el color del borde al hacer hover */
+.col-md-8 {
+    padding: 20px;
+}
+
+.card-body {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+.card-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.card-text {
+    font-size: 18px;
+    color: #495057;
+}
+
+.strong-text {
+    font-weight: bold;
+}
+
+.barcode-container {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.barcode-image {
+    max-width: 100%;
+}
+
+.barcode-text {
+    font-size: 18px;
+    color: #495057;
 }
