@@ -26,7 +26,7 @@
                             <img class="d-block w-100" src="img/reva.jpg" alt="">
                         </div>
                         <div class="carousel-item">
-                            <img class="d-block w-100" src="img/reva.jpg" alt="">
+                            <img class="d-block w-100" src="img/3.png" alt="">
                         </div>
                         <div class="carousel-item">
                             <img class="d-block w-100" src="img/reva.jpg" alt="">
@@ -44,7 +44,7 @@
                 <div class="card mb-3">
                     <div class="row no-gutters">
                         <div class="col-md-4">
-                            <img src="img/reva2.jpg" class="card-img" alt="">
+                            <img src="img/2.jpg" class="card-img" alt="">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -61,7 +61,7 @@
                 <div class="card mb-3">
                     <div class="row no-gutters">
                         <div class="col-md-4">
-                            <img src="img/reva2.jpg" class="card-img" alt="">
+                            <img src="img/1.jpg" class="card-img" alt="">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -76,8 +76,7 @@
         </div>
     </div>
 
-    <br>
-    <br>
 
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
 @endsection

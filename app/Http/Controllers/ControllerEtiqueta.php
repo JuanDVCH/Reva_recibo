@@ -24,11 +24,11 @@ class ControllerEtiqueta extends Controller
             ->distinct()
             ->orderBy('tags.delivery_date', 'desc') // Corregir el orden por fecha de entrega
             ->paginate(15);
-    
+
         // Obtener la lista de recibos y productos solo si es necesario
         $recibos = Model_Receipt::where('state', 1)->get();
         $productos = Model_Products::where('state', 1)->get();
-    
+
         return view('etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
     }
 
@@ -57,7 +57,7 @@ class ControllerEtiqueta extends Controller
             $etiqueta->barcode = $request->barcode;
             $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
             $etiqueta->save();
-    
+
             return redirect()->route('etiqueta.index');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -65,7 +65,7 @@ class ControllerEtiqueta extends Controller
         }
     }
 
-    
+
 
     public function show(string $order_num)
     {
@@ -85,7 +85,7 @@ class ControllerEtiqueta extends Controller
         return $pdf->stream('etiqueta.pdf');
     }
 
-    
+
     public function obtenerSkus(Request $request)
     {
         $orderNum = $request->input('orderNum');
@@ -110,10 +110,28 @@ class ControllerEtiqueta extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function obtenerBarcodePorSku(Request $request)
+    {
+        try {
+            $sku = $request->input('sku');
+            $barcode = Code_products::where('sku', $sku)->value('barcode');
+
+            if ($barcode === null) {
+                throw new \Exception("No se encontró código de barras para el SKU: $sku");
+            }
+
+            return response()->json(['barcode' => $barcode]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
 
 
 }
-    
-    
+
+
 
 

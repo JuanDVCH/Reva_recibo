@@ -2,13 +2,13 @@
 
 <form class="formulario-estilos" method="POST" action="{{ route('pulpo.store') }}" id="pulpoForm">
     @csrf
-    <div class="form-group row g-2">
-        <div class="form-group col-md-6">
+    <div class="form-group row g-3">
+        <div class="form-group col-md-4">
             <label for="filterOrderNum">Filtrar por Número de Recibo</label>
             <input type="text" class="form-control" id="filterOrderNum">
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label for="inputOrderNum">Número de recibo</label>
             <select class="form-control" name="order_num" id="inputOrderNum" required>
                 <option disabled selected value="">Selecciona un recibo</option>
@@ -17,13 +17,7 @@
                 @endforeach
             </select>
         </div>
-    </div>
-    <div class="form-group row g-2">
-        <div class="form-group col-md-6">
-            <label for="filterSku">Filtrar por SKU</label>
-            <input type="text" class="form-control" id="filterSku">
-        </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label for="inputSku">Sku</label>
             <select class="form-control" name="sku" id="inputSku" required>
                 <option value="" disabled selected>Seleccionar código del producto</option>
@@ -32,12 +26,14 @@
         </div>
     </div>
 
-    <div class="form-group row g-2">
-        <div class="form-group col-md-6">
+
+
+    <div class="form-group row g-3">
+        <div class="form-group col-md-4">
             <label for="filterSupplier">Filtrar por Proveedor</label>
             <input type="text" class="form-control" id="filterSupplier">
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label for="inputSupplierCode">Código de Proveedor</label>
             <select class="form-control" name="supplier_code" id="inputSupplierCode" required>
                 <option value="" disabled selected>Seleccionar proveedor</option>
@@ -46,32 +42,29 @@
                 @endforeach
             </select>
         </div>
-    </div>
-    <div class="form-group row g-2">
-    <div class="col-md-6">
-        <label for="deliveryDate">Fecha de Entrega:</label>
-        <input type="date" name="delivery_date" class="form-control" required>
+        <div class="col-md-4">
+            <label for="deliveryDate">Fecha de Entrega:</label>
+            <input type="date" name="delivery_date" class="form-control" required>
+        </div>
     </div>
 
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-12">
         <label for="notes">Notas:</label>
         <textarea name="notes" class="form-control"></textarea>
     </div>
 
-    <div class="form-group row g-3">
-        <div class="col-md-4">
+    <div class="form-group row g-2">
+        <div class="col-md-6">
             <label for="requested_quantity">Peso Neto:</label>
             <input type="text" name="requested_quantity" id="pesoNeto" class="form-control" readonly>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label for="criterium">Criterio:</label>
             <input type="text" name="criterium" class="form-control" required>
         </div>
-        <div class="col-md-4">
-            <label for="merchantSlug">Comerciante:</label>
-            <input type="text" name="merchant_slug" class="form-control" required>
-        </div>
+
+
     </div>
 
     <div class="form-group row g-2">
@@ -96,7 +89,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    
     $(document).ready(function() {
         // Almacena las opciones originales del campo SKU
         var originalSkuOptions = $('#inputSku').html();

@@ -10,23 +10,19 @@
                         data-bs-target="#createPulpoModal">
                         Crear Pulpo
                     </button>
-                    <a href="{{ route('home') }}" class="btn btn-secondary ml-2">Volver Atrás</a>
                     <button class="btn btn-info ml-2" onclick="exportarCSV()">Exportar a CSV</button>
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center">
-            </div>
-            <div class="card-body d-flex justify-content-center">
-
-                <div class="table-responsive" style="width: 80%;">
+                <div class="table-responsive table-fixed-header">
                     <table class="table table-striped table-hover table-bordered">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>supplier_code</th>
-                                <th>order_num<input type="text" id="filterOrderNum"></th>
+                                <th>order_num<input type="text" id="filterOrderNum" class="form-control"></th>
                                 <th>notes</th>
-                                <th>delivery_date</th>
-                                <th>sku<input type="text" id="filterSKU"></th>
+                                <th>delivery_date<input type="text" id="filterDeliveryDate" class="form-control"></th>
+                                <th>sku<input type="text" id="filterSKU" class="form-control"></th>
                                 <th>requested_quantity</th>
                                 <th>criterium</th>
                                 <th>merchant_slug</th>
@@ -34,57 +30,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $orders = [];
-                            @endphp
-
                             @forelse ($pulpos as $order)
-                                @php
-                                    $orderKey = $order->order_num . '-' . $order->sku;
-                                @endphp
-
-                                @if (isset($orders[$orderKey]))
-                                    @php
-                                        $orders[$orderKey]['requested_quantity'] += $order->requested_quantity;
-                                    @endphp
-                                @else
-                                    @php
-                                        $orders[$orderKey] = [
-                                            'supplier_code' => $order->supplier_code,
-                                            'order_num' => $order->order_num,
-                                            'notes' => $order->notes,
-                                            'delivery_date' => $order->delivery_date,
-                                            'sku' => $order->sku,
-                                            'requested_quantity' => $order->requested_quantity,
-                                            'criterium' => $order->criterium,
-                                            'merchant_slug' => $order->merchant_slug,
-                                            'merchant_channel_slug' => $order->merchant_channel_slug,
-                                        ];
-                                    @endphp
-                                @endif
+                                <tr>
+                                    <td>{{ $order->supplier_code }}</td>
+                                    <td>{{ $order->order_num }}</td>
+                                    <td>{{ $order->notes }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($order->delivery_date)->format('Y-m-d') }}</td>
+                                    <td>{{ $order->sku }}</td>
+                                    <td>{{ $order->requested_quantity }}</td>
+                                    <td>{{ $order->criterium }}</td>
+                                    <td>{{ $order->merchant_slug }}</td>
+                                    <td>{{ $order->merchant_channel_slug }}</td>
+                                </tr>
                             @empty
                                 <tr>
                                     <td colspan="9" class="text-center">No hay datos disponibles</td>
                                 </tr>
                             @endforelse
-
-                            @foreach ($orders as $order)
-                                <tr>
-                                    <td>{{ $order['supplier_code'] }}</td>
-                                    <td>{{ $order['order_num'] }}</td>
-                                    <td>{{ $order['notes'] }}</td>
-                                    <td>{{ $order['delivery_date'] }}</td>
-                                    <td>{{ $order['sku'] }}</td>
-                                    <td>{{ $order['requested_quantity'] }}</td>
-                                    <td>{{ $order['criterium'] }}</td>
-                                    <td>{{ $order['merchant_slug'] }}</td>
-                                    <td>{{ $order['merchant_channel_slug'] }}</td>
-                                </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
+            
+            <div class="card-footer">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                        <!-- ... (otros elementos) ... -->
+                        <li class="page-item {{ $pulpos->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $pulpos->previousPageUrl() }}" tabindex="-1">Previous</a>
+                        </li>
+                        @for ($i = 1; $i <= $pulpos->lastPage(); $i++)
+                            <li class="page-item {{ $pulpos->currentPage() == $i ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $pulpos->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="page-item {{ $pulpos->currentPage() == $pulpos->lastPage() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $pulpos->nextPageUrl() }}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -106,12 +90,17 @@
     </div>
 
     <!-- Enlace al archivo de estilos -->
-    <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tablestyles.css') }}">
     <!-- Bootstrap JS (asegúrate de que se haya cargado antes de tu script Modals.js) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
+
+    <!-- Tu script JavaScript para exportar a CSV y filtros -->
     <script>
         document.getElementById("filterOrderNum").addEventListener("input", function() {
+            applyFilters();
+        });
+
+        document.getElementById("filterDeliveryDate").addEventListener("input", function() {
             applyFilters();
         });
 
@@ -120,17 +109,20 @@
         });
 
         function applyFilters() {
-            
             var filterOrderNum = document.getElementById("filterOrderNum").value.toLowerCase();
+            var filterDeliveryDate = document.getElementById("filterDeliveryDate").value.toLowerCase();
             var filterSKU = document.getElementById("filterSKU").value.toLowerCase();
 
             var tableRows = document.querySelectorAll("table tbody tr");
 
             tableRows.forEach(function(row) {
                 var orderNum = row.cells[1].innerText.toLowerCase();
+                var deliveryDate = row.cells[3].innerText.toLowerCase();
                 var sku = row.cells[4].innerText.toLowerCase();
 
-                row.style.display = orderNum.includes(filterOrderNum) && sku.includes(filterSKU) ? "" : "none";
+                row.style.display = orderNum.includes(filterOrderNum) && 
+                                   deliveryDate.includes(filterDeliveryDate) && 
+                                   sku.includes(filterSKU) ? "" : "none";
             });
         }
 

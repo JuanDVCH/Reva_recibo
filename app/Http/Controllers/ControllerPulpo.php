@@ -14,12 +14,10 @@ class ControllerPulpo extends Controller
     public function index(Request $request)
     {
         $order_number = $request->input('order_num');
-
+    
         $skus = Code_products::all();
-        // Cargar proveedores
-        $suppliers = Supplier::all(); // Ajusta esto según tus necesidades
-
-        // Cargar pulpos con la relación 'supplier'
+        $suppliers = Supplier::all();
+    
         $pulpos = Pulpo::with('supplier')
             ->where('state', 1)
             ->when($order_number, function ($query) use ($order_number) {
@@ -27,15 +25,12 @@ class ControllerPulpo extends Controller
                     $subQuery->where('order_num', $order_number);
                 });
             })
-            ->get();
-
+            ->paginate(10); // Ajusta el número de elementos por página según tus necesidades
+    
         $recibos = Model_Receipt::where('state', 1)->get();
-
-
-        // Pasar $suppliers y $skus a la vista
+    
         return view('pulpo.index', compact('pulpos', 'order_number', 'recibos', 'suppliers', 'skus'));
     }
-
 
     public function create(Request $request)
     {
