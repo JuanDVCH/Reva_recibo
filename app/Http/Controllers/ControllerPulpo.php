@@ -126,4 +126,20 @@ class ControllerPulpo extends Controller
 
     return response()->json($pesoNeto);
 }
+public function filtrar(Request $request)
+{
+    // Recibe los datos del formulario
+    $filterOrderNum = $request->input('filterOrderNum');
+    $filterSupplier = $request->input('filterSupplier');
+    // Otros campos del formulario
+
+    // Realiza la consulta en base a los filtros
+    $resultados = Pulpo::where('order_num', 'like', "%$filterOrderNum%")
+        ->where('supplier', 'like', "%$filterSupplier%")
+        // Agrega más condiciones según sea necesario
+        ->get();
+
+    // Retorna los resultados al frontend (puedes utilizar un formato JSON)
+    return response()->json($resultados);
+}
 }

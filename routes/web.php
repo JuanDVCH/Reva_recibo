@@ -5,6 +5,17 @@ use App\Http\Controllers\Controller_Format_Receipt;
 use App\Http\Controllers\Controller_Create_Products;
 use App\Http\Controllers\ControllerPulpo;
 
+
+Route::middleware(['web', 'auth'])->group(function () {
+    // Otras rutas autenticadas si las tienes
+
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+});
+
+// Rutas de autenticación proporcionadas por Laravel
+Auth::routes();
+
 Route::get('/', function () {
     return view('auth.Login');
 });
@@ -38,6 +49,7 @@ Route::resource('Pulpo', ControllerPulpo::class)->names('pulpo');
 Route::get('/obtener-skus', [ControllerPulpo::class, 'obtenerSkus'])->name('pulpo.obtener-skus');
 Route::get('/pulpo/obtener-peso-neto', [ControllerPulpo::class, 'obtenerPesoNeto'])->name('pulpo.obtener-peso-neto');
 
+Route::post('/pulpo/filtrar', 'ControllerPulpo@filtrar')->name('pulpo.filtrar');
 
 Route::get('/productos/form/{order_num}', 'Controller_Create_Products@show')->name('productos.form');
 Route::get('/pulpo/form/{order_num}', 'ControllerPulpo@showPulpo')->name('pulpo.form');

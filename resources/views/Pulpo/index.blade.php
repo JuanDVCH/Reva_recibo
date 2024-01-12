@@ -2,73 +2,112 @@
 
 @section('content')
     <div class="container mt-5 mb-5">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3>Pulpo WMS</h3>
-                <div class="d-flex">
-                    <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal"
-                        data-bs-target="#createPulpoModal">
-                        Crear Pulpo
-                    </button>
-                    <button class="btn btn-info ml-2" onclick="exportarCSV()">Exportar a CSV</button>
+        <div class="row">
+            <!-- Contenedor del menú de filtros a la izquierda -->
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4 class="mb-0">Filtros</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Campos de filtro -->
+                        <div class="form-group">
+                            <label for="filterOrderNum">Order Num:</label>
+                            <input type="text" id="filterOrderNum" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filterDeliveryDate">Delivery Date:</label>
+                            <input type="text" id="filterDeliveryDate" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="filterSKU">SKU:</label>
+                            <input type="text" id="filterSKU" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-danger btn-block" onclick="clearFilters()">Eliminar Filtros</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="card-body d-flex justify-content-center">
-                <div class="table-responsive table-fixed-header">
-                    <table class="table table-striped table-hover table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>supplier_code</th>
-                                <th>order_num<input type="text" id="filterOrderNum" class="form-control"></th>
-                                <th>notes</th>
-                                <th>delivery_date<input type="text" id="filterDeliveryDate" class="form-control"></th>
-                                <th>sku<input type="text" id="filterSKU" class="form-control"></th>
-                                <th>requested_quantity</th>
-                                <th>criterium</th>
-                                <th>merchant_slug</th>
-                                <th>merchant_channel_slug</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($pulpos as $order)
-                                <tr>
-                                    <td>{{ $order->supplier_code }}</td>
-                                    <td>{{ $order->order_num }}</td>
-                                    <td>{{ $order->notes }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($order->delivery_date)->format('Y-m-d') }}</td>
-                                    <td>{{ $order->sku }}</td>
-                                    <td>{{ $order->requested_quantity }}</td>
-                                    <td>{{ $order->criterium }}</td>
-                                    <td>{{ $order->merchant_slug }}</td>
-                                    <td>{{ $order->merchant_channel_slug }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">No hay datos disponibles</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+
+            <!-- Contenedor de la tabla a la derecha -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header flex justify-between items-center bg-blue-500 text-white">
+                        <h3 class="m-0">Pulpo WMS</h3>
+                        <div class="flex">
+                            <button type="button" class="btn btn-primary ml-2" data-bs-toggle="modal"
+                                data-bs-target="#createPulpoModal">
+                                Crear Pulpo
+                            </button>
+                            <button class="btn btn-info ml-2" onclick="exportarCSV()">Exportar a CSV</button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive table-fixed-header">
+                            <table class="table w-full border border-gray-300">
+                                <thead class="bg-blue-200 text-blue-800">
+                                    <tr>
+                                        <th class="border-r border-gray-300">supplier_code</th>
+                                        <th class="border-r border-gray-300">order_num</th>
+                                        <th class="border-r border-gray-300">notes</th>
+                                        <th class="border-r border-gray-300">delivery_date</th>
+                                        <th class="border-r border-gray-300">sku</th>
+                                        <th class="border-r border-gray-300">requested_quantity</th>
+                                        <th class="border-r border-gray-300">criterium</th>
+                                        <th class="border-r border-gray-300">merchant_slug</th>
+                                        <th>merchant_channel_slug</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($pulpos as $order)
+                                        <tr>
+                                            <td class="border-r border-gray-300">{{ $order->supplier_code }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->order_num }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->notes }}</td>
+                                            <td class="border-r border-gray-300">
+                                                {{ \Carbon\Carbon::parse($order->delivery_date)->format('Y-m-d') }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->sku }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->requested_quantity }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->criterium }}</td>
+                                            <td class="border-r border-gray-300">{{ $order->merchant_slug }}</td>
+                                            <td>{{ $order->merchant_channel_slug }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9" class="text-center">No hay datos disponibles</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination flex justify-end">
+                                <!-- ... (otros elementos) ... -->
+                                <li class="page-item {{ $pulpos->onFirstPage() ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ $pulpos->previousPageUrl() }}"
+                                        tabindex="-1">Previous</a>
+                                </li>
+                                @for ($i = 1; $i <= $pulpos->lastPage(); $i++)
+                                    <li class="page-item {{ $pulpos->currentPage() == $i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $pulpos->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+                                <li
+                                    class="page-item {{ $pulpos->currentPage() == $pulpos->lastPage() ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ $pulpos->nextPageUrl() }}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="card-footer">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-end">
-                        <!-- ... (otros elementos) ... -->
-                        <li class="page-item {{ $pulpos->onFirstPage() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $pulpos->previousPageUrl() }}" tabindex="-1">Previous</a>
-                        </li>
-                        @for ($i = 1; $i <= $pulpos->lastPage(); $i++)
-                            <li class="page-item {{ $pulpos->currentPage() == $i ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $pulpos->url($i) }}">{{ $i }}</a>
-                            </li>
-                        @endfor
-                        <li class="page-item {{ $pulpos->currentPage() == $pulpos->lastPage() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $pulpos->nextPageUrl() }}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
@@ -89,8 +128,11 @@
         </div>
     </div>
 
-    <!-- Enlace al archivo de estilos -->
-    <link rel="stylesheet" href="{{ asset('css/tablestyles.css') }}">
+    <!-- Enlace al archivo de estilos de Tailwind -->
+    <link rel="stylesheet" href="{{ asset('css/pulpo.css') }}">
+    <style>
+        /* Agrega tus estilos personalizados aquí si es necesario */
+    </style>
     <!-- Bootstrap JS (asegúrate de que se haya cargado antes de tu script Modals.js) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -120,9 +162,9 @@
                 var deliveryDate = row.cells[3].innerText.toLowerCase();
                 var sku = row.cells[4].innerText.toLowerCase();
 
-                row.style.display = orderNum.includes(filterOrderNum) && 
-                                   deliveryDate.includes(filterDeliveryDate) && 
-                                   sku.includes(filterSKU) ? "" : "none";
+                row.style.display = orderNum.includes(filterOrderNum) &&
+                    deliveryDate.includes(filterDeliveryDate) &&
+                    sku.includes(filterSKU) ? "" : "none";
             });
         }
 
@@ -137,10 +179,10 @@
 
             var tableRows = document.querySelectorAll("table tbody tr");
 
-            tableRows.forEach(function (row) {
+            tableRows.forEach(function(row) {
                 if (row.style.display !== "none") {
                     var rowData = [];
-                    row.querySelectorAll("td").forEach(function (cell) {
+                    row.querySelectorAll("td").forEach(function(cell) {
                         rowData.push(cell.innerText);
                     });
                     filteredRows.push(rowData.join(","));
@@ -157,20 +199,17 @@
             link.click();
             document.body.removeChild(link);
         }
-    </script>
-    <script>
-        document.getElementById("filterSupplier").addEventListener("input", function() {
-            filterSuppliers();
-        });
-    
-        function filterSuppliers() {
-            var filterValue = document.getElementById("filterSupplier").value.toLowerCase();
-            var options = document.getElementById("supplierSelect").options;
-    
-            for (var i = 0; i < options.length; i++) {
-                var optionText = options[i].text.toLowerCase();
-                options[i].style.display = optionText.includes(filterValue) ? "" : "none";
-            }
+
+        function clearFilters() {
+            document.getElementById("filterOrderNum").value = "";
+            document.getElementById("filterDeliveryDate").value = "";
+            document.getElementById("filterSKU").value = "";
+
+            // Restaurar la visualización de todas las filas
+            var tableRows = document.querySelectorAll("table tbody tr");
+            tableRows.forEach(function(row) {
+                row.style.display = "";
+            });
         }
     </script>
 @endsection
