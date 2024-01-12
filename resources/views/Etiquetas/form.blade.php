@@ -147,7 +147,7 @@
 
             // Realiza una solicitud Ajax para obtener los SKUs relacionados con el número de recibo seleccionado
             $.ajax({
-                url: '{{ route('etiqueta.obtener-skus') }}', // Ajusta el nombre de la ruta según sea necesario
+                url: '{{ route('etiqueta.obtener-skus') }}',
                 type: 'GET',
                 data: {
                     orderNum: selectedOrderNum
@@ -157,7 +157,7 @@
                     $('#inputSku').empty();
                     $('#inputSku').append(
                         '<option value="" disabled selected>Seleccionar código del producto</option>'
-                    );
+                        );
                     $.each(data, function(key, value) {
                         $('#inputSku').append('<option value="' + value + '">' +
                             value + '</option>');
@@ -168,10 +168,7 @@
                 }
             });
         });
-    });
-</script>
-<script>
-    $(document).ready(function() {
+
         // Evento para el cambio en el número de recibo
         $('#inputConsecutivo').on('change', function() {
             // ... (tu código existente)
@@ -181,6 +178,7 @@
         $('#inputSku').on('change', function() {
             var sku = $(this).val().trim();
             var $descripcionSelect = $('#inputDescripcion');
+            var $barcodeInput = $('#inputBarcode');
 
             if (sku !== '') {
                 // Obtener el token CSRF
@@ -212,41 +210,38 @@
                             );
                     }
                 });
+
+                // Solicitud Ajax para obtener el código de barras
+                $.ajax({
+                    url: '{{ route('etiqueta.obtener-barcode-por-sku') }}',
+                    method: 'POST',
+                    data: {
+                        sku: sku,
+                        _token: csrfToken
+                    },
+                    success: function(response) {
+                        var barcode = response.barcode;
+
+                        // Actualizar el valor del campo Barcode
+                        $barcodeInput.val(barcode);
+
+                        // Restablecer el mensaje de error
+                        $('#barcodeError').text('');
+                    },
+                    error: function() {
+                        // Manejar el error si es necesario
+                        $barcodeInput.val('');
+
+                        // Mostrar un mensaje de error
+                        $('#barcodeError').text('Error al obtener el código de barras');
+                    }
+                });
             } else {
                 // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
                 $descripcionSelect.prop('disabled', true).html(
                     '<option value="" selected>Selecciona un SKU primero</option>');
             }
         });
-
-        // Botón Limpiar
-        $('#limpiarBtn').on('click', function() {
-            // Restablecer el formulario a su estado original
-            $('#productoForm')[0].reset();
-
-            // Ocultar mensajes de error
-            $('#consecutivoError, #descripcionError, #umbError, #cantidadError, #brutoError, #empaqueError, #netoError')
-                .text('');
-
-            // Deshabilitar select de descripción
-            $('#inputDescripcion').prop('disabled', true).html(
-                '<option value="" selected>Selecciona un SKU primero</option>');
-
-            // Restablecer el resultado de Peso Neto
-            $('#resultadoNeto').text('');
-
-            // Restablecer el valor del campo oculto de Peso Neto
-            $('#inputNeto').val('');
-
-            // Restablecer el valor del campo oculto de Descripción
-            $('#hiddenDescripcion').val('');
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        // Almacena las opciones originales del campo SKU
-        var originalSkuOptions = $('#inputSku').html();
 
         // Botón Limpiar
         $('#etiquetaForm').on('reset', function() {
@@ -261,74 +256,4 @@
                 '<option value="" selected>Selecciona un SKU primero</option>');
         });
     });
-</script>
-
-<script>
-    $(document).ready(function() {
-    // Evento para el cambio en el número de recibo
-    $('#inputConsecutivo').on('change', function() {
-        // ... (tu código existente)
-    });
-
-    // Evento para la entrada en el campo SKU
-    $('#inputSku').on('change', function() {
-        var sku = $(this).val().trim();
-        var $barcodeInput = $('#inputBarcode');
-
-        if (sku !== '') {
-            // Obtener el token CSRF
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-            // Solicitud Ajax al controlador
-            $.ajax({
-                url: '{{ route('etiqueta.obtener-barcode-por-sku') }}', // Ajusta el nombre de la ruta según sea necesario
-                method: 'POST',
-                data: {
-                    sku: sku,
-                    _token: csrfToken
-                },
-                success: function(response) {
-                    var barcode = response.barcode;
-
-                    // Actualizar el valor del campo Barcode
-                    $barcodeInput.val(barcode);
-
-                    // Restablecer el mensaje de error
-                    $('#barcodeError').text('');
-                },
-                error: function() {
-                    // Manejar el error si es necesario
-                    $barcodeInput.val('');
-
-                    // Mostrar un mensaje de error
-                    $('#barcodeError').text('Error al obtener el código de barras');
-                }
-            });
-        } else {
-            // Si no hay SKU, restablecer el valor del campo Barcode y ocultar el mensaje de error
-            $barcodeInput.val('');
-            $('#barcodeError').text('');
-        }
-    });
-
-    // Botón Limpiar
-    $('#limpiarBtn').on('click', function() {
-        // Restablecer el formulario a su estado original
-        $('#productoForm')[0].reset();
-
-        // Ocultar mensajes de error
-        $('#consecutivoError, #descripcionError, #umbError, #cantidadError, #brutoError, #empaqueError, #netoError')
-            .text('');
-
-        // Deshabilitar el campo de Barcode
-        $('#inputBarcode').prop('disabled', true);
-
-        // Restablecer el valor del campo de Barcode
-        $('#inputBarcode').val('');
-
-        // Restablecer el mensaje de error del campo de Barcode
-        $('#barcodeError').text('');
-    });
-});
-
 </script>
