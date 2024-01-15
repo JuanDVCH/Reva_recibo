@@ -115,11 +115,11 @@ class ControllerEtiqueta extends Controller
         try {
             $sku = $request->input('sku');
             $barcode = Code_products::where('sku', $sku)->value('barcode');
-
+    
             if ($barcode === null) {
                 throw new \Exception("No se encontró código de barras para el SKU: $sku");
             }
-
+    
             return response()->json(['barcode' => $barcode]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

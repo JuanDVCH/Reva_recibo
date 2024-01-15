@@ -5,7 +5,7 @@
         @csrf
         <div class="col-md-6">
             <label for="inputFiltrarOrderNum" class="form-label">Filtrar Número de recibo</label>
-            <input type="text" class="form-control" id="inputFiltrarOrderNum" placeholder="Buscar recibo">
+            <input type="number" class="form-control" id="inputFiltrarOrderNum" placeholder="Buscar recibo">
         </div>
         
         <div class="col-md-6">

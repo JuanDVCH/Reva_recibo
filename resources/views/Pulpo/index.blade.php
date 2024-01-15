@@ -59,8 +59,6 @@
                                         <th class="border-r border-gray-300">sku</th>
                                         <th class="border-r border-gray-300">requested_quantity</th>
                                         <th class="border-r border-gray-300">criterium</th>
-                                        <th class="border-r border-gray-300">merchant_slug</th>
-                                        <th>merchant_channel_slug</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,8 +72,7 @@
                                             <td class="border-r border-gray-300">{{ $order->sku }}</td>
                                             <td class="border-r border-gray-300">{{ $order->requested_quantity }}</td>
                                             <td class="border-r border-gray-300">{{ $order->criterium }}</td>
-                                            <td class="border-r border-gray-300">{{ $order->merchant_slug }}</td>
-                                            <td>{{ $order->merchant_channel_slug }}</td>
+
                                         </tr>
                                     @empty
                                         <tr>

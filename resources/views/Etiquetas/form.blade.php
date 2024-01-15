@@ -35,11 +35,10 @@
         </div>
 
         <!-- Código de barras -->
+        <!-- Código de barras -->
         <div class="col-md-6">
-            <label for="inputDescripcion" class="form-label">Código de Barras</label>
-            <select class="form-control" id="inputBarcode" name="barcode" disabled required>
-                <option value="" selected>Selecciona un SKU primero</option>
-            </select>
+            <label for="inputBarcode" class="form-label">Código de Barras</label>
+            <input type="text" class="form-control" id="inputBarcode" name="barcode" readonly required>
             <div id="barcodeError" class="text-danger"></div>
             <input type="hidden" name="hidden_barcode" id="hiddenBarcode" required>
             <!-- Campo oculto para almacenar el barcode -->
@@ -134,6 +133,11 @@
         </div>
     </form>
 </div>
+
+
+<!-- Script JavaScript -->
+
+
 <!-- Script JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
@@ -157,36 +161,34 @@
                     $('#inputSku').empty();
                     $('#inputSku').append(
                         '<option value="" disabled selected>Seleccionar código del producto</option>'
-                        );
+                    );
                     $.each(data, function(key, value) {
                         $('#inputSku').append('<option value="' + value + '">' +
                             value + '</option>');
                     });
                 },
-                error: function(error) {
-                    console.error(error);
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud Ajax (obtener-skus):", status,
+                        error);
                 }
             });
-        });
-
-        // Evento para el cambio en el número de recibo
-        $('#inputConsecutivo').on('change', function() {
-            // ... (tu código existente)
         });
 
         // Evento para la entrada en el campo SKU
         $('#inputSku').on('change', function() {
             var sku = $(this).val().trim();
+            var selectedOrderNum = $('#inputOrderNum').val();
             var $descripcionSelect = $('#inputDescripcion');
             var $barcodeInput = $('#inputBarcode');
+            var $pesoNetoInput = $('#pesoNeto');
 
             if (sku !== '') {
                 // Obtener el token CSRF
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-                // Solicitud Ajax al controlador
+                // Solicitud Ajax al controlador para obtener la descripción
                 $.ajax({
-                    url: '{{ route('obtenerDescripcionPorSku') }}',
+                    url: '{{ route('etiqueta.obtener-descripcion-por-sku') }}',
                     method: 'POST',
                     data: {
                         sku: sku,
@@ -203,43 +205,63 @@
                         // Almacenar la descripción en el campo oculto
                         $('#hiddenDescripcion').val(descripcion);
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
+                        console.error(
+                            "Error en la solicitud Ajax (obtener-descripcion-por-sku):",
+                            status, error);
+
                         // Manejar el error si es necesario
                         $descripcionSelect.prop('disabled', true).html(
                             '<option value="" selected>Error al obtener la descripción</option>'
-                            );
+                        );
                     }
                 });
 
                 // Solicitud Ajax para obtener el código de barras
-                $.ajax({
-                    url: '{{ route('etiqueta.obtener-barcode-por-sku') }}',
-                    method: 'POST',
-                    data: {
-                        sku: sku,
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        var barcode = response.barcode;
+                $(document).ready(function() {
+                    $.ajax({
+                        url: '{{ route('etiqueta.obtener-barcode-por-sku') }}',
+                        method: 'POST',
+                        data: {
+                            sku: sku,
+                            _token: csrfToken
+                        },
+                        success: function(response) {
+                            console.log('Respuesta exitosa:', response);
 
-                        // Actualizar el valor del campo Barcode
-                        $barcodeInput.val(barcode);
+                            // Asegúrate de acceder a la propiedad correcta del objeto de respuesta
+                            var barcodeValue = response.barcode;
 
-                        // Restablecer el mensaje de error
-                        $('#barcodeError').text('');
-                    },
-                    error: function() {
-                        // Manejar el error si es necesario
-                        $barcodeInput.val('');
+                            // Actualizar el valor del campo Barcode
+                            $('#inputBarcode').val(barcodeValue);
 
-                        // Mostrar un mensaje de error
-                        $('#barcodeError').text('Error al obtener el código de barras');
-                    }
+                            // Restablecer el mensaje de error
+                            $('#barcodeError').text('');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(
+                                "Error en la solicitud Ajax (obtener-barcode-por-sku):",
+                                status, error);
+
+                            // Log del contenido de la respuesta del servidor
+                            console.log(xhr.responseText);
+
+                            // Manejar el error si es necesario
+                            $('#inputBarcode').val('');
+
+                            // Mostrar un mensaje de error
+                            $('#barcodeError').text(
+                                'Error al obtener el código de barras');
+                        }
+                    });
                 });
             } else {
                 // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
                 $descripcionSelect.prop('disabled', true).html(
                     '<option value="" selected>Selecciona un SKU primero</option>');
+
+                // Limpiar el valor del campo de peso neto
+                $pesoNetoInput.val('');
             }
         });
 
@@ -251,9 +273,10 @@
             // Ocultar mensajes de error
             $('.text-danger').text('');
 
-            // Deshabilitar select de descripción
+            // Deshabilitar select de descripción y peso neto
             $('#inputDescripcion').prop('disabled', true).html(
                 '<option value="" selected>Selecciona un SKU primero</option>');
+            $('#pesoNeto').val('');
         });
     });
 </script>

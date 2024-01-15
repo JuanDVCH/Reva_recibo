@@ -2,57 +2,62 @@
 
 @section('content')
     <div class="container mt-5 mb-5">
-        <div class="card rounded">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3>Formatos de recibo</h3>
-                <div class="d-flex">
-                    <button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal"
-                        data-bs-target="#createReceiptModal">
-                        Crear nuevo recibo
-                    </button>
-                </div>
-            </div>
-            
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover rounded">
-                        <caption>Lista de Recibos</caption>
-                        <thead>
-                            <tr>
-                                <th>Número de formato</th>
-                                <th>Fecha</th>
-                                <th>Origen</th>
-                                <th>Cliente</th>
-                                <th>Código del Cliente</th>
-                                <th>Conductor</th>
-                                <th>Placa</th>
-                                <th>Número de Vehículo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($recibos as $recibo)
-                                <tr data-recibo="{{ $recibo->order_num }}">
-                                    <td>{{ $recibo->order_num }}</td>
-                                    <td>{{ $recibo->delivery_date }}</td>
-                                    <td>{{ $recibo->origin }}</td>
-                                    <td>{{ $recibo->customer }}</td>
-                                    <td>{{ $recibo->code_customer }}</td>
-                                    <td>{{ $recibo->driver }}</td>
-                                    <td>{{ $recibo->plate }}</td>
-                                    <td>{{ $recibo->num_vehicle }}</td>
-                                    <td>
-                                        <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                            class="btn btn-info btn-sm rounded">Detalles</a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9">No hay datos disponibles</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="flex justify-between items-center">
+                            <h3>Formatos de recibo</h3>
+                            <div class="flex">
+                                <button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal"
+                                    data-bs-target="#createReceiptModal">
+                                    Crear nuevo recibo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="bg-blue-200 text-blue-800">
+                                    <tr>
+                                        <th class="border-r border-gray-300">Número de formato</th>
+                                        <th class="border-r border-gray-300">Fecha</th>
+                                        <th class="border-r border-gray-300">Origen</th>
+                                        <th class="border-r border-gray-300">Cliente</th>
+                                        <th class="border-r border-gray-300">Código del Cliente</th>
+                                        <th class="border-r border-gray-300">Conductor</th>
+                                        <th class="border-r border-gray-300">Placa</th>
+                                        <th class="border-r border-gray-300">Número de Vehículo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($recibos as $recibo)
+                                        <tr data-recibo="{{ $recibo->order_num }}">
+                                            <td class="border-r border-gray-300">{{ $recibo->order_num }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->delivery_date }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->origin }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->customer }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->code_customer }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->driver }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->plate }}</td>
+                                            <td class="border-r border-gray-300">{{ $recibo->num_vehicle }}</td>
+                                            <td>
+                                                <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
+                                                    class="btn btn-info btn-sm rounded">Detalles</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9">No hay datos disponibles</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

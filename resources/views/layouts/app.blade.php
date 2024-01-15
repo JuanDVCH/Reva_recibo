@@ -8,7 +8,6 @@
     <title>Reva</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Bootstrap JS y Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -22,7 +21,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/imprimir.css') }}">
     <link rel="stylesheet" href="{{ asset('css/forms.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+
 
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
@@ -129,11 +131,11 @@
         <script src="{{ asset('js/form-validation.js') }}" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="{{ asset('js/app.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
         <script src="{{ asset('js/Modals.js') }}"></script>
         <script src="{{ asset('js/filters.js') }}"></script>
         <script src="{{ asset('js/pagination.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+
     </div>
 </body>
 

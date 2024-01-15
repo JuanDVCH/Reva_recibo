@@ -37,9 +37,10 @@ Route::post('/obtener-descripcion-por-sku', [Controller_Create_Products::class, 
 // Rutas para el recurso "Etiquetas"
 Route::resource('Etiquetas', ControllerEtiqueta::class)->names('etiqueta');
 Route::get('/obtener-skus-etiqueta', [ControllerEtiqueta::class, 'obtenerSkus'])->name('etiqueta.obtener-skus');
-Route::get('etiqueta/obtener-fechas/{orderNum}', 'ControllerEtiqueta@tuMetodo')->name('etiqueta.obtener-fechas');
-Route::post('/etiqueta/obtener-barcode-por-sku', 'ControllerEtiqueta@obtenerBarcodePorSku')->name('etiqueta.obtener-barcode-por-sku');
-
+Route::post('/obtener-barcode-por-sku', [ControllerEtiqueta::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
+Route::get('/etiqueta/obtener-peso-neto', [ControllerEtiqueta::class, 'obtenerPesoNeto'])->name('etiqueta.obtener-peso-neto');
+Route::post('/etiqueta/obtener-descripcion-por-sku', [ControllerEtiqueta::class, 'obtenerDescripcionPorSku'])
+    ->name('etiqueta.obtener-descripcion-por-sku');
 // Rutas para impresión
 Route::get('/etiquetas/imprimir/{id_tag}', [ControllerEtiqueta::class, 'imprimir'])->name('etiquetas.imprimir');
 

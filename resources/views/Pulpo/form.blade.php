@@ -63,18 +63,9 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="mb-4">
+            <div class="mb-12">
                 <label for="criterium" class="block text-sm font-medium text-gray-600">Criterio:</label>
                 <input type="text" name="criterium" class="form-input" required>
-            </div>
-            <div class="mb-4">
-                <label for="merchantSlug" class="block text-sm font-medium text-gray-600">Comerciante:</label>
-                <input type="text" name="merchant_slug" class="form-input" required>
-            </div>
-            <div class="mb-4">
-                <label for="merchantChannelSlug" class="block text-sm font-medium text-gray-600">Canal del
-                    Comerciante:</label>
-                <input type="text" name="merchant_channel_slug" class="form-input" required>
             </div>
         </div>
 

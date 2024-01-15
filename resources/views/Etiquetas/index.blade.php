@@ -57,6 +57,7 @@
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead class="thead-dark">
                                             <tr>
+                                                <th>Consecutivo</th>
                                                 <th>Número de Orden</th>
                                                 <th>Código del Producto</th>
                                                 <th>Descripción</th>
@@ -75,6 +76,7 @@
                                         <tbody id="etiquetaTableBody">
                                             @forelse ($etiquetas as $etiqueta)
                                                 <tr>
+                                                    <td>{{ $etiqueta->id_tag }}</td>
                                                     <td>{{ $etiqueta->order_num }}</td>
                                                     <td>{{ $etiqueta->sku }}</td>
                                                     <td>{{ $etiqueta->description }}</td>
