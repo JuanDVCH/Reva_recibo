@@ -13,11 +13,11 @@ class Etiqueta extends Model
     protected $table = "tags";
     protected $primaryKey = 'id_tag'; // Ajusta esto según la clave primaria real de tu modelo
 
-    protected $fillable = ['order_num', 'sku', 'description', 'delivery_date', 'amount', 'weight', 'origin', 'type', 'content', 'product_status', 'color', 'barcode', 'state'];
+    protected $fillable = ['order_num', 'sku', 'description', 'delivery_date', 'amount', 'weight', 'customer', 'type', 'content', 'product_status', 'color', 'barcode', 'state'];
 
     public function recibo()
     {
-        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num');
+        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num')->select('customer', 'delivery_date');
     }
     
     public function producto()

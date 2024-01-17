@@ -30,32 +30,31 @@
             </select>
             <div id="descripcionError" class="text-danger"></div>
             <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
-            <!-- Campo oculto para almacenar la descripción -->
-            <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
         </div>
 
-        <!-- Código de barras -->
         <!-- Código de barras -->
         <div class="col-md-6">
             <label for="inputBarcode" class="form-label">Código de Barras</label>
             <input type="text" class="form-control" id="inputBarcode" name="barcode" readonly required>
             <div id="barcodeError" class="text-danger"></div>
             <input type="hidden" name="hidden_barcode" id="hiddenBarcode" required>
-            <!-- Campo oculto para almacenar el barcode -->
-            <input type="hidden" name="hidden_barcode" id="hiddenBarcode" required>
         </div>
-
 
         <!-- Fecha -->
         <div class="col-md-6">
             <label for="deliveryDate">Fecha:</label>
             <input type="date" name="delivery_date" class="form-control" required>
         </div>
-        <!-- Origen -->
-        <div class="col-md-6">
-            <label for="inputorigin" class="form-label">Origen</label>
-            <input type="text" name="origin" class="form-control" required>
-            <div id="originError" class="text-danger"></div>
+
+        <!-- Cliente -->
+        <div class="form-group col-md-6">
+            <label for="inputCustomer">Cliente</label>
+            <select class="form-control" name="customer" id="inputCustomer" required>
+                <option disabled selected value="">Selecciona un recibo</option>
+                @foreach ($recibos as $recibo)
+                    <option value="{{ $recibo->customer }}">{{ $recibo->customer }}</option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Amount -->
@@ -71,6 +70,7 @@
             <input type="number" step="any" class="form-control" id="inputweight" name="weight">
             <div id="weightError" class="text-danger"></div>
         </div>
+
         <!-- Tipo de producto -->
         <div class="col-md-4">
             <label for="inputtype" class="form-label">Tipo de producto</label>
@@ -81,7 +81,6 @@
                 <option value="flexible_P">Flexible P</option>
                 <option value="flexible_G">Flexible G</option>
                 <option value="No_aplica">No aplica</option>
-
             </select>
             <div id="typeError" class="text-danger"></div>
         </div>
@@ -94,7 +93,6 @@
                 <option value="aderezos">Aderezos</option>
                 <option value="limpieza">Limpieza</option>
                 <option value="No_aplica">No aplica</option>
-
             </select>
             <div id="contentError" class="text-danger"></div>
         </div>
@@ -107,7 +105,6 @@
                 <option value="sucio">Sucio</option>
                 <option value="limpio">Limpio</option>
                 <option value="No_aplica">No aplica</option>
-
             </select>
             <div id="productStatusError" class="text-danger"></div>
         </div>
@@ -120,11 +117,9 @@
                 <option value="colores">Colores</option>
                 <option value="neutro">Neutro</option>
                 <option value="No_aplica">No aplica</option>
-
             </select>
             <div id="colorError" class="text-danger"></div>
         </div>
-
 
         <!-- Botones -->
         <div class="col-12 mt-3 text-center">
@@ -134,24 +129,21 @@
     </form>
 </div>
 
-
-<!-- Script JavaScript -->
-
-
 <!-- Script JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Almacena las opciones originales del campo SKU
+        // Almacena las opciones originales del campo SKU y Cliente
         var originalSkuOptions = $('#inputSku').html();
+        var originalCustomerOptions = $('#inputCustomer').html();
 
         // Maneja el cambio en el campo Número de recibo
         $('#inputOrderNum').on('change', function() {
             var selectedOrderNum = $(this).val();
 
-            // Realiza una solicitud Ajax para obtener los SKUs relacionados con el número de recibo seleccionado
+            // Realiza una solicitud Ajax para obtener los SKUs y los Clientes relacionados con el número de recibo seleccionado
             $.ajax({
-                url: '{{ route('etiqueta.obtener-skus') }}',
+                url: '{{ route('etiqueta.obtener-skus-y-customer') }}',
                 type: 'GET',
                 data: {
                     orderNum: selectedOrderNum
@@ -162,16 +154,25 @@
                     $('#inputSku').append(
                         '<option value="" disabled selected>Seleccionar código del producto</option>'
                     );
-                    $.each(data, function(key, value) {
+                    $.each(data.skus, function(key, value) {
                         $('#inputSku').append('<option value="' + value + '">' +
                             value + '</option>');
                     });
+
+                   
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error en la solicitud Ajax (obtener-skus):", status,
-                        error);
+                    console.error("Error en la solicitud Ajax (obtener-skus-y-customer):",
+                        status, error);
                 }
             });
+        });
+
+        // Evento para la entrada en el campo Cliente
+        $('#inputCustomer').on('change', function() {
+            // Agrega tu lógica aquí si es necesario
+            var customer = $(this).val().trim();
+            var selectedOrderNum = $('#inputOrderNum').val();
         });
 
         // Evento para la entrada en el campo SKU
@@ -180,7 +181,6 @@
             var selectedOrderNum = $('#inputOrderNum').val();
             var $descripcionSelect = $('#inputDescripcion');
             var $barcodeInput = $('#inputBarcode');
-            var $pesoNetoInput = $('#pesoNeto');
 
             if (sku !== '') {
                 // Obtener el token CSRF
@@ -199,7 +199,8 @@
 
                         // Habilitar el select y actualizar opciones
                         $descripcionSelect.prop('disabled', false);
-                        $descripcionSelect.html('<option value="' + descripcion +
+                        $descripcionSelect.html('<option value="' +
+                            descripcion +
                             '" selected>' + descripcion + '</option>');
 
                         // Almacenar la descripción en el campo oculto
@@ -218,50 +219,45 @@
                 });
 
                 // Solicitud Ajax para obtener el código de barras
-                $(document).ready(function() {
-                    $.ajax({
-                        url: '{{ route('etiqueta.obtener-barcode-por-sku') }}',
-                        method: 'POST',
-                        data: {
-                            sku: sku,
-                            _token: csrfToken
-                        },
-                        success: function(response) {
-                            console.log('Respuesta exitosa:', response);
+                $.ajax({
+                    url: '{{ route('etiqueta.obtener-barcode-por-sku') }}',
+                    method: 'POST',
+                    data: {
+                        sku: sku,
+                        _token: csrfToken
+                    },
+                    success: function(response) {
+                        console.log('Respuesta exitosa:', response);
 
-                            // Asegúrate de acceder a la propiedad correcta del objeto de respuesta
-                            var barcodeValue = response.barcode;
+                        // Asegúrate de acceder a la propiedad correcta del objeto de respuesta
+                        var barcodeValue = response.barcode;
 
-                            // Actualizar el valor del campo Barcode
-                            $('#inputBarcode').val(barcodeValue);
+                        // Actualizar el valor del campo Barcode
+                        $('#inputBarcode').val(barcodeValue);
 
-                            // Restablecer el mensaje de error
-                            $('#barcodeError').text('');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(
-                                "Error en la solicitud Ajax (obtener-barcode-por-sku):",
-                                status, error);
+                        // Restablecer el mensaje de error
+                        $('#barcodeError').text('');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(
+                            "Error en la solicitud Ajax (obtener-barcode-por-sku):",
+                            status, error);
 
-                            // Log del contenido de la respuesta del servidor
-                            console.log(xhr.responseText);
+                        // Log del contenido de la respuesta del servidor
+                        console.log(xhr.responseText);
 
-                            // Manejar el error si es necesario
-                            $('#inputBarcode').val('');
+                        // Manejar el error si es necesario
+                        $('#inputBarcode').val('');
 
-                            // Mostrar un mensaje de error
-                            $('#barcodeError').text(
-                                'Error al obtener el código de barras');
-                        }
-                    });
+                        // Mostrar un mensaje de error
+                        $('#barcodeError').text(
+                            'Error al obtener el código de barras');
+                    }
                 });
             } else {
                 // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
                 $descripcionSelect.prop('disabled', true).html(
                     '<option value="" selected>Selecciona un SKU primero</option>');
-
-                // Limpiar el valor del campo de peso neto
-                $pesoNetoInput.val('');
             }
         });
 
@@ -269,6 +265,7 @@
         $('#etiquetaForm').on('reset', function() {
             // Restablecer el formulario a su estado original
             $('#inputSku').html(originalSkuOptions);
+            $('#inputCustomer').html(originalCustomerOptions);
 
             // Ocultar mensajes de error
             $('.text-danger').text('');
@@ -276,7 +273,6 @@
             // Deshabilitar select de descripción y peso neto
             $('#inputDescripcion').prop('disabled', true).html(
                 '<option value="" selected>Selecciona un SKU primero</option>');
-            $('#pesoNeto').val('');
         });
     });
 </script>

@@ -30,8 +30,8 @@
             <p class="mb-4 text-4xl font-normal text-gray-700 dark:text-gray-400">Fecha:
                 <span class="text-blue-500 text-4xl">{{ $etiqueta->delivery_date }}</span>
             </p>
-            <p class="mb-4 text-4xl font-normal text-gray-700 dark:text-gray-400">Origen:
-                <span class="text-blue-500 text-4xl">{{ $etiqueta->origin }}</span>
+            <p class="mb-4 text-4xl font-normal text-gray-700 dark:text-gray-400">Cliente:
+                <span class="text-blue-500 text-4xl">{{ $etiqueta->customer }}</span>
             </p>
             <p class="mb-4 text-4xl font-normal text-gray-700 dark:text-gray-400">Cantidad:
                 <span class="text-blue-500 text-4xl">{{ $etiqueta->amount }}</span>

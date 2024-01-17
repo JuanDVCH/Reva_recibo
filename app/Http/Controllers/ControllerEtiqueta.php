@@ -47,7 +47,7 @@ class ControllerEtiqueta extends Controller
             $etiqueta->sku = $request->sku;
             $etiqueta->description = $request->description;
             $etiqueta->delivery_date = $request->delivery_date;
-            $etiqueta->origin = $request->origin;
+            $etiqueta->customer = $request->customer;
             $etiqueta->amount = $request->amount;
             $etiqueta->weight = $request->weight;
             $etiqueta->type = $request->type;
@@ -86,15 +86,23 @@ class ControllerEtiqueta extends Controller
     }
 
 
-    public function obtenerSkus(Request $request)
+    public function obtenerSkusYCustomer(Request $request)
     {
         $orderNum = $request->input('orderNum');
 
         // Obtén los SKUs asociados al número de recibo
-        $skus = Model_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
+        $skus = Model_Products::where('order_num', $orderNum)->distinct()->pluck('sku');
+        
+        // Obtén los clientes asociados al número de recibo
+        $customers = Model_Receipt::where('order_num', $orderNum)->distinct()->pluck('customer');
 
-        return response()->json($skus);
+        return response()->json([
+            'skus' => $skus,
+            'customers' => $customers,
+        ]);
     }
+
+
     public function obtenerDescripcionPorSku(Request $request)
     {
         try {
@@ -115,16 +123,22 @@ class ControllerEtiqueta extends Controller
         try {
             $sku = $request->input('sku');
             $barcode = Code_products::where('sku', $sku)->value('barcode');
-    
+
             if ($barcode === null) {
                 throw new \Exception("No se encontró código de barras para el SKU: $sku");
             }
-    
+
             return response()->json(['barcode' => $barcode]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+
+
 
 
 

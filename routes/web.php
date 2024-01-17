@@ -1,25 +1,30 @@
 <?php
 use App\Http\Controllers\ControllerEtiqueta;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller_Format_Receipt;
 use App\Http\Controllers\Controller_Create_Products;
 use App\Http\Controllers\ControllerPulpo;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
-
+// Rutas que requieren autenticación
 Route::middleware(['web', 'auth'])->group(function () {
-    // Otras rutas autenticadas si las tienes
-
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+
+    // Otras rutas autenticadas aquí si es necesario
 });
 
 // Rutas de autenticación proporcionadas por Laravel
 Auth::routes();
 
+// Ruta predeterminada para usuarios no autenticados
 Route::get('/', function () {
-    return view('auth.Login');
+    if (Auth::check()) {
+        return redirect('/home'); // Redirige a /home si el usuario ya está autenticado
+    } else {
+        return view('auth.Login');
+    }
 });
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -36,12 +41,9 @@ Route::post('/obtener-descripcion-por-sku', [Controller_Create_Products::class, 
 
 // Rutas para el recurso "Etiquetas"
 Route::resource('Etiquetas', ControllerEtiqueta::class)->names('etiqueta');
-Route::get('/obtener-skus-etiqueta', [ControllerEtiqueta::class, 'obtenerSkus'])->name('etiqueta.obtener-skus');
-Route::post('/obtener-barcode-por-sku', [ControllerEtiqueta::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
-Route::get('/etiqueta/obtener-peso-neto', [ControllerEtiqueta::class, 'obtenerPesoNeto'])->name('etiqueta.obtener-peso-neto');
-Route::post('/etiqueta/obtener-descripcion-por-sku', [ControllerEtiqueta::class, 'obtenerDescripcionPorSku'])
-    ->name('etiqueta.obtener-descripcion-por-sku');
-// Rutas para impresión
+Route::get('/etiqueta/obtener-skus-y-customer', [ControllerEtiqueta::class, 'obtenerSkusYCustomer'])->name('etiqueta.obtener-skus-y-customer');
+Route::post('/etiqueta/obtener-descripcion-por-sku', [ControllerEtiqueta::class, 'obtenerDescripcionPorSku'])->name('etiqueta.obtener-descripcion-por-sku');
+Route::post('/etiqueta/obtener-barcode-por-sku', [ControllerEtiqueta::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
 Route::get('/etiquetas/imprimir/{id_tag}', [ControllerEtiqueta::class, 'imprimir'])->name('etiquetas.imprimir');
 
 

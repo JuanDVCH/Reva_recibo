@@ -62,7 +62,7 @@
                                                 <th>Código del Producto</th>
                                                 <th>Descripción</th>
                                                 <th>Fecha</th>
-                                                <th>Origen</th>
+                                                <th>Cliente</th>
                                                 <th>Cantidad</th>
                                                 <th>Peso</th>
                                                 <th>Tipo</th>
@@ -81,7 +81,7 @@
                                                     <td>{{ $etiqueta->sku }}</td>
                                                     <td>{{ $etiqueta->description }}</td>
                                                     <td>{{ $etiqueta->delivery_date }}</td>
-                                                    <td>{{ $etiqueta->origin }}</td>
+                                                    <td>{{ $etiqueta->customer }}</td>
                                                     <td>{{ $etiqueta->amount }}</td>
                                                     <td>{{ $etiqueta->weight }}</td>
                                                     <td>{{ $etiqueta->type }}</td>
