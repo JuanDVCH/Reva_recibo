@@ -29,7 +29,7 @@
                                     <div class="card-body">
                                         <!-- Campos de filtro -->
                                         <div class="form-group">
-                                            <label for="filtroOrden">Número de Orden:</label>
+                                            <label for="filtroOrden">Consecutivo:</label>
                                             <input type="text" id="filtroOrden" class="form-control">
                                         </div>
 

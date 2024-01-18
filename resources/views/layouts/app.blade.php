@@ -72,11 +72,13 @@
                         aria-label="{{ __('Toggle navigation') }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-            
+
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto"></ul>
-            
+                        <ul class="navbar-nav me-auto">
+                            <!-- Puedes agregar más elementos según sea necesario -->
+                        </ul>
+
                         <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ms-auto">
                             <!-- Authentication Links -->
@@ -86,14 +88,15 @@
                                     style="color: #ffffff; font-weight: bold;">
                                     {{ Auth::user()->name }}
                                 </a>
-            
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                <div class="dropdown-menu dropdown-menu-end animated fadeIn"
+                                    aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                        style="color: #ffffff;">
+                                        style="color: #000000;">
                                         {{ __('Cerrar sesión') }}
                                     </a>
-            
+
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
@@ -103,9 +106,7 @@
                     </div>
                 </div>
             </nav>
-            
-            
-            
+
 
         @endauth
         <!-- Contenido principal -->
@@ -130,39 +131,31 @@
     </div>
 </body>
 <!-- Tailwind Footer -->
-<footer class="footer relative bg-black pt-6 pb-6" style="margin-top: 200px;">
+<footer class="footer relative bg-black pt-6 pb-6" style="margin-top: 150px;">
 
     <div class="container mx-auto px-4">
         <div class="flex flex-wrap">
             <div class="w-full lg:w-6/12 px-4">
                 <h4 class="text-4xl font-semibold text-white">Reva_Col</h4>
                 <h5 class="text-lg mt-0 mb-2 text-white">
-                    Plataforma digital diseñada para respaldar los procesos llevados a cabo por REVA_Colombia.                </h5>
-                <div class="mt-6">
-                    <button
-                        class="bg-white text-blue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
-                        type="button">
-                        <i class="flex fab fa-instagram"></i></button>
-                    <button
-                        class="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
-                        type="button">
-                        <i class="flex fab fa-facebook-square"></i></button>
-                </div>
+                    Plataforma digital diseñada para respaldar los procesos llevados a cabo por REVA_Colombia. </h5>
+
             </div>
             <div class="w-full lg:w-6/12 px-4">
                 <div class="flex flex-wrap items-top mb-6">
                     <div class="w-full lg:w-4/12 px-4 ml-auto">
                         <span class="block uppercase text-white text-sm font-semibold mb-2"> Accesos directos</span>
                         <ul class="list-unstyled">
-
                             <li>
                                 <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
-                                    href="https://eu-show.pulpo.co/#/incoming-goods/incoming-stock-component">
-                                    Pulpo WMS</a>
+                                    href="https://eu-show.pulpo.co/#/incoming-goods/incoming-stock-component" target="_blank">
+                                    Pulpo WMS
+                                </a>
                             </li>
+                            
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
