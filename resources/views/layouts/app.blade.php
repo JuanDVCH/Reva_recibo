@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="utf-8">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Reva</title>
 
     <!-- Bootstrap CSS -->
@@ -26,8 +27,13 @@
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
-
     <!-- Tailwind CSS -->
+    <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/3.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 
     <style>
@@ -42,58 +48,65 @@
             grid-row: 1;
         }
 
-
+        .navbar {
+            background-color: #28C7AF;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            /* Elimina los márgenes */
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
         @auth
-        <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #28C7AF; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/home') }}">Inicio</a>
-                <a class="navbar-brand" href="{{ route('recibo.index') }}">Recibos</a>
-                <a class="navbar-brand" href="{{ route('etiqueta.index') }}">Etiquetas</a>
-                <a class="navbar-brand" href="{{ route('pulpo.index') }}">Pulpo</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-        
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto"></ul>
-        
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre
-                                style="color: #ffffff; font-weight: bold;">
-                                {{ Auth::user()->name }}
-                            </a>
-        
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"
-                                style="background-color: #28C7AF;">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                    style="color: #ffffff;">
-                                    {{ __('Cerrar sesión') }}
+            <!-- Bootstrap Navbar -->
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{ url('/home') }}">Inicio</a>
+                    <a class="navbar-brand" href="{{ route('recibo.index') }}">Recibos</a>
+                    <a class="navbar-brand" href="{{ route('etiqueta.index') }}">Etiquetas</a>
+                    <a class="navbar-brand" href="{{ route('pulpo.index') }}">Pulpo</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+            
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav me-auto"></ul>
+            
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Authentication Links -->
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre
+                                    style="color: #ffffff; font-weight: bold;">
+                                    {{ Auth::user()->name }}
                                 </a>
-        
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
+            
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        style="color: #ffffff;">
+                                        {{ __('Cerrar sesión') }}
+                                    </a>
+            
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        
+            </nav>
+            
+            
+            
+
         @endauth
         <!-- Contenido principal -->
         <main class="py-4">
@@ -102,29 +115,7 @@
             </div>
         </main>
 
-        <!-- Tailwind Footer -->
-        <footer class="footer">
-            <div class="container p-4">
-                <div class="row">
-                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                        <h5 class="text-uppercase">Footer text</h5>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
-                        </p>
-                    </div>
 
-                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                        <h5 class="text-uppercase">Footer text</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center p-3">
-                © 2024 Copyright: Reva_Col
-            </div>
-        </footer>
 
         <!-- Bootstrap and Tailwind Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -138,5 +129,53 @@
 
     </div>
 </body>
+<!-- Tailwind Footer -->
+<footer class="footer relative bg-black pt-6 pb-6" style="margin-top: 200px;">
+
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-4xl font-semibold text-white">Reva_Col</h4>
+                <h5 class="text-lg mt-0 mb-2 text-white">
+                    Plataforma digital diseñada para respaldar los procesos llevados a cabo por REVA_Colombia.                </h5>
+                <div class="mt-6">
+                    <button
+                        class="bg-white text-blue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
+                        type="button">
+                        <i class="flex fab fa-instagram"></i></button>
+                    <button
+                        class="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
+                        type="button">
+                        <i class="flex fab fa-facebook-square"></i></button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-white text-sm font-semibold mb-2"> Accesos directos</span>
+                        <ul class="list-unstyled">
+
+                            <li>
+                                <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
+                                    href="https://eu-show.pulpo.co/#/incoming-goods/incoming-stock-component">
+                                    Pulpo WMS</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-gray-400" />
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-white font-semibold py-1">
+                    Copyright © Reva
+
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 </html>

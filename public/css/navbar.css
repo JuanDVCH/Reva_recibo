@@ -1,52 +1,5 @@
-/* Estilo para la barra de navegación */
 .navbar {
-    background-color: #28C7AF; /* Verde azulado para el fondo del navbar */
-    padding: 10px 20px; /* Aumenté el espacio interno para mejorar la estética */
-    border-radius: 15px;
-    width: 100%; /* Ancho del 100% para ocupar todo el contenedor */
-    margin: 10px auto 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil para resaltar el navbar */
-}
-
-.navbar a {
-    color: #fff; /* Texto en blanco */
-    margin-right: 15px;
-    text-decoration: none;
-    transition: color 0.3s ease-in-out; /* Transición suave del color del texto */
-    font-size: 1.2rem; /* Tamaño de fuente ligeramente más grande */
-}
-
-.navbar a:hover {
-    text-decoration: underline;
-}
-
-.navbar-toggler-icon {
-    color: #fff; /* Icono de la barra de navegación en blanco */
-    font-size: 1.5rem; /* Tamaño del icono aumentado */
-}
-
-.navbar-collapse {
-    text-align: center;
-}
-
-.navbar .nav-item.dropdown {
-    margin-left: auto;
-}
-
-.navbar .dropdown-menu {
-    background-color: #3A615B; /* Fondo del menú desplegable */
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para resaltar el menú desplegable */
-}
-
-.navbar .dropdown-item {
-    color: #fff; /* Texto en blanco */
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Transiciones suaves */
-    font-size: 1.2rem; /* Tamaño de fuente ligeramente más grande */
-    padding: 8px 16px; /* Aumenté el espacio interno del elemento del menú */
-}
-
-.navbar .dropdown-item:hover {
-    background-color: #293331; /* Fondo del menú desplegable al pasar el ratón por encima */
-    color: #fff; /* Texto en blanco */
+    background-color: #28C7AF;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0; /* Elimina los márgenes */
 }

@@ -7,5 +7,4 @@ module.exports = {
     './src/**/*.html',
     './src/**/*.js',
   ],
-  // ...otras configuraciones
-}
+};
