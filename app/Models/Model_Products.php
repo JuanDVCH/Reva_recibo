@@ -6,14 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Model_Products extends Model
 {
-    // No es necesario especificar primaryKey y timestamps si sigues las convenciones de Laravel
-
+    use HasFactory;
     protected $table = "product";
-    protected $fillable = ['sku', 'description', 'unit_measurement', 'amount', 'gross_weight', 'packaging_weight', 'net_weight', 'order_num', 'state'];
+
+    protected $fillable = [
+        'sku',
+        'description',
+        'unit_measurement',
+        'amount',
+        'gross_weight',
+        'packaging_weight',
+        'net_weight',
+        'order_num',
+        'state',
+        'delivery_date',
+        'code_customer',
+        'notes',
+        'criterium',
+    ];
 
     public function recibo()
     {
-        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num');
+        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num')
+            ->select('order_num', 'delivery_date', 'code_customer');
     }
 
     public function etiquetas()
@@ -26,3 +41,5 @@ class Model_Products extends Model
         return $this->belongsTo(Code_products::class, 'sku', 'sku');
     }
 }
+
+

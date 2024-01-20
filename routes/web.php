@@ -35,6 +35,8 @@ Route::get('/obtener-codigos-cliente/{id}', [Controller_Format_Receipt::class, '
 
 
 // Rutas para el recurso "Productos"
+Route::post('/obtener-info-recibo', [Controller_Create_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
+
 Route::resource('Productos', Controller_Create_Products::class)->names('productos');
 Route::post('/obtener-descripcion-por-sku', [Controller_Create_Products::class, 'obtenerDescripcionPorSku'])->name('obtenerDescripcionPorSku');
 

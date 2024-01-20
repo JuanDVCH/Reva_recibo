@@ -9,12 +9,16 @@ class Model_Receipt extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = "receipts";
-    protected $fillable = ['delivery_date','origin','customer','code_customer','driver','plate','num_vehicle','state'];
+    protected $fillable = ['delivery_date', 'origin', 'customer', 'code_customer', 'driver', 'plate', 'num_vehicle', 'state'];
+
+    // Dentro de Model_Receipt.php
 
     public function productos()
     {
-        return $this->hasMany(Model_Products::class, 'order_num', 'order_num');
+        return $this->hasMany(Model_Products::class, 'order_num', 'order_num')
+            ->with('recibo:order_num,delivery_date,code_customer');
     }
+
     public function etiquetas()
     {
         return $this->hasMany(Etiqueta::class, 'order_num', 'order_num');

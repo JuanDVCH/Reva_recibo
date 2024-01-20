@@ -39,20 +39,20 @@ class Controller_Create_Products extends Controller
     {
         // Recuperar los SKUs almacenados en la sesión y ordenar alfabéticamente
         $skus = session('skus', collect())->sort()->values();
-        
+
         // Obtener descripciones asociadas a SKUs y ordenar alfabéticamente
         $descripciones = Code_products::pluck('description')->sort()->values()->toArray();
-        
+
         // Obtener recibos con estado 1 y ordenarlos por número de recibo
         $recibos = Model_Receipt::where('state', 1)->orderBy('order_num')->get();
-        
+
         // Almacenar las descripciones en la sesión para su uso posterior
         session(['descripciones' => $descripciones]);
-        
+
         // Configurar la vista con los datos necesarios antes de la condición
         return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
     }
-    
+
 
     public function obtenerSkus(Request $request)
     {
@@ -63,6 +63,7 @@ class Controller_Create_Products extends Controller
 
         return response()->json($skus);
     }
+
     public function obtenerDescripcionPorSku(Request $request)
     {
         try {
@@ -91,10 +92,24 @@ class Controller_Create_Products extends Controller
                 'packaging_weight' => 'required|numeric',
                 'net_weight' => 'required|numeric',
                 'orden_num' => 'required',
-                'description' => 'required|exists:code_products,description', // Asegúrate de que el campo 'description' esté presente en las reglas de validación
+                'description' => 'required|exists:code_products,description',
+                'notes' => 'nullable|string',
+                'criterium' => 'nullable|string',
             ]);
 
+            // Obtener información de recibo (delivery_date y code_customer) asociada a orden_num
+            $reciboInfo = Model_Receipt::where('order_num', $request->orden_num)
+                ->select('delivery_date', 'code_customer')
+                ->first();
+
+            // Verificar si se encontró información del recibo
+            if (!$reciboInfo) {
+                // Manejar el caso en el que no se encuentra la información del recibo
+                return redirect()->back()->with('error', 'No se encontró información del recibo.');
+            }
+
             // Crear instancia del modelo y asignar valores
+// Crear instancia del modelo y asignar valores
             $producto = new Model_Products();
             $producto->sku = $request->sku;
             $producto->description = $request->description;
@@ -104,17 +119,43 @@ class Controller_Create_Products extends Controller
             $producto->packaging_weight = $request->packaging_weight;
             $producto->net_weight = $request->net_weight;
             $producto->order_num = $request->orden_num;
+            $producto->notes = $request->notes;
+            $producto->criterium = $request->criterium; // Asignar el valor de criterium desde el formulario
+            $producto->code_customer = $reciboInfo->code_customer; // Asignar el valor de code_customer desde la información del recibo
             $producto->state = 1;
 
             // Intentar guardar el producto
             $producto->save();
 
+
             // Redirección después de guardar
             return redirect(route('recibo.index'));
         } catch (\Exception $e) {
             // Manejo del error
+            dd($e->getMessage());
         }
     }
 
 
+    public function obtenerInfoRecibo(Request $request)
+    {
+        $orderNum = $request->input('order_num');
+
+        // Obtener información de recibo según el número de recibo
+        $recibo = Model_Receipt::where('order_num', $orderNum)->first();
+
+        if ($recibo) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'delivery_date' => $recibo->delivery_date,
+                    'code_customer' => $recibo->code_customer,
+                ],
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+            ]);
+        }
+    }
 }

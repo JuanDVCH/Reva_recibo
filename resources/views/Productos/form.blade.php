@@ -1,13 +1,14 @@
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
 
 <div class="container mt-5">
     <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
+
         <div class="col-md-6">
             <label for="inputFiltrarOrderNum" class="form-label">Filtrar Número de recibo</label>
             <input type="number" class="form-control" id="inputFiltrarOrderNum" placeholder="Buscar recibo">
         </div>
-        
+
         <div class="col-md-6">
             <label for="inputOrderNum" class="form-label">Número de recibo</label>
             <select class="form-control" name="orden_num" id="inputOrderNum" required>
@@ -17,12 +18,23 @@
                 @endforeach
             </select>
         </div>
+        <!-- Este div mostrará la fecha de entrega -->
+        <div class="col-md-6">
+            <label for="inputDeliveryDate" class="form-label">Fecha de Entrega</label>
+            <input type="date" class="form-control" id="inputDeliveryDate" name="delivery_date" readonly>
+        </div>
+
+        <!-- Este div mostrará el código de cliente -->
+        <div class="col-md-6">
+            <label for="inputCodeCustomer" class="form-label">Código de Cliente</label>
+            <input type="text" class="form-control" id="inputCodeCustomer" name="code_customer" readonly>
+        </div>
 
         <div class="col-md-6">
             <label for="inputFiltrarSku" class="form-label">Filtrar SKU</label>
             <input type="text" class="form-control" id="inputFiltrarSku" placeholder="Buscar SKU">
         </div>
-        
+
         <div class="col-md-6">
             <label for="inputSku" class="form-label">SKU</label>
             <select class="form-control" id="inputSku" name="sku" required>
@@ -32,14 +44,22 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="inputDescripcion" class="form-label">Descripción</label>
             <select class="form-control" id="inputDescripcion" name="description" disabled required>
                 <option value="" selected>Selecciona un SKU primero</option>
             </select>
             <div id="descripcionError" class="text-danger"></div>
         </div>
-
+        <div class="col-md-6">
+            <label for="inputumb" class="form-label">criterium</label>
+            <input type="text" class="form-control" id="inputumb" name="unit_measurement" required>
+            <div id="umbError" class="text-danger"></div>
+        </div>
+        <div class="mb-4">
+            <label for="notes" class="block text-sm font-medium text-gray-600">Notas:</label>
+            <textarea name="notes" class="form-input"></textarea>
+        </div>
         <!-- Campo oculto para almacenar la descripción -->
         <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
         <div class="col-md-6">
@@ -136,7 +156,7 @@
 
                 // Solicitud Ajax al controlador
                 $.ajax({
-                    url: '{{ route("obtenerDescripcionPorSku") }}',
+                    url: '{{ route('obtenerDescripcionPorSku') }}',
                     method: 'POST',
                     data: {
                         sku: sku,
@@ -147,19 +167,23 @@
 
                         // Habilitar el select y actualizar opciones
                         $descripcionSelect.prop('disabled', false);
-                        $descripcionSelect.html('<option value="' + descripcion + '" selected>' + descripcion + '</option>');
+                        $descripcionSelect.html('<option value="' + descripcion +
+                            '" selected>' + descripcion + '</option>');
 
                         // Almacenar la descripción en el campo oculto
                         $('#hiddenDescripcion').val(descripcion);
                     },
                     error: function() {
                         // Manejar el error si es necesario
-                        $descripcionSelect.prop('disabled', true).html('<option value="" selected>Error al obtener la descripción</option>');
+                        $descripcionSelect.prop('disabled', true).html(
+                            '<option value="" selected>Error al obtener la descripción</option>'
+                        );
                     }
                 });
             } else {
                 // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
-                $descripcionSelect.prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
+                $descripcionSelect.prop('disabled', true).html(
+                    '<option value="" selected>Selecciona un SKU primero</option>');
             }
         });
 
@@ -169,10 +193,12 @@
             $('#productoForm')[0].reset();
 
             // Ocultar mensajes de error
-            $('#consecutivoError, #descripcionError, #umbError, #cantidadError, #brutoError, #empaqueError, #netoError').text('');
+            $('#consecutivoError, #descripcionError, #umbError, #cantidadError, #brutoError, #empaqueError, #netoError')
+                .text('');
 
             // Deshabilitar select de descripción
-            $('#inputDescripcion').prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
+            $('#inputDescripcion').prop('disabled', true).html(
+                '<option value="" selected>Selecciona un SKU primero</option>');
 
             // Restablecer el resultado de Peso Neto
             $('#resultadoNeto').text('');
@@ -185,6 +211,40 @@
         });
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        // Evento para el cambio en el número de recibo
+        $('#inputOrderNum').on('change', function() {
+            var orderNum = $(this).val();
+
+            // Realizar solicitud AJAX para obtener información de recibo
+            $.ajax({
+                url: '{{ route('obtenerInfoRecibo') }}',
+                method: 'POST',
+                data: {
+                    order_num: orderNum,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Rellenar los campos de delivery_date y code_customer
+                        $('#inputDeliveryDate').val(response.data.delivery_date);
+                        $('#inputCodeCustomer').val(response.data.code_customer);
+                    } else {
+                        // Manejar el caso en que no se encontró la información del recibo
+                        alert('No se pudo obtener la información del recibo.');
+                    }
+                },
+                error: function() {
+                    // Manejar el error si es necesario
+                    alert('Error al realizar la solicitud.');
+                }
+            });
+        });
+    });
+</script>
+
 
 <script>
     function actualizarPesoNeto() {
