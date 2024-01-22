@@ -22,12 +22,16 @@
         <div class="col-md-6">
             <label for="inputDeliveryDate" class="form-label">Fecha de Entrega</label>
             <input type="date" class="form-control" id="inputDeliveryDate" name="delivery_date" readonly>
+            <!-- Campo oculto para almacenar la fecha -->
+            <input type="hidden" name="hidden_delivery_date" id="hiddenDelivery_date" required>
         </div>
 
         <!-- Este div mostrará el código de cliente -->
         <div class="col-md-6">
             <label for="inputCodeCustomer" class="form-label">Código de Cliente</label>
             <input type="text" class="form-control" id="inputCodeCustomer" name="code_customer" readonly>
+            <!-- Campo oculto para almacenar codigo del cliente -->
+            <input type="hidden" name="hidden_code_customer" id="hiddenCode_customer" required>
         </div>
 
         <div class="col-md-6">
@@ -50,18 +54,19 @@
                 <option value="" selected>Selecciona un SKU primero</option>
             </select>
             <div id="descripcionError" class="text-danger"></div>
+            <!-- Campo oculto para almacenar la descripción -->
+            <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
         </div>
         <div class="col-md-6">
-            <label for="inputumb" class="form-label">criterium</label>
-            <input type="text" class="form-control" id="inputumb" name="unit_measurement" required>
-            <div id="umbError" class="text-danger"></div>
+            <label for="inputcriterium" class="form-label">criterium</label>
+            <input type="text" class="form-control" id="inputcriterium" name="criterium" required>
+            <div id="criteriumError" class="text-danger"></div>
         </div>
         <div class="mb-4">
             <label for="notes" class="block text-sm font-medium text-gray-600">Notas:</label>
             <textarea name="notes" class="form-input"></textarea>
         </div>
-        <!-- Campo oculto para almacenar la descripción -->
-        <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
+
         <div class="col-md-6">
             <label for="inputumb" class="form-label">Unidad de medida básica</label>
             <input type="text" class="form-control" id="inputumb" name="unit_measurement" required>

@@ -58,7 +58,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    
+
                 </div>
             </div>
         </div>
@@ -88,46 +88,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         function exportToCSV() {
-            // Create an object to store aggregated data by SKU
+            // Crear un objeto para almacenar datos agregados por SKU
             var aggregatedData = {};
 
-            // Iterate through table rows and aggregate data
+            // Iterar a través de las filas de la tabla y agregar datos
             $('#productsTable tbody tr').each(function(index, row) {
-                var sku = $(row).find('td:first-child').text(); // Assuming SKU is in the first column
-                var netWeight = parseFloat($(row).find('td:nth-child(7)')
-            .text()); // Assuming Net Weight is in the seventh column
-                var receiptNumber = $(row).find('td:last-child')
-            .text(); // Assuming Receipt Number is in the last column
+                var supplierCode = $(row).find('td:nth-child(1)')
+            .text(); // Obtener el proveedor desde la primera columna
+                var orderNum = $(row).find('td:nth-child(2)').text();
+                var notes = $(row).find('td:nth-child(3)').text();
+                var deliveryDate = $(row).find('td:nth-child(4)').text();
+                var sku = $(row).find('td:nth-child(5)').text();
+                var requestedQuantity = $(row).find('td:nth-child(6)').text();
+                var criterium = $(row).find('td:nth-child(7)').text();
 
                 if (!aggregatedData[sku]) {
-                    // If SKU is not in the aggregatedData, initialize it
+                    // Si SKU no está en aggregatedData, inicializarlo
                     aggregatedData[sku] = {
+                        supplierCode: supplierCode,
+                        orderNum: orderNum,
+                        notes: notes,
+                        deliveryDate: deliveryDate,
                         sku: sku,
-                        netWeight: netWeight,
-                        receiptNumber: receiptNumber
+                        requestedQuantity: requestedQuantity,
+                        criterium: criterium
                     };
-                } else {
-                    // If SKU is already in the aggregatedData, update the netWeight
-                    aggregatedData[sku].netWeight += netWeight;
                 }
             });
 
-            // Convert the aggregated data to an array
+            // Convertir los datos agregados a un array
             var aggregatedArray = Object.values(aggregatedData);
 
-            // Select only required fields for export
-            var exportData = aggregatedArray.map(function(item) {
-                return {
-                    sku: item.sku,
-                    netWeight: item.netWeight,
-                    receiptNumber: item.receiptNumber
-                };
+            // Convertir los datos al formato CSV utilizando PapaParse
+            var csv = Papa.unparse(aggregatedArray, {
+                columns: ["supplierCode", "orderNum", "notes", "deliveryDate", "sku", "requestedQuantity",
+                    "criterium"
+                ]
             });
 
-            // Convert the data to CSV format using PapaParse
-            var csv = Papa.unparse(exportData);
-
-            // Create a Blob and initiate a download
+            // Crear un Blob e iniciar la descarga
             var blob = new Blob([csv], {
                 type: 'text/csv;charset=utf-8;'
             });

@@ -66,7 +66,6 @@
                     <a class="navbar-brand" href="{{ url('/home') }}">Inicio</a>
                     <a class="navbar-brand" href="{{ route('recibo.index') }}">Recibos</a>
                     <a class="navbar-brand" href="{{ route('etiqueta.index') }}">Etiquetas</a>
-                    <a class="navbar-brand" href="{{ route('pulpo.index') }}">Pulpo</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                         aria-label="{{ __('Toggle navigation') }}">

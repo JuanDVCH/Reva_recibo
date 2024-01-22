@@ -8,22 +8,8 @@ class Model_Products extends Model
 {
     use HasFactory;
     protected $table = "product";
-
-    protected $fillable = [
-        'sku',
-        'description',
-        'unit_measurement',
-        'amount',
-        'gross_weight',
-        'packaging_weight',
-        'net_weight',
-        'order_num',
-        'state',
-        'delivery_date',
-        'code_customer',
-        'notes',
-        'criterium',
-    ];
+    protected $primaryKey = 'id_product'; // Ajusta esto según la clave primaria real de tu modelo
+    protected $fillable = ['sku', 'description', 'unit_measurement', 'gross_weight', 'packaging_weight', 'net_weight', 'order_num', 'delivery_date', 'code_customer', 'notes', 'criterium','state'];
 
     public function recibo()
     {

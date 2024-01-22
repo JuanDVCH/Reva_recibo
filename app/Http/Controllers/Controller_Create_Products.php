@@ -91,7 +91,7 @@ class Controller_Create_Products extends Controller
                 'gross_weight' => 'required|numeric',
                 'packaging_weight' => 'required|numeric',
                 'net_weight' => 'required|numeric',
-                'orden_num' => 'required',
+                'orden_num' => 'required', // Cambiado de 'order_num'
                 'description' => 'required|exists:code_products,description',
                 'notes' => 'nullable|string',
                 'criterium' => 'nullable|string',
@@ -109,7 +109,6 @@ class Controller_Create_Products extends Controller
             }
 
             // Crear instancia del modelo y asignar valores
-// Crear instancia del modelo y asignar valores
             $producto = new Model_Products();
             $producto->sku = $request->sku;
             $producto->description = $request->description;
@@ -118,21 +117,20 @@ class Controller_Create_Products extends Controller
             $producto->gross_weight = $request->gross_weight;
             $producto->packaging_weight = $request->packaging_weight;
             $producto->net_weight = $request->net_weight;
-            $producto->order_num = $request->orden_num;
+            $producto->order_num = $request->orden_num; // Cambiado de 'order_num'
             $producto->notes = $request->notes;
-            $producto->criterium = $request->criterium; // Asignar el valor de criterium desde el formulario
-            $producto->code_customer = $reciboInfo->code_customer; // Asignar el valor de code_customer desde la información del recibo
+            $producto->criterium = $request->criterium;
+            $producto->code_customer = $reciboInfo->code_customer;
             $producto->state = 1;
 
             // Intentar guardar el producto
             $producto->save();
 
-
             // Redirección después de guardar
-            return redirect(route('recibo.index'));
+            return redirect(route('recibo.index'))->with('success', 'Producto creado exitosamente.');
         } catch (\Exception $e) {
             // Manejo del error
-            dd($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
