@@ -47,6 +47,7 @@ Route::get('/etiqueta/obtener-skus-y-customer', [ControllerEtiqueta::class, 'obt
 Route::post('/etiqueta/obtener-descripcion-por-sku', [ControllerEtiqueta::class, 'obtenerDescripcionPorSku'])->name('etiqueta.obtener-descripcion-por-sku');
 Route::post('/etiqueta/obtener-barcode-por-sku', [ControllerEtiqueta::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
 Route::get('/etiquetas/imprimir/{id_tag}', [ControllerEtiqueta::class, 'imprimir'])->name('etiquetas.imprimir');
+Route::post('/obtener-info-reciboetiquetas', [ControllerEtiqueta::class, 'obtenerInfoReciboetiquetas'])->name('obtenerInfoReciboetiquetas');
 
 
 // Rutas para el recurso "Pulpo"

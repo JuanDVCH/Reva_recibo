@@ -17,7 +17,8 @@ class Etiqueta extends Model
 
     public function recibo()
     {
-        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num')->select('customer', 'delivery_date');
+        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num')
+            ->select('order_num', 'delivery_date', 'customer');
     }
     
     public function producto()

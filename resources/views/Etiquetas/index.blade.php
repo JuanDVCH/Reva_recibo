@@ -100,18 +100,12 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="13">No hay datos disponibles</td>
+                                                    <td colspan="12">No hay datos disponibles</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
                                     </table>
-                                    <!-- Agregar la paginación si hay más de 5 registros -->
 
-                                    @if ($etiquetas->total() > $etiquetas->perPage())
-                                        <div class="d-flex justify-content-end">
-                                            {{ $etiquetas->links('pagination::bootstrap-4') }}
-                                        </div>
-                                    @endif
 
                                 </div>
                             </div>

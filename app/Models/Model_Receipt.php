@@ -21,7 +21,8 @@ class Model_Receipt extends Model
 
     public function etiquetas()
     {
-        return $this->hasMany(Etiqueta::class, 'order_num', 'order_num');
+        return $this->hasMany(Model_Products::class, 'order_num', 'order_num')
+            ->with('recibo:order_num,delivery_date,customer');
     }
     public function codeProducts()
     {

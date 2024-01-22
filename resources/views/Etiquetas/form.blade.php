@@ -2,7 +2,7 @@
     <form class="formulario-estilos row g-3" id="etiquetaForm" method="POST" action="{{ route('etiqueta.store') }}">
         @csrf
 
-        <!-- Número de recibo -->
+        <!-- Número de recibo y SKU -->
         <div class="form-group row g-2">
             <div class="form-group col-md-6">
                 <label for="inputOrderNum">Número de recibo</label>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <!--Descripción-->
+        <!-- Descripción -->
         <div class="col-md-6">
             <label for="inputDescripcion" class="form-label">Descripción</label>
             <select class="form-control" id="inputDescripcion" name="description" disabled required>
@@ -40,38 +40,35 @@
             <input type="hidden" name="hidden_barcode" id="hiddenBarcode" required>
         </div>
 
-        <!-- Fecha -->
+        <!-- Este div mostrará la fecha de entrega -->
         <div class="col-md-6">
-            <label for="deliveryDate">Fecha:</label>
-            <input type="date" name="delivery_date" class="form-control" required>
+            <label for="inputDeliveryDate" class="form-label">Fecha de Entrega</label>
+            <input type="date" class="form-control" id="inputDeliveryDate" name="delivery_date" readonly>
+            <!-- Campo oculto para almacenar la fecha -->
+            <input type="hidden" name="hidden_delivery_date" id="hiddenDelivery_date" required>
         </div>
 
-        <!-- Cliente -->
-        <div class="form-group col-md-6">
-            <label for="inputCustomer">Cliente</label>
-            <select class="form-control" name="customer" id="inputCustomer" required>
-                <option disabled selected value="">Selecciona un recibo</option>
-                @foreach ($recibos as $recibo)
-                    <option value="{{ $recibo->customer }}">{{ $recibo->customer }}</option>
-                @endforeach
-            </select>
+        <!-- Este div mostrará el código de cliente -->
+        <div class="col-md-6">
+            <label for="inputCustomer" class="form-label">Cliente</label>
+            <input type="text" class="form-control" id="inputCustomer" name="customer" readonly>
+            <!-- Campo oculto para almacenar codigo del cliente -->
+            <input type="hidden" name="hidden_customer" id="hiddenustomer" required>
         </div>
 
-        <!-- Amount -->
+        <!-- Amount, Peso, Tipo de producto, Contenido, Estado del producto, Color -->
         <div class="col-md-4">
             <label for="inputamount" class="form-label">Cantidad</label>
             <input type="number" class="form-control" id="inputamount" name="amount">
             <div id="amountError" class="text-danger"></div>
         </div>
 
-        <!-- Peso -->
         <div class="col-md-4">
             <label for="inputweight" class="form-label">Peso</label>
             <input type="number" step="any" class="form-control" id="inputweight" name="weight">
             <div id="weightError" class="text-danger"></div>
         </div>
 
-        <!-- Tipo de producto -->
         <div class="col-md-4">
             <label for="inputtype" class="form-label">Tipo de producto</label>
             <select class="form-control" name="type" id="inputtype" required>
@@ -85,7 +82,6 @@
             <div id="typeError" class="text-danger"></div>
         </div>
 
-        <!-- Contenido -->
         <div class="col-md-4">
             <label for="inputcontent" class="form-label">Contenido</label>
             <select class="form-control" name="content" id="inputcontent" required>
@@ -97,7 +93,6 @@
             <div id="contentError" class="text-danger"></div>
         </div>
 
-        <!-- Estado del producto -->
         <div class="col-md-4">
             <label for="inputproduct_status" class="form-label">Estado del producto</label>
             <select class="form-control" name="product_status" id="inputproduct_status" required>
@@ -109,7 +104,6 @@
             <div id="productStatusError" class="text-danger"></div>
         </div>
 
-        <!-- Color -->
         <div class="col-md-4">
             <label for="inputcolor" class="form-label">Color</label>
             <select class="form-control" name="color" id="inputcolor" required>
@@ -131,6 +125,38 @@
 
 <!-- Script JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Evento para el cambio en el número de recibo
+        $('#inputOrderNum').on('change', function() {
+            var orderNum = $(this).val();
+
+            // Realizar solicitud AJAX para obtener información de recibo
+            $.ajax({
+                url: '{{ route('obtenerInfoReciboetiquetas') }}',
+                method: 'POST',
+                data: {
+                    order_num: orderNum,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Rellenar los campos de delivery_date y customer
+                        $('#inputDeliveryDate').val(response.data.delivery_date);
+                        $('#inputCustomer').val(response.data.customer);
+                    } else {
+                        // Manejar el caso en que no se encontró la información del recibo
+                        alert('No se pudo obtener la información del recibo.');
+                    }
+                },
+                error: function() {
+                    // Manejar el error si es necesario
+                    alert('Error al realizar la solicitud.');
+                }
+            });
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         // Almacena las opciones originales del campo SKU y Cliente
@@ -158,8 +184,6 @@
                         $('#inputSku').append('<option value="' + value + '">' +
                             value + '</option>');
                     });
-
-                   
                 },
                 error: function(xhr, status, error) {
                     console.error("Error en la solicitud Ajax (obtener-skus-y-customer):",
