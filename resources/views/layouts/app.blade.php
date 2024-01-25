@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
     <!-- Tailwind CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     <link rel="shortcut icon" href="./assets/img/favicon.ico" />
     <link rel="apple-touch-icon" sizes="76x76" href="/img/3.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -42,6 +43,7 @@
             grid-template-rows: 1fr auto;
             min-height: 100vh;
             margin: 0;
+            color: #000000
         }
 
         #app {
@@ -126,6 +128,8 @@
         <script src="{{ asset('js/filters.js') }}"></script>
         <script src="{{ asset('js/pagination.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>    
 
     </div>
 </body>

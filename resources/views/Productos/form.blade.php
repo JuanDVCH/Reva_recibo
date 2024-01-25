@@ -39,6 +39,7 @@
             <input type="text" class="form-control" id="inputFiltrarSku" placeholder="Buscar SKU">
         </div>
 
+
         <div class="col-md-6">
             <label for="inputSku" class="form-label">SKU</label>
             <select class="form-control" id="inputSku" name="sku" required>
@@ -48,6 +49,8 @@
                 @endforeach
             </select>
         </div>
+
+
         <div class="col-md-6">
             <label for="inputDescripcion" class="form-label">Descripción</label>
             <select class="form-control" id="inputDescripcion" name="description" disabled required>
@@ -58,14 +61,15 @@
             <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
         </div>
         <div class="col-md-6">
-            <label for="inputcriterium" class="form-label">criterium</label>
+            <label for="inputcriterium" class="form-label">Criterium</label>
             <input type="text" class="form-control" id="inputcriterium" name="criterium" required>
             <div id="criteriumError" class="text-danger"></div>
         </div>
         <div class="mb-4">
             <label for="notes" class="block text-sm font-medium text-gray-600">Notas:</label>
-            <textarea name="notes" class="form-input"></textarea>
+            <textarea id="notes" name="notes" class="form-input"></textarea>
         </div>
+
 
         <div class="col-md-6">
             <label for="inputumb" class="form-label">Unidad de medida básica</label>
@@ -92,7 +96,7 @@
 
         <div class="col-md-4">
             <label for="inputNeto" class="form-label">Peso neto</label>
-            <label id="resultadoNeto" class="form-control"></label>
+            <label id="resultadoNeto" class="form-control" for="inputNeto"></label>
             <div id="netoError" class="text-danger"></div>
             <!-- Campo oculto para almacenar el valor del peso neto -->
             <input type="hidden" name="net_weight" id="inputNeto" required>
@@ -106,89 +110,23 @@
 </div>
 
 <!-- Script JavaScript -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
         // Evento para el cambio en el número de recibo
-        $('#inputConsecutivo').on('change', function() {
-            // ... (tu código existente)
+        $('#inputOrderNum').on('change', function() {
+            obtenerInfoRecibo($(this).val());
         });
 
-        // Evento para la entrada en el campo de filtrado de Número de recibo
-        $('#inputFiltrarOrderNum').on('input', function() {
-            var filtroOrderNum = $(this).val().trim().toLowerCase();
-            var $selectOrderNum = $('#inputOrderNum');
-
-            // Filtrar opciones del select
-            $selectOrderNum.find('option').filter(function() {
-                var orderNum = $(this).text().toLowerCase();
-                $(this).toggle(orderNum.indexOf(filtroOrderNum) > -1);
-            });
-
-            // Si hay solo una opción después del filtrado, seleccionarla automáticamente
-            var opcionesVisibles = $selectOrderNum.find('option:visible');
-            if (opcionesVisibles.length === 1) {
-                opcionesVisibles.prop('selected', true);
-            }
-        });
-
-        // Evento para la entrada en el campo de filtrado de SKU
-        $('#inputFiltrarSku').on('input', function() {
-            var filtroSku = $(this).val().trim().toLowerCase();
-            var $selectSku = $('#inputSku');
-
-            // Filtrar opciones del select
-            $selectSku.find('option').filter(function() {
-                var sku = $(this).text().toLowerCase();
-                $(this).toggle(sku.indexOf(filtroSku) > -1);
-            });
-
-            // Si hay solo una opción después del filtrado, seleccionarla automáticamente
-            var opcionesVisibles = $selectSku.find('option:visible');
-            if (opcionesVisibles.length === 1) {
-                opcionesVisibles.prop('selected', true);
-            }
-        });
-
-        // Evento para la entrada en el campo SKU
-        $('#inputSku').on('change', function() {
-            var sku = $(this).val().trim();
+        // Evento para la entrada en el campo de filtrado de SKU y cambio en el campo SKU
+        $('#inputFiltrarSku, #inputSku').on('input change', function() {
+            filtrarOpciones($('#inputFiltrarSku'), $('#inputSku'));
+            var sku = $('#inputSku').val().trim();
             var $descripcionSelect = $('#inputDescripcion');
 
             if (sku !== '') {
-                // Obtener el token CSRF
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                // Solicitud Ajax al controlador
-                $.ajax({
-                    url: '{{ route('obtenerDescripcionPorSku') }}',
-                    method: 'POST',
-                    data: {
-                        sku: sku,
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        var descripcion = response.descripcion;
-
-                        // Habilitar el select y actualizar opciones
-                        $descripcionSelect.prop('disabled', false);
-                        $descripcionSelect.html('<option value="' + descripcion +
-                            '" selected>' + descripcion + '</option>');
-
-                        // Almacenar la descripción en el campo oculto
-                        $('#hiddenDescripcion').val(descripcion);
-                    },
-                    error: function() {
-                        // Manejar el error si es necesario
-                        $descripcionSelect.prop('disabled', true).html(
-                            '<option value="" selected>Error al obtener la descripción</option>'
-                        );
-                    }
-                });
+                obtenerDescripcionPorSku(sku, $descripcionSelect);
             } else {
-                // Si no hay SKU, deshabilitar el select y mostrar un mensaje predeterminado
-                $descripcionSelect.prop('disabled', true).html(
-                    '<option value="" selected>Selecciona un SKU primero</option>');
+                limpiarDescripcion($descripcionSelect);
             }
         });
 
@@ -202,8 +140,7 @@
                 .text('');
 
             // Deshabilitar select de descripción
-            $('#inputDescripcion').prop('disabled', true).html(
-                '<option value="" selected>Selecciona un SKU primero</option>');
+            limpiarDescripcion($('#inputDescripcion'));
 
             // Restablecer el resultado de Peso Neto
             $('#resultadoNeto').text('');
@@ -215,52 +152,95 @@
             $('#hiddenDescripcion').val('');
         });
     });
+
+    function filtrarOpciones(inputFiltrar, selectDestino) {
+        var filtro = inputFiltrar.val().trim().toLowerCase();
+        var $select = selectDestino;
+
+        $select.find('option').filter(function() {
+            var optionText = $(this).text().toLowerCase();
+            $(this).toggle(optionText.indexOf(filtro) > -1);
+        });
+
+        var opcionesVisibles = $select.find('option:visible');
+        if (opcionesVisibles.length === 1) {
+            opcionesVisibles.prop('selected', true);
+        }
+    }
+
+    function obtenerDescripcionPorSku(sku, $descripcionSelect) {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            url: '{{ route('obtenerDescripcionPorSku') }}',
+            method: 'POST',
+            data: {
+                sku: sku,
+                _token: csrfToken
+            },
+            success: function(response) {
+                var descripcion = response.descripcion;
+
+                // Habilitar el select y actualizar opciones
+                $descripcionSelect.prop('disabled', false);
+                $descripcionSelect.html('<option value="' + descripcion + '" selected>' + descripcion +
+                    '</option>');
+
+                // Almacenar la descripción en el campo oculto
+                $('#hiddenDescripcion').val(descripcion);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error en la solicitud Ajax:', textStatus, errorThrown);
+                // Manejar el error si es necesario
+                $descripcionSelect.prop('disabled', true).html(
+                    '<option value="" selected>Error al obtener la descripción</option>');
+            }
+        });
+    }
+
+    function limpiarDescripcion($descripcionSelect) {
+        $descripcionSelect.prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
+    }
+</script>
+
+<script>
+    function actualizarPesoNeto() {
+        var bruto = parseFloat($('#inputbruto').val()) || 0;
+        var empaque = parseFloat($('#inputEmpaque').val()) || 0;
+        var pesoNeto = bruto - empaque;
+        $('#resultadoNeto').text(pesoNeto.toFixed(2));
+        $('#inputNeto').val(pesoNeto.toFixed(2));
+    }
 </script>
 
 <script>
     $(document).ready(function() {
         // Evento para el cambio en el número de recibo
         $('#inputOrderNum').on('change', function() {
-            var orderNum = $(this).val();
-
-            // Realizar solicitud AJAX para obtener información de recibo
-            $.ajax({
-                url: '{{ route('obtenerInfoRecibo') }}',
-                method: 'POST',
-                data: {
-                    order_num: orderNum,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Rellenar los campos de delivery_date y code_customer
-                        $('#inputDeliveryDate').val(response.data.delivery_date);
-                        $('#inputCodeCustomer').val(response.data.code_customer);
-                    } else {
-                        // Manejar el caso en que no se encontró la información del recibo
-                        alert('No se pudo obtener la información del recibo.');
-                    }
-                },
-                error: function() {
-                    // Manejar el error si es necesario
-                    alert('Error al realizar la solicitud.');
-                }
-            });
+            obtenerInfoRecibo($(this).val());
         });
     });
-</script>
 
-
-<script>
-    function actualizarPesoNeto() {
-        // Actualizar peso neto
-        var bruto = parseFloat($('#inputbruto').val()) || 0;
-        var empaque = parseFloat($('#inputEmpaque').val()) || 0;
-
-        var pesoNeto = bruto - empaque;
-        $('#resultadoNeto').text(pesoNeto.toFixed(2));
-
-        // Asignar valor al campo oculto
-        $('#inputNeto').val(pesoNeto.toFixed(2));
+    function obtenerInfoRecibo(orderNum) {
+        $.ajax({
+            url: '{{ route('obtenerInfoRecibo') }}',
+            method: 'POST',
+            data: {
+                order_num: orderNum,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#inputDeliveryDate').val(response.data.delivery_date);
+                    $('#inputCodeCustomer').val(response.data.code_customer);
+                } else {
+                    alert('No se pudo obtener la información del recibo.');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error en la solicitud Ajax:', textStatus, errorThrown);
+                alert('Error al realizar la solicitud.');
+            }
+        });
     }
 </script>

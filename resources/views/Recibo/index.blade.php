@@ -2,19 +2,14 @@
 
 @section('content')
     {{-- Agrega los estilos y scripts de DataTables --}}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
-    </script>
 
     <style>
         #dataTable_wrapper .dataTable thead th,
         #dataTable_wrapper .dataTable thead td {
             border: none;
+            /* Quita el borde */
             background-color: #f2f2f2;
-            /* Color de fondo gris claro */
             border-radius: 0;
-            /* Esquinas no redondas */
         }
 
         #dataTable_filter input {
@@ -22,9 +17,7 @@
             border-radius: 4px;
             padding: 5px;
             background-color: #f2f2f2;
-            /* Color de fondo gris claro para el campo de filtro */
         }
-
 
         .bg-teal {
             background-color: #4FD1C5;
@@ -41,6 +34,11 @@
 
         .btn-teal:hover {
             background-color: #3CB3A6;
+        }
+
+        #dataTable tbody td {
+            border: none;
+            /* Quita el borde en el cuerpo de la tabla */
         }
     </style>
 
@@ -79,11 +77,9 @@
                                     @foreach ([$recibo->order_num, $recibo->delivery_date, $recibo->origin, $recibo->customer, $recibo->code_customer, $recibo->driver, $recibo->plate, $recibo->num_vehicle] as $data)
                                         <td class="py-2 px-4">{{ $data }}</td>
                                     @endforeach
-                                    <td class="py-2 px-4">
+                                    <td>
                                         <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                            class="btn btn-info btn-sm rounded-md bg-teal text-white hover:bg-teal-700">
-                                            Detalles
-                                        </a>
+                                            class="btn btn-info btn-sm rounded">Detalles</a>
                                     </td>
                                 </tr>
                             @empty

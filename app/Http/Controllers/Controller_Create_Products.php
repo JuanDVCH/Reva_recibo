@@ -7,34 +7,47 @@ use App\Models\Code_products;
 use App\Models\Model_Products;
 use App\Models\Model_Receipt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Controller_Create_Products extends Controller
 {
     public function index(Request $request)
     {
-        $order_number = $request->input('order_num', null);
-
-        $productos = $order_number
-            ? Model_Products::where('state', 1)
-                ->whereHas('recibo', function ($query) use ($order_number) {
-                    $query->where('order_num', $order_number);
-                })
-                ->with('code_products')
-                ->get()
-            : collect();
-
-        $recibos = Model_Receipt::where('state', 1)->get();
-        $skus = Code_products::pluck('sku');
-        $descripciones = Code_products::pluck('description');
-
-        // Almacena los SKUs y descripciones en la sesión
-        session(['skus' => $skus]);
-        session(['descriptions' => $descripciones]);
-
-        // Pasa $skus y $descripciones a la vista
-        return view('Productos.index', compact('productos', 'order_number', 'recibos', 'skus', 'descripciones'));
+        try {
+            // Obtener el número de pedido de la solicitud
+            $orderNumber = $request->input('order_num', null);
+    
+            // Agregar un mensaje de depuración para verificar el número de orden
+            Log::info("Order Number (provided): $orderNumber");
+    
+            // Obtener productos basados en el número de pedido (si se proporciona)
+            $productos = $orderNumber
+                ? Model_Products::where('order_num', $orderNumber)->where('state', 1)->with('code_products')->get()
+                : collect();
+    
+            // Agregar un mensaje de depuración para verificar la cantidad de productos
+            Log::info("Productos Count: " . $productos->count());
+    
+            // Obtener todos los recibos con estado 1
+            $recibos = Model_Receipt::where('state', 1)->get();
+    
+            // Obtener todos los SKUs y descripciones disponibles
+            $skus = Code_products::pluck('sku');
+            $descripciones = Code_products::pluck('description');
+    
+            // Almacenar SKUs y descripciones en la sesión para su uso posterior
+            session(['skus' => $skus, 'descriptions' => $descripciones]);
+    
+            // Pasar datos a la vista
+            return view('Productos.index', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
+        } catch (\Exception $e) {
+            // Manejar excepciones proporcionando detalles en el log y mostrando un mensaje de consola
+            Log::error("Error en ControllerCreateProducts@index: " . $e->getMessage());
+            Log::error($e->getTraceAsString()); // Mostrar el rastreo de la pila en la consola
+            return back()->withErrors(['error' => 'Ha ocurrido un error.']);
+        }
     }
-
+    
     public function create()
     {
         // Recuperar los SKUs almacenados en la sesión y ordenar alfabéticamente
@@ -52,7 +65,6 @@ class Controller_Create_Products extends Controller
         // Configurar la vista con los datos necesarios antes de la condición
         return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
     }
-
 
     public function obtenerSkus(Request $request)
     {
@@ -85,29 +97,11 @@ class Controller_Create_Products extends Controller
         try {
             // Validación de datos
             $request->validate([
-                'sku' => 'required|exists:code_products,sku',
-                'unit_measurement' => 'required',
-                'amount' => 'required|numeric',
-                'gross_weight' => 'required|numeric',
-                'packaging_weight' => 'required|numeric',
-                'net_weight' => 'required|numeric',
-                'orden_num' => 'required', // Cambiado de 'order_num'
-                'description' => 'required|exists:code_products,description',
-                'notes' => 'nullable|string',
-                'criterium' => 'nullable|string',
+                // ... (tus reglas de validación)
+            ], [
+                // ... (tus mensajes de error personalizados)
             ]);
-
-            // Obtener información de recibo (delivery_date y code_customer) asociada a orden_num
-            $reciboInfo = Model_Receipt::where('order_num', $request->orden_num)
-                ->select('delivery_date', 'code_customer')
-                ->first();
-
-            // Verificar si se encontró información del recibo
-            if (!$reciboInfo) {
-                // Manejar el caso en el que no se encuentra la información del recibo
-                return redirect()->back()->with('error', 'No se encontró información del recibo.');
-            }
-
+    
             // Crear instancia del modelo y asignar valores
             $producto = new Model_Products();
             $producto->sku = $request->sku;
@@ -117,23 +111,26 @@ class Controller_Create_Products extends Controller
             $producto->gross_weight = $request->gross_weight;
             $producto->packaging_weight = $request->packaging_weight;
             $producto->net_weight = $request->net_weight;
-            $producto->order_num = $request->orden_num; // Cambiado de 'order_num'
-            $producto->notes = $request->notes;
+            $producto->order_num = $request->orden_num;
+            $producto->delivery_date = $request->delivery_date;
             $producto->criterium = $request->criterium;
-            $producto->code_customer = $reciboInfo->code_customer;
+            $producto->notes = $request->notes;
+            $producto->code_customer = $request->code_customer;
+    
+            // Asignar el valor '1' al campo 'state'
             $producto->state = 1;
-
+    
             // Intentar guardar el producto
             $producto->save();
-
+    
             // Redirección después de guardar
-            return redirect(route('recibo.index'))->with('success', 'Producto creado exitosamente.');
+            return redirect(route('recibo.index'));
         } catch (\Exception $e) {
             // Manejo del error
-            return redirect()->back()->with('error', $e->getMessage());
+            return back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
+    
 
     public function obtenerInfoRecibo(Request $request)
     {
@@ -153,7 +150,7 @@ class Controller_Create_Products extends Controller
         } else {
             return response()->json([
                 'success' => false,
-            ]);
+            ], 404);
         }
     }
 }

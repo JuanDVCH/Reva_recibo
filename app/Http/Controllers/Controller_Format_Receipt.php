@@ -50,4 +50,5 @@ class Controller_Format_Receipt extends Controller
         return response()->json($codigosClientes);
     }
 
+    
 }

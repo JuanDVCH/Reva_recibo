@@ -22,14 +22,16 @@ class ControllerEtiqueta extends Controller
             ->join('product as prod', 'tags.sku', '=', 'prod.sku')
             ->where('tags.state', 1)
             ->distinct()
-            ->orderBy('tags.delivery_date', 'desc'); // Corregir el orden por fecha de entrega
-
+            ->orderBy('tags.delivery_date', 'desc')
+            ->get(); // Agregar el método get() para ejecutar la consulta y obtener los resultados
+    
         // Obtener la lista de recibos y productos solo si es necesario
         $recibos = Model_Receipt::where('state', 1)->get();
         $productos = Model_Products::where('state', 1)->get();
-
+    
         return view('etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
     }
+    
 
     public function create()
     {
