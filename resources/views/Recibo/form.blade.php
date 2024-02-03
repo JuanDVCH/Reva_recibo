@@ -77,3 +77,15 @@
         $('#inputcode_customer').val(selectedCode);
     });
 </script>
+
+
+<script>
+    // Obtén la referencia al elemento de entrada de fecha
+    var inputDeliveryDate = document.getElementById('inputdelivery_date');
+
+    // Obtén la fecha actual en formato ISO (YYYY-MM-DD)
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    // Establece la fecha máxima como la fecha actual
+    inputDeliveryDate.setAttribute('max', currentDate);
+</script>

@@ -21,10 +21,12 @@
         <!-- Este div mostrará la fecha de entrega -->
         <div class="col-md-6">
             <label for="inputDeliveryDate" class="form-label">Fecha de Entrega</label>
-            <input type="date" class="form-control" id="inputDeliveryDate" name="delivery_date" readonly>
+            <input type="date" class="form-control" id="inputDeliveryDate" name="delivery_date" readonly
+                max="<?php echo date('Y-m-d'); ?>">
             <!-- Campo oculto para almacenar la fecha -->
             <input type="hidden" name="hidden_delivery_date" id="hiddenDelivery_date" required>
         </div>
+
 
         <!-- Este div mostrará el código de cliente -->
         <div class="col-md-6">
