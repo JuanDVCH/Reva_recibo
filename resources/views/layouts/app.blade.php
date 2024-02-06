@@ -129,7 +129,8 @@
         <script src="{{ asset('js/pagination.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>    
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
+        </script>
 
     </div>
 </body>
@@ -151,11 +152,20 @@
                         <ul class="list-unstyled">
                             <li>
                                 <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
-                                    href="https://eu-show.pulpo.co/#/incoming-goods/incoming-stock-component" target="_blank">
+                                    href="https://eu-show.pulpo.co/#/"
+                                    target="_blank">
                                     Pulpo WMS
                                 </a>
+                                <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
+                                    href="https://eu-show.pulpo.co/wizard/#" target="_blank">
+                                    PULPO WMS Warehouse Wizard
+                                </a>
+                                <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
+                                    href="https://intercom.help/pulpo-wms/es/" target="_blank">
+                                    PULPO WMS Centro de ayuda
+                                </a>
                             </li>
-                            
+
                         </ul>
                     </div>
 
