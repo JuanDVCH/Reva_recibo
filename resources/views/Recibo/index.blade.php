@@ -2,12 +2,11 @@
 
 @section('content')
     {{-- Agrega los estilos y scripts de DataTables --}}
-
     <style>
+        /* Estilos personalizados */
         #dataTable_wrapper .dataTable thead th,
         #dataTable_wrapper .dataTable thead td {
             border: none;
-            /* Quita el borde */
             background-color: #f2f2f2;
             border-radius: 0;
         }
@@ -38,7 +37,6 @@
 
         #dataTable tbody td {
             border: none;
-            /* Quita el borde en el cuerpo de la tabla */
         }
     </style>
 
@@ -57,7 +55,7 @@
                     <table class="w-full table table-hover shadow-md" id="dataTable">
                         <thead class="bg-teal text-teal">
                             <tr>
-                                @foreach (['Número de formato', 'Fecha', 'Origen', 'Cliente', 'Código del Cliente', 'Conductor', 'Placa', 'Número de Vehículo', 'Acciones'] as $header)
+                                @foreach (['Número de formato', 'Fecha', 'Origen', 'Cliente', 'Código del Cliente', 'Conductor', 'Placa', 'Impronta', 'Acciones'] as $header)
                                     <th class="py-3 px-4">{{ $header }}</th>
                                 @endforeach
                             </tr>
@@ -93,6 +91,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog" aria-labelledby="createReceiptModal"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -109,7 +108,16 @@
             </div>
         </div>
     </div>
+
     {{-- Inicializa DataTables para tu tabla --}}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+
     <script>
         $(document).ready(function() {
             var table = $('#dataTable').DataTable({
@@ -149,6 +157,6 @@
             });
         });
     </script>
-    <script src="{{ asset('js/Modals.js') }}"></script>
 
+    <script src="{{ asset('js/Modals.js') }}"></script>
 @endsection

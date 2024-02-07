@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-6 d-flex">
             <div class="me-2 flex-grow-1">
-                <label for="customer" class="form-label">Buscar</label>
+                <label for="customerFilter" class="form-label">Buscar</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="customerFilter" placeholder="Buscar clientes">
                 </div>
@@ -21,18 +21,15 @@
                 <select class="form-select custom-select" id="customer" name="customer" style="width: 100%;" required>
                     <option value="" disabled selected>Seleccione un cliente</option>
                     @foreach ($suppliers as $supplier)
-                        <option value="{{ $supplier->name }}" data-code="{{ $supplier->code }}">{{ $supplier->name }}
-                        </option>
+                        <option value="{{ $supplier->name }}" data-code="{{ $supplier->code }}">{{ $supplier->name }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
-
         <div class="col-md-6">
             <label for="inputcode_customer" class="form-label">Código del cliente</label>
             <input type="text" class="form-control" id="inputcode_customer" name="code_customer" required readonly>
         </div>
-
         <div class="col-md-4">
             <label for="inputdriver" class="form-label">Nombre del conductor</label>
             <input type="text" class="form-control" id="inputdriver" name="driver" required>
@@ -42,8 +39,8 @@
             <input type="text" class="form-control" id="inputplate" name="plate" required>
         </div>
         <div class="col-md-4">
-            <label for="inputnum_vehicle" class="form-label">Número del vehículo</label>
-            <input type="number" class="form-control" id="inputnum_vehicle" name="num_vehicle">
+            <label for="inputnum_vehicle" class="form-label">Impronta</label>
+            <input type="number" class="form-control" id="inputnum_vehicle" name="num_vehicle" required>
         </div>
         <div class="col-12 mt-3 text-center">
             <button type="submit" class="btn btn-success mx-2">Enviar</button>
@@ -51,6 +48,7 @@
         </div>
     </form>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
@@ -77,7 +75,6 @@
         $('#inputcode_customer').val(selectedCode);
     });
 </script>
-
 
 <script>
     // Obtén la referencia al elemento de entrada de fecha
