@@ -40,7 +40,7 @@
         </div>
         <div class="col-md-4">
             <label for="inputnum_vehicle" class="form-label">Impronta</label>
-            <input type="number" class="form-control" id="inputnum_vehicle" name="num_vehicle" required>
+            <input type="text" class="form-control" id="inputnum_vehicle" name="num_vehicle">
         </div>
         <div class="col-12 mt-3 text-center">
             <button type="submit" class="btn btn-success mx-2">Enviar</button>
