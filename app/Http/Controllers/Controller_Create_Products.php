@@ -16,28 +16,28 @@ class Controller_Create_Products extends Controller
         try {
             // Obtener el número de pedido de la solicitud
             $orderNumber = $request->input('order_num', null);
-    
+
             // Agregar un mensaje de depuración para verificar el número de orden
             Log::info("Order Number (provided): $orderNumber");
-    
+
             // Obtener productos basados en el número de pedido (si se proporciona)
             $productos = $orderNumber
                 ? Model_Products::where('order_num', $orderNumber)->where('state', 1)->with('code_products')->get()
                 : collect();
-    
+
             // Agregar un mensaje de depuración para verificar la cantidad de productos
             Log::info("Productos Count: " . $productos->count());
-    
+
             // Obtener todos los recibos con estado 1
             $recibos = Model_Receipt::where('state', 1)->get();
-    
+
             // Obtener todos los SKUs y descripciones disponibles
             $skus = Code_products::pluck('sku');
             $descripciones = Code_products::pluck('description');
-    
+
             // Almacenar SKUs y descripciones en la sesión para su uso posterior
             session(['skus' => $skus, 'descriptions' => $descripciones]);
-    
+
             // Pasar datos a la vista
             return view('Productos.index', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
         } catch (\Exception $e) {
@@ -47,7 +47,7 @@ class Controller_Create_Products extends Controller
             return back()->withErrors(['error' => 'Ha ocurrido un error.']);
         }
     }
-    
+
     public function create()
     {
         // Recuperar los SKUs almacenados en la sesión y ordenar alfabéticamente
@@ -76,19 +76,18 @@ class Controller_Create_Products extends Controller
         return response()->json($skus);
     }
 
-    public function obtenerDescripcionPorSku(Request $request)
+    public function obtenerSkuPorDescripcion(Request $request)
     {
-        try {
-            $sku = $request->input('sku');
-            $descripcion = Code_products::where('sku', $sku)->value('description');
+        $descripcion = $request->input('descripcion');
 
-            if ($descripcion === null) {
-                throw new \Exception("No se encontró descripción para el SKU: $sku");
-            }
+        // Realizar la consulta a la base de datos para obtener el SKU
+        $codeProduct = Code_products::where('description', $descripcion)->first();
 
-            return response()->json(['descripcion' => $descripcion]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if ($codeProduct) {
+            $sku = $codeProduct->sku;
+            return response()->json(['sku' => $sku]);
+        } else {
+            return response()->json(['sku' => null]);
         }
     }
 
@@ -101,7 +100,7 @@ class Controller_Create_Products extends Controller
             ], [
                 // ... (tus mensajes de error personalizados)
             ]);
-    
+
             // Crear instancia del modelo y asignar valores
             $producto = new Model_Products();
             $producto->sku = $request->sku;
@@ -116,13 +115,13 @@ class Controller_Create_Products extends Controller
             $producto->criterium = $request->criterium;
             $producto->notes = $request->notes;
             $producto->code_customer = $request->code_customer;
-    
+
             // Asignar el valor '1' al campo 'state'
             $producto->state = 1;
-    
+
             // Intentar guardar el producto
             $producto->save();
-    
+
             // Redirección después de guardar
             return redirect(route('recibo.index'));
         } catch (\Exception $e) {
@@ -130,7 +129,6 @@ class Controller_Create_Products extends Controller
             return back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
-    
 
     public function obtenerInfoRecibo(Request $request)
     {
@@ -153,4 +151,9 @@ class Controller_Create_Products extends Controller
             ], 404);
         }
     }
+    public function obtenerProductosPorOrden($orderNum) {
+        $productos = Producto::where('order_num', $orderNum)->get();
+        return response()->json(['productos' => $productos]);
+    }
+
 }

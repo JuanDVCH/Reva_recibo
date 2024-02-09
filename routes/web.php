@@ -30,7 +30,9 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::group(['prefix' => 'productos'], function () {
         Route::resource('/', Controller_Create_Products::class)->names('productos');
         Route::post('/obtener-info-recibo', [Controller_Create_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
-        Route::post('/obtener-descripcion-por-sku', [Controller_Create_Products::class, 'obtenerDescripcionPorSku'])->name('obtenerDescripcionPorSku');
+        Route::get('/obtener-productos-por-orden/{orderNum}', [Controller_Create_Products::class, 'obtenerProductosPorOrden'])
+            ->name('obtener.productos.por.orden');
+        Route::post('/obtener-sku-por-descripcion', [Controller_Create_Products::class, 'obtenerSkuPorDescripcion'])->name('obtenerSkuPorDescripcion');
     });
 
     Route::group(['prefix' => 'etiquetas'], function () {

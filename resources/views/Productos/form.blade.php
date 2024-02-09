@@ -36,32 +36,31 @@
             <input type="hidden" name="hidden_code_customer" id="hiddenCode_customer" required>
         </div>
 
-        <!-- Filtrar SKU -->
+        <!-- Filtrar Descripción -->
         <div class="col-md-6">
-            <label for="inputFiltrarSku" class="form-label">Filtrar SKU</label>
-            <input type="text" class="form-control" id="inputFiltrarSku" placeholder="Buscar SKU">
-        </div>
-
-        <!-- SKU -->
-        <div class="col-md-6">
-            <label for="inputSku" class="form-label">SKU</label>
-            <select class="form-control" id="inputSku" name="sku" required>
-                <option value="" disabled selected>Selecciona un SKU</option>
-                @foreach ($skus->sort() as $sku)
-                    <option value="{{ $sku }}">{{ $sku }}</option>
-                @endforeach
-            </select>
+            <label for="inputFiltrarDescripcion" class="form-label">Filtrar Descripción</label>
+            <input type="text" class="form-control" id="inputFiltrarDescripcion" placeholder="Buscar Descripción">
         </div>
 
         <!-- Descripción -->
         <div class="col-md-6">
             <label for="inputDescripcion" class="form-label">Descripción</label>
-            <select class="form-control" id="inputDescripcion" name="description" disabled required>
-                <option value="" selected>Selecciona un SKU primero</option>
+            <select class="form-control" id="inputDescripcion" name="description" required>
+                <option value="" selected>Selecciona una descripción</option>
+                @foreach ($descripciones as $descripcion)
+                    <option value="{{ $descripcion }}">{{ $descripcion }}</option>
+                @endforeach
             </select>
             <div id="descripcionError" class="text-danger"></div>
             <input type="hidden" name="hidden_description" id="hiddenDescripcion" required>
         </div>
+
+        <!-- SKU -->
+        <div class="col-md-6">
+            <label for="inputSku" class="form-label">SKU</label>
+            <input type="text" class="form-control" id="inputSku" name="sku" readonly>
+        </div>
+
 
         <!-- Criterium -->
         <div class="col-md-6">
@@ -126,6 +125,65 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
 
+<script>
+    $(document).ready(function() {
+        // Evento para la selección de la descripción
+        $('#inputDescripcion').on('change', function() {
+            var descripcion = $(this).val().trim();
+            var $skuInput = $('#inputSku');
+
+            if (descripcion !== '') {
+                obtenerSkuPorDescripcion(descripcion, $skuInput);
+            } else {
+                limpiarSku($skuInput);
+            }
+        });
+    });
+
+    function obtenerSkuPorDescripcion(descripcion, $skuInput) {
+        $.ajax({
+            url: '{{ route('obtenerSkuPorDescripcion') }}',
+            method: 'POST',
+            data: {
+                descripcion: descripcion,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Actualiza el campo SKU con el valor obtenido
+                $skuInput.val(response.sku);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error en la solicitud Ajax:', textStatus, errorThrown);
+                // Manejar el error si es necesario
+            }
+        });
+    }
+
+    function limpiarSku($skuInput) {
+        $skuInput.val('');
+    }
+    $(document).ready(function() {
+        // Evento para la entrada en el campo de filtrado de Descripción
+        $('#inputFiltrarDescripcion').on('input', function() {
+            filtrarDescripciones($(this).val());
+        });
+    });
+
+    function filtrarDescripciones(filtro) {
+        filtro = filtro.trim().toLowerCase();
+        var $select = $('#inputDescripcion');
+
+        $select.find('option').filter(function() {
+            var optionText = $(this).text().toLowerCase();
+            $(this).toggle(optionText.indexOf(filtro) > -1);
+        });
+
+        var opcionesVisibles = $select.find('option:visible');
+        if (opcionesVisibles.length === 1) {
+            opcionesVisibles.prop('selected', true);
+        }
+    }
+</script>
 <script>
     $(document).ready(function() {
         // Evento para el cambio en el número de recibo
@@ -209,35 +267,6 @@
         }
     }
 
-    function obtenerDescripcionPorSku(sku, $descripcionSelect) {
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-        $.ajax({
-            url: '{{ route('obtenerDescripcionPorSku') }}',
-            method: 'POST',
-            data: {
-                sku: sku,
-                _token: csrfToken
-            },
-            success: function(response) {
-                var descripcion = response.descripcion;
-
-                // Habilitar el select y actualizar opciones
-                $descripcionSelect.prop('disabled', false);
-                $descripcionSelect.html('<option value="' + descripcion + '" selected>' + descripcion +
-                    '</option>');
-
-                // Almacenar la descripción en el campo oculto
-                $('#hiddenDescripcion').val(descripcion);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error('Error en la solicitud Ajax:', textStatus, errorThrown);
-                // Manejar el error si es necesario
-                $descripcionSelect.prop('disabled', true).html(
-                    '<option value="" selected>Error al obtener la descripción</option>');
-            }
-        });
-    }
 
     function limpiarDescripcion($descripcionSelect) {
         $descripcionSelect.prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
