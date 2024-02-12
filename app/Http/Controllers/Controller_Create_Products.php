@@ -121,9 +121,8 @@ class Controller_Create_Products extends Controller
 
             // Intentar guardar el producto
             $producto->save();
-
             // Redirección después de guardar
-            return redirect(route('recibo.index'));
+            return redirect(route('create.index'));
         } catch (\Exception $e) {
             // Manejo del error
             return back()->withInput()->withErrors(['error' => $e->getMessage()]);
