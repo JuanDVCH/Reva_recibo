@@ -82,6 +82,8 @@
 
                         <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ms-auto">
+
+
                             <!-- Authentication Links -->
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
@@ -92,12 +94,16 @@
 
                                 <div class="dropdown-menu dropdown-menu-end animated fadeIn"
                                     aria-labelledby="navbarDropdown">
+                                    <!-- Enlace a la ruta del perfil -->
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}" style="color: #000000; ">
+                                        Mi Perfil
+                                    </a>
+                                    <!-- Enlace para cerrar sesión -->
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                         style="color: #000000;">
                                         {{ __('Cerrar sesión') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
@@ -105,6 +111,7 @@
                             </li>
                         </ul>
                     </div>
+
                 </div>
             </nav>
 
@@ -127,6 +134,7 @@
         <script src="{{ asset('js/Modals.js') }}"></script>
         <script src="{{ asset('js/filters.js') }}"></script>
         <script src="{{ asset('js/pagination.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js">
@@ -152,8 +160,7 @@
                         <ul class="list-unstyled">
                             <li>
                                 <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"
-                                    href="https://eu-show.pulpo.co/#/"
-                                    target="_blank">
+                                    href="https://eu-show.pulpo.co/#/" target="_blank">
                                     Pulpo WMS
                                 </a>
                                 <a class="text-white hover:text-gray-300 font-semibold block pb-2 text-sm"

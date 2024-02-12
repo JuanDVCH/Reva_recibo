@@ -121,6 +121,7 @@ class Controller_Create_Products extends Controller
 
             // Intentar guardar el producto
             $producto->save();
+            
             // Redirección después de guardar
             return redirect(route('create.index'));
         } catch (\Exception $e) {
@@ -151,7 +152,7 @@ class Controller_Create_Products extends Controller
         }
     }
     public function obtenerProductosPorOrden($orderNum) {
-        $productos = Producto::where('order_num', $orderNum)->get();
+        $productos = Model_Products::where('order_num', $orderNum)->get();
         return response()->json(['productos' => $productos]);
     }
 

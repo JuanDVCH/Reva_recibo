@@ -3,6 +3,8 @@ use App\Http\Controllers\ControllerEtiqueta;
 use App\Http\Controllers\Controller_Format_Receipt;
 use App\Http\Controllers\Controller_Create_Products;
 use App\Http\Controllers\ControllerPulpo;
+use App\Http\Controllers\ControllerProfile;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,11 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/obtener-codigos-cliente/{id}', [Controller_Format_Receipt::class, 'obtenerCodigosCliente']);
     });
 
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('profile/edit', [ControllerProfile::class, 'edit'])->name('profile.edit');
+        Route::put('profile/update', [ControllerProfile::class, 'update'])->name('profile.update');
+    });
+    
     Route::group(['prefix' => 'productos'], function () {
         Route::resource('/', Controller_Create_Products::class)->names('productos');
         Route::post('/obtener-info-recibo', [Controller_Create_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
