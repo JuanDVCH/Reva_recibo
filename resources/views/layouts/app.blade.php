@@ -15,6 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Other CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -95,9 +96,11 @@
                                 <div class="dropdown-menu dropdown-menu-end animated fadeIn"
                                     aria-labelledby="navbarDropdown">
                                     <!-- Enlace a la ruta del perfil -->
+                                    @if (auth()->user()->hasRole('Administrador'))
                                     <a class="dropdown-item" href="{{ route('profile.edit') }}" style="color: #000000; ">
-                                        Mi Perfil
+                                        administración
                                     </a>
+                                    @endif
                                     <!-- Enlace para cerrar sesión -->
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -134,6 +137,7 @@
         <script src="{{ asset('js/Modals.js') }}"></script>
         <script src="{{ asset('js/filters.js') }}"></script>
         <script src="{{ asset('js/pagination.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://cdn.jsdelivr.net/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>

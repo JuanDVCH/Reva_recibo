@@ -23,6 +23,7 @@
         "picqer/php-barcode-generator": "^2.4",
         "predis/predis": "^2.2",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-permission": "^6.3",
         "tecnickcom/tcpdf": "^6.6"
     },
     "require-dev": {
@@ -39,7 +40,8 @@
         "psr-4": {
             "Milon\\Barcode\\": "ruta/a/tu/namespace",
             "App\\": "app/",
-            "Database\\Factories\\": "database/factories/"
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders"
         }
     },
     "autoload-dev": {
