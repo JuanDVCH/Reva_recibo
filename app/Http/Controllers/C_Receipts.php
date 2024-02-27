@@ -6,7 +6,7 @@ use App\Models\Model_Receipt;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
-class Controller_Format_Receipt extends Controller
+class C_Receipts extends Controller
 {
     /**
      * Display a listing of the resource.

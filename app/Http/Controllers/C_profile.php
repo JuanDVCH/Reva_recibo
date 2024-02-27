@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class ControllerProfile extends Controller
+class C_profile extends Controller
 {
     /**
      * Show the form for editing the specified resource.

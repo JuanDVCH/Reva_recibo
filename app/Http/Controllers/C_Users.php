@@ -7,7 +7,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
-class ControllerUsers extends Controller
+class C_Users extends Controller
 {
     public function index()
     {
@@ -111,5 +111,7 @@ class ControllerUsers extends Controller
 
 
     
+
+
 
 }

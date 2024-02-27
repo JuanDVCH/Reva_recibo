@@ -1,9 +1,10 @@
 <?php
-use App\Http\Controllers\ControllerEtiqueta;
-use App\Http\Controllers\Controller_Format_Receipt;
-use App\Http\Controllers\Controller_Create_Products;
-use App\Http\Controllers\ControllerProfile;
-use App\Http\Controllers\ControllerUsers;
+// Importación de controladores y clases necesarias
+use App\Http\Controllers\C_Tags;
+use App\Http\Controllers\C_Receipts;
+use App\Http\Controllers\C_Products;
+use App\Http\Controllers\C_profile;
+use App\Http\Controllers\C_Users;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Auth;
@@ -13,48 +14,57 @@ Auth::routes();
 
 // Ruta predeterminada para usuarios no autenticados
 Route::get('/', function () {
+    // Redirigir a /home si el usuario está autenticado, de lo contrario, mostrar la vista de inicio de sesión
     return Auth::check() ? redirect('/home') : view('auth.Login');
 });
 
 // Rutas que requieren autenticación
 Route::middleware(['web', 'auth'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    // Ruta para mostrar la vista de inicio después de iniciar sesión
+    Route::get('/home', [App\Http\Controllers\C_home::class, 'index'])->name('home');
+
+    // Ruta para cerrar sesión
     Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-    // Otras rutas autenticadas aquí si es necesario
 
     // Rutas agrupadas por recursos
     Route::group(['prefix' => 'recibo'], function () {
-        Route::resource('/', Controller_Format_Receipt::class)->names('recibo');
-        Route::get('/obtener-codigos-cliente/{id}', [Controller_Format_Receipt::class, 'obtenerCodigosCliente']);
+        // Rutas relacionadas con los recibos
+        Route::resource('/', C_Receipts::class)->names('recibo');
+        Route::get('/obtener-codigos-cliente/{id}', [C_Receipts::class, 'obtenerCodigosCliente']);
     });
 
-    Route::resource('users', ControllerUsers::class);
-    
+    // Ruta para gestionar usuarios
+    Route::resource('users', C_Users::class);
 
+    // Rutas agrupadas para el perfil del usuario
     Route::group(['prefix' => 'profile'], function () {
-        Route::get('profile/edit', [ControllerProfile::class, 'edit'])->name('profile.edit');
-        Route::put('profile/update', [ControllerProfile::class, 'update'])->name('profile.update');
+        // Rutas para editar y actualizar el perfil del usuario
+        Route::get('profile/edit', [C_profile::class, 'edit'])->name('profile.edit');
+        Route::put('profile/update', [C_profile::class, 'update'])->name('profile.update');
     });
 
+    // Rutas agrupadas para productos
     Route::group(['prefix' => 'productos'], function () {
-        Route::resource('/', Controller_Create_Products::class)->names('productos');
-        Route::post('/obtener-info-recibo', [Controller_Create_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
-        Route::get('/obtener-productos-por-orden/{orderNum}', [Controller_Create_Products::class, 'obtenerProductosPorOrden'])
+        // Rutas relacionadas con la gestión de productos
+        Route::resource('/', C_Products::class)->names('productos');
+        Route::post('/obtener-info-recibo', [C_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
+        Route::get('/obtener-productos-por-orden/{orderNum}', [C_Products::class, 'obtenerProductosPorOrden'])
             ->name('obtener.productos.por.orden');
-        Route::post('/obtener-sku-por-descripcion', [Controller_Create_Products::class, 'obtenerSkuPorDescripcion'])->name('obtenerSkuPorDescripcion');
+        Route::post('/obtener-sku-por-descripcion', [C_Products::class, 'obtenerSkuPorDescripcion'])->name('obtenerSkuPorDescripcion');
     });
 
+    // Rutas agrupadas para etiquetas
     Route::group(['prefix' => 'etiquetas'], function () {
-        Route::resource('/', ControllerEtiqueta::class)->names('etiqueta');
-        Route::get('/obtener-skus-y-customer', [ControllerEtiqueta::class, 'obtenerSkusYCustomer'])->name('etiqueta.obtener-skus-y-customer');
-        Route::post('/obtener-descripcion-por-sku', [ControllerEtiqueta::class, 'obtenerDescripcionPorSku'])->name('etiqueta.obtener-descripcion-por-sku');
-        Route::post('/obtener-barcode-por-sku', [ControllerEtiqueta::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
-        Route::get('/{id_tag}/imprimir', [ControllerEtiqueta::class, 'imprimir'])->name('etiquetas.imprimir');
-        Route::post('/obtener-info-reciboetiquetas', [ControllerEtiqueta::class, 'obtenerInfoReciboetiquetas'])->name('obtenerInfoReciboetiquetas');
+        // Rutas relacionadas con la gestión de etiquetas
+        Route::resource('/', C_Tags::class)->names('etiqueta');
+        Route::get('/obtener-skus-y-customer', [C_Tags::class, 'obtenerSkusYCustomer'])->name('etiqueta.obtener-skus-y-customer');
+        Route::post('/obtener-descripcion-por-sku', [C_Tags::class, 'obtenerDescripcionPorSku'])->name('etiqueta.obtener-descripcion-por-sku');
+        Route::post('/obtener-barcode-por-sku', [C_Tags::class, 'obtenerBarcodePorSku'])->name('etiqueta.obtener-barcode-por-sku');
+        Route::get('/{id_tag}/imprimir', [C_Tags::class, 'imprimir'])->name('etiquetas.imprimir');
+        Route::post('/obtener-info-reciboetiquetas', [C_Tags::class, 'obtenerInfoReciboetiquetas'])->name('obtenerInfoReciboetiquetas');
     });
 
     // Ruta para asignar el rol de administrador
     Route::get('/assign-admin-role', [RolePermissionController::class, 'assignAdminRole']);
-
 });

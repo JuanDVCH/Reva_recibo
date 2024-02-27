@@ -9,7 +9,7 @@ use App\Models\Model_Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class Controller_Create_Products extends Controller
+class C_Products extends Controller
 {
     public function index(Request $request)
     {

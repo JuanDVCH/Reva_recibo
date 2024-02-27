@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log; // Add this line
 
 //use Imagick;
 
-class ControllerEtiqueta extends Controller
+class C_Tags extends Controller
 {
     public function index()
     {
