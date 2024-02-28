@@ -224,18 +224,24 @@
         $('#consecutivoError, #descripcionError, #umbError, #cantidadError, #brutoError, #empaqueError, #netoError')
             .text('');
 
-        // Deshabilitar select de descripción
-        limpiarDescripcion($('#inputDescripcion'));
-
         // Restablecer el resultado de Peso Neto
         $('#resultadoNeto').text('');
 
         // Restablecer el valor del campo oculto de Peso Neto
         $('#inputNeto').val('');
 
+        // Deshabilitar el campo de descripción solo si SKU está vacío
+        var sku = $('#inputSku').val().trim();
+        var $descripcionSelect = $('#inputDescripcion');
+
+        if (sku === '') {
+            limpiarDescripcion($descripcionSelect);
+        }
+
         // Restablecer el valor del campo oculto de Descripción
         $('#hiddenDescripcion').val('');
     }
+
 
     function filtrarOrdenes(filtro) {
         filtro = filtro.trim().toLowerCase();
@@ -265,11 +271,6 @@
         if (opcionesVisibles.length === 1) {
             opcionesVisibles.prop('selected', true);
         }
-    }
-
-
-    function limpiarDescripcion($descripcionSelect) {
-        $descripcionSelect.prop('disabled', true).html('<option value="" selected>Selecciona un SKU primero</option>');
     }
 
     function actualizarPesoNeto() {

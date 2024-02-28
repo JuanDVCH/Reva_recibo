@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Model_Receipt;
-use App\Models\Supplier;
+use App\Models\M_Receipts;
+use App\Models\M_Suppliers;
 use Illuminate\Http\Request;
 
 class C_Receipts extends Controller
@@ -13,10 +13,21 @@ class C_Receipts extends Controller
      */
     public function index()
     {
-        $recibos = Model_Receipt::where('state', '1')->get();
-        $suppliers = Supplier::all(); // Obtén todos los proveedores
-    
+        $recibos = M_Receipts::where('state', '1')->paginate(8);
+        $suppliers = M_Suppliers::all(); // Obtén todos los proveedores
+
         return view('Recibo.index', compact('recibos', 'suppliers'));
+    }
+
+    public function filtrar(Request $request)
+    {
+        $numeroFormato = $request->input('numero_formato');
+
+        $recibos = M_Receipts::when($numeroFormato, function ($query) use ($numeroFormato) {
+            return $query->where('order_num', 'LIKE', '%' . $numeroFormato . '%');
+        })->get();
+
+        return view('recibo.lista_recibos', ['recibos' => $recibos]);
     }
 
     /**
@@ -24,8 +35,8 @@ class C_Receipts extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
-    
+        $suppliers = M_Suppliers::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
+
         return view('Recibo.create', compact('suppliers'));
     }
 
@@ -35,20 +46,20 @@ class C_Receipts extends Controller
     public function store(Request $request)
     {
 
-    
-        $recibo = new Model_Receipt($request->all());
+
+        $recibo = new M_Receipts($request->all());
         $recibo->state = 1;
         $recibo->save();
-    
+
         return redirect(route('recibo.index'));
     }
 
     public function obtenerCodigosCliente($id)
     {
-        $codigosClientes = Supplier::where('id', $id)->pluck('code', 'id');
+        $codigosClientes = M_Suppliers::where('id', $id)->pluck('code', 'id');
 
         return response()->json($codigosClientes);
     }
 
-    
+
 }

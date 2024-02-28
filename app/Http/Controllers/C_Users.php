@@ -9,14 +9,27 @@ use Illuminate\Support\Facades\Hash;
 
 class C_Users extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Obtener solo los usuarios con state igual a 1
-        $users = User::with('roles')->where('state', 1)->get();
+        $query = User::with('roles')->where('state', 1);
+        
+        // Realizar búsqueda si se proporciona un término de búsqueda
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+    
+        // Paginar los resultados y ordenar alfabéticamente
+        $users = $query->orderBy('name')->paginate(12);
         $roles = Role::all();
     
         return view('users.index', compact('users', 'roles'));
     }
+    
+    
+    
+    
+    
 
     public function create()
     {
@@ -24,8 +37,6 @@ class C_Users extends Controller
 
         return view('users.create', compact('roles'));
     }
-
-
 
     public function store(Request $request)
     {
@@ -36,7 +47,7 @@ class C_Users extends Controller
             'password' => 'required|string|min:8',
             'roles' => 'required|array',
         ]);
-    
+
         try {
             // Crear el nuevo usuario con la contraseña encriptada y estado 1
             $user = User::create([
@@ -45,10 +56,10 @@ class C_Users extends Controller
                 'password' => Hash::make($request->input('password')),
                 'state' => 1, // Establecer el estado por defecto
             ]);
-    
+
             // Asignar roles al usuario utilizando el nombre del rol
             $user->assignRole($request->input('roles'));
-    
+
             // Redirigir a la vista de usuarios o a donde sea necesario
             return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente');
         } catch (\Exception $e) {
@@ -56,19 +67,19 @@ class C_Users extends Controller
             return redirect()->back()->with('error', 'Error al crear usuario: ' . $e->getMessage());
         }
     }
-    
+
 
 
     public function edit(User $user)
     {
         $roles = Role::all();
-    
+
         // Obtén los roles actuales del usuario
         $userRoles = $user->roles->pluck('name')->toArray();
-    
+
         return view('users.edit', compact('user', 'roles', 'userRoles'));
     }
-    
+
 
     public function update(Request $request, User $user)
     {
@@ -89,29 +100,21 @@ class C_Users extends Controller
 
         return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente');
     }
-    public function destroy($id)
-{
-    try {
-        // Buscar el usuario por ID
-        $user = User::find($id);
-
-        if (!$user) {
-            return redirect()->route('users.index')->with('error', 'Usuario no encontrado');
-        }
-
-        // Actualizar el estado del usuario a 1 en lugar de eliminarlo
-        $user->update(['state' => 0]);
-
-        return redirect()->route('users.index')->with('success', 'Usuario marcado como activo exitosamente');
-    } catch (\Exception $e) {
-        // Manejar errores
-        return redirect()->route('users.index')->with('error', 'Error al marcar el usuario como activo: ' . $e->getMessage());
-    }
-}
-
-
     
+    public function destroy($id)
+    {
+        try {
+            $user = User::find($id);
 
+            if (!$user) {
+                return redirect()->route('users.index')->with('error', 'Usuario no encontrado');
+            }
 
+            $user->update(['state' => 0]);
 
+            return redirect()->route('users.index')->with('success', 'Usuario desactivado exitosamente');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error al desactivar el usuario: ' . $e->getMessage());
+        }
+    }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Model_Products extends Model
+class M_Products extends Model
 {
     use HasFactory;
     protected $table = "product";
@@ -13,18 +13,18 @@ class Model_Products extends Model
 
     public function recibo()
     {
-        return $this->belongsTo(Model_Receipt::class, 'order_num', 'order_num')
+        return $this->belongsTo(M_Receipts::class, 'order_num', 'order_num')
             ->select('order_num', 'delivery_date', 'code_customer');
     }
 
-    public function etiquetas()
+    public function M_Tags()
     {
-        return $this->hasMany(Etiqueta::class, 'sku', 'sku');
+        return $this->hasMany(M_Tags::class, 'sku', 'sku');
     }
 
-    public function code_products()
+    public function M_codeProducts()
     {
-        return $this->belongsTo(Code_products::class, 'sku', 'sku');
+        return $this->belongsTo(M_codeProducts::class, 'sku', 'sku');
     }
 }
 

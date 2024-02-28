@@ -4,23 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Code_products extends Model
+class M_codeProducts extends Model
 {
     protected $primaryKey = 'id_code_products';
     protected $table = 'code_products';
     protected $fillable = ['sku', 'barcode', 'description', 'category', 'state'];
 
-    public function pulpos()
+    public function M_Tags()
     {
-        return $this->hasMany(Pulpo::class, 'sku', 'sku');
-    }
-    public function etiqueta()
-    {
-        return $this->hasMany(Etiqueta::class, 'sku', 'sku');
+        return $this->hasMany(M_Tags::class, 'sku', 'sku');
     }
     public function receipts()
     {
-        return $this->hasMany(Model_Receipt::class, 'order_num', 'sku');
+        return $this->hasMany(M_Receipts::class, 'order_num', 'sku');
     }
     public static function obtenerDescripcionPorSku($sku)
     {
@@ -44,6 +40,6 @@ class Code_products extends Model
     }
     public function products()
     {
-        return $this->hasMany(Model_Products::class, 'sku', 'sku');
+        return $this->hasMany(M_Products::class, 'sku', 'sku');
     }
 }

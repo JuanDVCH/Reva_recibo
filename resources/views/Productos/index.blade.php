@@ -68,9 +68,7 @@
         <div class="modal-content">
             <div class="modal-header bg-teal text-white">
                 <h1 class="modal-title">Crear Producto</h1>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closecreateProductsModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @include('productos.form')
@@ -97,7 +95,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, "All"]
             ],
-            pageLength: 30,
+            pageLength: 5,
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
@@ -135,41 +133,37 @@
     });
 
     function exportToCSV() {
-        // Crear un objeto para almacenar datos agregados por SKU y order_num
+        // Recopila todos los datos, incluso aquellos en páginas no visibles
+        var allRows = $('#productsTable').DataTable().rows().data().toArray();
+
         var aggregatedData = {};
 
-        // Iterar a través de las filas de la tabla y agregar datos
-        $('#productsTable tbody tr').each(function(index, row) {
-            var orderNum = $(row).find('td:nth-child(2)').text();
-            var sku = $(row).find('td:nth-child(5)').text();
-            var netWeight = parseFloat($(row).find('td:nth-child(6)').text()) || 0;
+        allRows.forEach(function(row) {
+            var orderNum = row[1];  // Ajusta el índice según tu estructura de columna
+            var sku = row[4];       // Ajusta el índice según tu estructura de columna
+            var netWeight = parseFloat(row[5]) || 0;  // Ajusta el índice según tu estructura de columna
 
             if (!aggregatedData[orderNum + sku]) {
-                // Si orderNum + sku no está en aggregatedData, inicializarlo
                 aggregatedData[orderNum + sku] = {
-                    supplier_code: $(row).find('td:nth-child(1)').text(),
+                    supplier_code: row[0],  // Ajusta el índice según tu estructura de columna
                     order_num: orderNum,
-                    notes: $(row).find('td:nth-child(3)').text(),
-                    delivery_date: $(row).find('td:nth-child(4)').text(),
+                    notes: row[2],  // Ajusta el índice según tu estructura de columna
+                    delivery_date: row[3],  // Ajusta el índice según tu estructura de columna
                     sku: sku,
                     requested_quantity: netWeight,
-                    criterium: $(row).find('td:nth-child(7)').text(),
+                    criterium: row[6]  // Ajusta el índice según tu estructura de columna
                 };
             } else {
-                // Si ya existe, actualizar requested_quantity sumando netWeight
                 aggregatedData[orderNum + sku].requested_quantity += netWeight;
             }
         });
 
-        // Convertir los datos agregados a un array
         var aggregatedArray = Object.values(aggregatedData);
 
-        // Convertir los datos al formato CSV utilizando PapaParse
         var csv = Papa.unparse(aggregatedArray, {
             columns: ["supplier_code", "order_num", "notes", "delivery_date", "sku", "requested_quantity", "criterium"]
         });
 
-        // Crear un Blob e iniciar la descarga
         var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         var link = document.createElement('a');
         var url = URL.createObjectURL(blob);
@@ -181,5 +175,6 @@
         document.body.removeChild(link);
     }
 </script>
+
 
 @endsection

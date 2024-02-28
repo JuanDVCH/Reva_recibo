@@ -1,0 +1,11 @@
+/* icons.css */
+
+.fa-list-alt::before {
+    content: "\f022";  /* Código Unicode del icono fa-list-alt */
+}
+
+.fa-plus::before {
+    content: "\f067";  /* Código Unicode del icono fa-plus */
+}
+
+/* Agrega más clases para otros iconos según sea necesario */

@@ -32,17 +32,23 @@ Route::middleware(['web', 'auth'])->group(function () {
         // Rutas relacionadas con los recibos
         Route::resource('/', C_Receipts::class)->names('recibo');
         Route::get('/obtener-codigos-cliente/{id}', [C_Receipts::class, 'obtenerCodigosCliente']);
+        Route::get('/recibos/filtrar', 'C_Receipts@filtrar')->name('recibos.filtrar');
+
     });
 
     // Ruta para gestionar usuarios
-    Route::resource('users', C_Users::class);
+    Route::group(['prefix' => 'users', 'middleware' => 'Administrador'], function () {
+        Route::resource('users', C_Users::class);
+    });
 
-    // Rutas agrupadas para el perfil del usuario
-    Route::group(['prefix' => 'profile'], function () {
+
+
+    Route::group(['prefix' => 'profile', 'middleware' => 'Administrador'], function () {
         // Rutas para editar y actualizar el perfil del usuario
         Route::get('profile/edit', [C_profile::class, 'edit'])->name('profile.edit');
         Route::put('profile/update', [C_profile::class, 'update'])->name('profile.update');
     });
+
 
     // Rutas agrupadas para productos
     Route::group(['prefix' => 'productos'], function () {
@@ -67,4 +73,6 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // Ruta para asignar el rol de administrador
     Route::get('/assign-admin-role', [RolePermissionController::class, 'assignAdminRole']);
+
+
 });

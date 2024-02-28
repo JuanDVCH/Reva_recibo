@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
 
 
-    use HasApiTokens, HasFactory, Notifiable, HasRoles ;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -44,4 +44,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    // En app\Models\User.php
+    public function isAdministrador()
+    {
+        // Supongamos que tienes una relación roles() para obtener los roles del usuario
+        // y que cada rol tiene un campo 'nombre'.
+        return $this->roles()->where('nombre', 'Administrador')->exists();
+    }
+
 }

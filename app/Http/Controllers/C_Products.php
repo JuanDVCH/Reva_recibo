@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Session;
-use App\Models\Code_products;
-use App\Models\Model_Products;
-use App\Models\Model_Receipt;
+use App\Models\M_Products;
+use App\Models\M_codeProducts;
+use App\Models\M_Receipts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -22,18 +22,18 @@ class C_Products extends Controller
 
             // Obtener productos basados en el número de pedido (si se proporciona)
             $productos = $orderNumber
-                ? Model_Products::where('order_num', $orderNumber)->where('state', 1)->with('code_products')->get()
+                ? M_Products::where('order_num', $orderNumber)->where('state', 1)->with('M_codeProducts')->get()
                 : collect();
 
             // Agregar un mensaje de depuración para verificar la cantidad de productos
             Log::info("Productos Count: " . $productos->count());
 
             // Obtener todos los recibos con estado 1
-            $recibos = Model_Receipt::where('state', 1)->get();
+            $recibos = M_Receipts::where('state', 1)->get();
 
             // Obtener todos los SKUs y descripciones disponibles
-            $skus = Code_products::pluck('sku');
-            $descripciones = Code_products::pluck('description');
+            $skus = M_codeProducts::pluck('sku');
+            $descripciones = M_codeProducts::pluck('description');
 
             // Almacenar SKUs y descripciones en la sesión para su uso posterior
             session(['skus' => $skus, 'descriptions' => $descripciones]);
@@ -54,10 +54,10 @@ class C_Products extends Controller
         $skus = session('skus', collect())->sort()->values();
 
         // Obtener descripciones asociadas a SKUs y ordenar alfabéticamente
-        $descripciones = Code_products::pluck('description')->sort()->values()->toArray();
+        $descripciones = M_codeProducts::pluck('description')->sort()->values()->toArray();
 
         // Obtener recibos con estado 1 y ordenarlos por número de recibo
-        $recibos = Model_Receipt::where('state', 1)->orderBy('order_num')->get();
+        $recibos = M_Receipts::where('state', 1)->orderBy('order_num')->get();
 
         // Almacenar las descripciones en la sesión para su uso posterior
         session(['descripciones' => $descripciones]);
@@ -71,7 +71,7 @@ class C_Products extends Controller
         $orderNum = $request->input('orderNum');
 
         // Obtén los SKUs asociados al número de recibo
-        $skus = Model_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
+        $skus = M_Products::where('order_num', $orderNum)->distinct('sku')->pluck('sku');
 
         return response()->json($skus);
     }
@@ -81,7 +81,7 @@ class C_Products extends Controller
         $descripcion = $request->input('descripcion');
 
         // Realizar la consulta a la base de datos para obtener el SKU
-        $codeProduct = Code_products::where('description', $descripcion)->first();
+        $codeProduct = M_codeProducts::where('description', $descripcion)->first();
 
         if ($codeProduct) {
             $sku = $codeProduct->sku;
@@ -102,7 +102,7 @@ class C_Products extends Controller
             ]);
 
             // Crear instancia del modelo y asignar valores
-            $producto = new Model_Products();
+            $producto = new M_Products();
             $producto->sku = $request->sku;
             $producto->description = $request->description;
             $producto->unit_measurement = $request->unit_measurement;
@@ -135,7 +135,7 @@ class C_Products extends Controller
         $orderNum = $request->input('order_num');
 
         // Obtener información de recibo según el número de recibo
-        $recibo = Model_Receipt::where('order_num', $orderNum)->first();
+        $recibo = M_Receipts::where('order_num', $orderNum)->first();
 
         if ($recibo) {
             return response()->json([
@@ -152,7 +152,7 @@ class C_Products extends Controller
         }
     }
     public function obtenerProductosPorOrden($orderNum) {
-        $productos = Model_Products::where('order_num', $orderNum)->get();
+        $productos = M_Products::where('order_num', $orderNum)->get();
         return response()->json(['productos' => $productos]);
     }
 

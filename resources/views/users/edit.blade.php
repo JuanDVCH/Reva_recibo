@@ -1,8 +1,7 @@
 <!-- resources/views/users/edit.blade.php -->
 
-<div class="modal-content">
+<div class="modal-content" id="editModalContent">
     <div class="container mx-auto my-8 bg-white p-8 rounded-md shadow-lg">
-        <span class="cursor-pointer text-red-500 absolute top-0 right-0 mt-2 mr-2" onclick="closeEditModal()">❌</span>
         <h1 class="text-3xl font-semibold mb-6">Editar Usuario</h1>
         <form method="post" action="{{ route('users.update', ['user' => $user->id]) }}">
             @csrf
@@ -37,10 +36,13 @@
             <div class="flex justify-end">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">Actualizar Usuario</button>
                 <button type="button" class="text-red-500 ml-4 hover:underline" onclick="clearForm()">Limpiar</button>
+                <button type="button" class="text-gray-500 hover:text-gray-700 ml-2 px-4 py-2 rounded-md hover:underline" onclick="closeModal()">Cerrar</button>
+
             </div>
         </form>
     </div>
 </div>
+
 <script>
     function clearForm() {
         // Obtener todos los campos del formulario y limpiarlos
@@ -49,7 +51,8 @@
         });
     }
 
-    function closeEditModal() {
+
+    function closeModal() {
         document.getElementById('editModal').classList.add('hidden');
     }
 </script>

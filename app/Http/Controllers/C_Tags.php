@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\M_Tags;
 use Illuminate\Http\Request;
-use App\Models\Model_Receipt;
-use App\Models\Code_products;
-use App\Models\Model_Products;
-use App\Models\Etiqueta;
+use App\Models\M_Receipts;
+use App\Models\M_codeProducts;
+use App\Models\M_Products;
 use PDF;
 use Illuminate\Support\Facades\Log; // Add this line
 
@@ -17,26 +17,26 @@ class C_Tags extends Controller
     public function index()
     {
         // Usar alias más descriptivos para mejorar la legibilidad
-        $etiquetas = Etiqueta::select('rec.order_num as recibo_numero', 'prod.sku as sku_producto', 'tags.*')
+        $etiquetas = M_Tags::select('rec.order_num as recibo_numero', 'prod.sku as sku_producto', 'tags.*')
             ->join('receipts as rec', 'tags.order_num', '=', 'rec.order_num')
             ->join('product as prod', 'tags.sku', '=', 'prod.sku')
             ->where('tags.state', 1)
             ->distinct()
             ->orderBy('tags.delivery_date', 'desc')
             ->get(); // Agregar el método get() para ejecutar la consulta y obtener los resultados
-    
+
         // Obtener la lista de recibos y productos solo si es necesario
-        $recibos = Model_Receipt::where('state', 1)->get();
-        $productos = Model_Products::where('state', 1)->get();
-    
+        $recibos = M_Receipts::where('state', 1)->get();
+        $productos = M_Products::where('state', 1)->get();
+
         return view('etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
     }
-    
+
 
     public function create()
     {
-        $recibos = Model_Receipt::where('state', 1)->get();
-        $productos = Model_Products::where('state', 1)->get();
+        $recibos = M_Receipts::where('state', 1)->get();
+        $productos = M_Products::where('state', 1)->get();
         return view('etiquetas.create', compact('recibos', 'productos'));
     }
 
@@ -57,21 +57,21 @@ class C_Tags extends Controller
             'color' => 'required|in:colores,neutro,No_aplica',
             'barcode' => 'required',
         ]);
-    
+
         try {
             // Obtener información de recibo (delivery_date y customer) asociada a orden_num
-            $reciboInfo = Model_Receipt::where('order_num', $request->order_num)
+            $reciboInfo = M_Receipts::where('order_num', $request->order_num)
                 ->select('delivery_date', 'customer')
                 ->first();
-    
+
             // Verificar si se encontró información del recibo
             if (!$reciboInfo) {
                 // Manejar el caso en el que no se encuentra la información del recibo
                 return redirect()->back()->with('error', 'No se encontró información del recibo.');
             }
-    
+
             // Crear una nueva instancia del modelo Etiqueta y asignar valores
-            $etiqueta = new Etiqueta();
+            $etiqueta = new M_Tags();
             $etiqueta->order_num = $request->order_num;
             $etiqueta->sku = $request->sku;
             $etiqueta->description = $request->description;
@@ -86,30 +86,30 @@ class C_Tags extends Controller
             $etiqueta->barcode = $request->barcode;
             $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
             $etiqueta->save();
-    
+
             return redirect()->route('etiqueta.index')->with('success', 'Recibo creado exitosamente.');
         } catch (\Exception $e) {
             // Log del error
             Log::error($e->getMessage());
-    
+
             // Redirige de nuevo con un mensaje de error
             return redirect()->back()->withInput()->withErrors(['error' => 'Ocurrió un error al intentar guardar el recibo.']);
         }
     }
-    
+
 
 
 
     public function show(string $order_num)
     {
-        $etiqueta = Etiqueta::where('order_num', $order_num)->first();
+        $etiqueta = M_Tags::where('order_num', $order_num)->first();
 
         return view('etiquetas.show', compact('etiqueta'));
     }
 
     public function imprimir($id_tag)
     {
-        $etiqueta = Etiqueta::find($id_tag);
+        $etiqueta = M_Tags::find($id_tag);
 
         // Generar el PDF con la librería PDF de Laravel
         $pdf = PDF::loadView('etiquetas.imprimir', compact('etiqueta'));
@@ -124,10 +124,10 @@ class C_Tags extends Controller
         $orderNum = $request->input('orderNum');
 
         // Obtén los SKUs asociados al número de recibo
-        $skus = Model_Products::where('order_num', $orderNum)->distinct()->pluck('sku');
+        $skus = M_Products::where('order_num', $orderNum)->distinct()->pluck('sku');
 
         // Obtén los clientes asociados al número de recibo
-        $customers = Model_Receipt::where('order_num', $orderNum)->distinct()->pluck('customer');
+        $customers = M_Receipts::where('order_num', $orderNum)->distinct()->pluck('customer');
 
         return response()->json([
             'skus' => $skus,
@@ -140,7 +140,7 @@ class C_Tags extends Controller
     {
         try {
             $sku = $request->input('sku');
-            $descripcion = Code_products::where('sku', $sku)->value('description');
+            $descripcion = M_codeProducts::where('sku', $sku)->value('description');
 
             if ($descripcion === null) {
                 throw new \Exception("No se encontró descripción para el SKU: $sku");
@@ -155,7 +155,7 @@ class C_Tags extends Controller
     {
         try {
             $sku = $request->input('sku');
-            $barcode = Code_products::where('sku', $sku)->value('barcode');
+            $barcode = M_codeProducts::where('sku', $sku)->value('barcode');
 
             if ($barcode === null) {
                 throw new \Exception("No se encontró código de barras para el SKU: $sku");
@@ -173,7 +173,7 @@ class C_Tags extends Controller
         $orderNum = $request->input('order_num');
 
         // Obtener información de recibo según el número de recibo
-        $recibo = Model_Receipt::where('order_num', $orderNum)->first();
+        $recibo = M_Receipts::where('order_num', $orderNum)->first();
 
         if ($recibo) {
             return response()->json([
