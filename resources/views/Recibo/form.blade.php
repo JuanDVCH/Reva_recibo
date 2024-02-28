@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-2">
     <form method="POST" action="{{ route('recibo.store') }}" class="formulario-estilos row g-3">
         @csrf
         <div class="col-md-6">
@@ -43,7 +43,7 @@
             <input type="text" class="form-control" id="inputnum_vehicle" name="num_vehicle">
         </div>
         <div class="col-12 mt-3 text-center">
-            <button type="submit" class="btn btn-success mx-2">Enviar</button>
+            <button type="submit" class="btn bg-teal-500 mx-2 text-white">Enviar</button>
             <button type="reset" class="btn btn-danger mx-2">Limpiar</button>
         </div>
     </form>

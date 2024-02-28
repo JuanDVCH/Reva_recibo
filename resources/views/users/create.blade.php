@@ -1,7 +1,7 @@
 <!-- resources/views/users/create.blade.php -->
 <div class="container mx-auto my-8 p-4 bg-white rounded-md shadow-md max-w-md">
     <div class="flex items-center justify-center mb-4">
-        <h2 class="text-2xl font-semibold text-green-500">Crear Nuevo Usuario</h2>
+        <h2 class="text-2xl text-teal-500 font-semibold">Crear Nuevo Usuario</h2>
     </div>
 
     <form onsubmit="return validateForm()" method="post" action="{{ route('users.store') }}" class="grid grid-cols-1 gap-4">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="flex justify-end mt-4">
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Crear Usuario</button>
+            <button type="submit" class="bg-teal-500 text-white px-4 py-2 rounded-md">Crear Usuario</button>
             <button type="button" class="bg-red-500 text-white ml-2 px-4 py-2 rounded-md hover:underline" onclick="clearForm()">Limpiar</button>
             <button type="button" class="text-gray-500 hover:text-gray-700 ml-2 px-4 py-2 rounded-md hover:underline" onclick="closeCreateModal()">Cerrar</button>
         </div>

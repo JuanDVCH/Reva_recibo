@@ -2,7 +2,7 @@
 
 <div class="modal-content" id="editModalContent">
     <div class="container mx-auto my-8 bg-white p-8 rounded-md shadow-lg">
-        <h1 class="text-3xl font-semibold mb-6">Editar Usuario</h1>
+        <h1 class="text-2xl text-teal-500 font-semibold mb-4">Editar Usuario</h1>
         <form method="post" action="{{ route('users.update', ['user' => $user->id]) }}">
             @csrf
             @method('PUT')
@@ -34,8 +34,8 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">Actualizar Usuario</button>
-                <button type="button" class="text-red-500 ml-4 hover:underline" onclick="clearForm()">Limpiar</button>
+                <button type="submit" class="bg-teal-500 text-white px-4 py-2 rounded-md mr-2">Actualizar Usuario</button>
+                <button type="button" class="bg-red-500 text-white ml-2 px-4 py-2 rounded-md hover:underline" onclick="clearForm()">Limpiar</button>
                 <button type="button" class="text-gray-500 hover:text-gray-700 ml-2 px-4 py-2 rounded-md hover:underline" onclick="closeModal()">Cerrar</button>
 
             </div>

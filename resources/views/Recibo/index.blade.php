@@ -39,7 +39,7 @@
                             <!-- Botón de detalles siempre al final -->
                             <div class="mt-4">
                                 <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                    class="btn btn-info btn-sm rounded">Detalles</a>
+                                    class="btn bg-teal-500 text-white btn-sm rounded">Detalles</a>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createReceiptModalLabel">Crear un nuevo recibo</h5>
+                    <h2 class="text-2xl text-teal-500 font-semibold" id="createReceiptModalLabel">Crear Nuevo formato de recibo</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

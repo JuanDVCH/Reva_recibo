@@ -57,7 +57,7 @@
                                     <td>
                                         <a href="javascript:void(0)"
                                             onclick="openPdfModal('{{ route('etiquetas.imprimir', ['id_tag' => $etiqueta->id_tag]) }}')"
-                                            class="btn btn-info btn-sm btn-teal">Imprimir</a>
+                                            class="btn bg-teal-500 text-white">Imprimir</a>
                                     </td>
                                 </tr>
                             @empty
@@ -94,11 +94,8 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-teal text-white">
-                    <h1 class="modal-title">Crear Etiqueta</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        onclick="closecreateTagsModal()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h1 class="text-2xl text-white font-semibold">Crear nueva etiqueta</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     @include('etiquetas.form')

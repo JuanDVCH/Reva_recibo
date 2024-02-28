@@ -1,4 +1,4 @@
-<!-- resources/views/errors/403.blade.php -->
+<!-- resources/views/errors/permission.blade.php -->
 
 @extends('layouts.app')
 

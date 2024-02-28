@@ -67,7 +67,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-teal text-white">
-                <h1 class="modal-title">Crear Producto</h1>
+                <h1 class="text-2xl text-white font-semibold">Crear nuevo producto</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

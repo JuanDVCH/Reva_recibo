@@ -50,6 +50,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     });
 
 
+
     // Rutas agrupadas para productos
     Route::group(['prefix' => 'productos'], function () {
         // Rutas relacionadas con la gestión de productos

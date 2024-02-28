@@ -1,6 +1,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
 
-<div class="container mt-5">
+<div class="container mt-2">
     <form id="productoForm" method="POST" action="{{ route('productos.store') }}" class="formulario-estilos row g-3">
         @csrf
 
@@ -115,7 +115,7 @@
 
         <!-- Botones -->
         <div class="col-12 mt-3 text-center">
-            <button type="submit" class="btn btn-success mx-2" id="enviarBtn">Enviar</button>
+            <button type="submit" class="btn bg-teal-500 text-white mx-2" id="enviarBtn">Enviar</button>
             <button type="button" class="btn btn-danger mx-2" id="limpiarBtn">Limpiar</button>
         </div>
     </form>

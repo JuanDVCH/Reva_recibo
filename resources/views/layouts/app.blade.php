@@ -50,7 +50,7 @@
         #app {
             grid-row: 1;
         }
-
+        
         .navbar {
             background-color: #28C7AF;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);

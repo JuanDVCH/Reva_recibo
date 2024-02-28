@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto my-8 p-8 bg-black-800 rounded-md shadow-md mb-16 mt-12">
+    <div class="container mx-auto my-8 p-8 bg-white rounded-md shadow-md mb-16 mt-12">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-4xl font-semibold text-gray-800">
-                <i class="fas fa-users mr-2 text-dark"></i> Lista de Usuarios
+            <h1 class="text-4xl text-teal-500 font-semibold ">
+                <i class="fas fa-users mr-2 text-teal-500"></i> Lista de Usuarios
             </h1>
             <div class="flex items-center space-x-4">
                 <div class="relative">
@@ -13,7 +13,7 @@
                     <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                 </div>
                 <button id="createUserBtn"
-                    class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 focus:outline-none focus:shadow-outline-green active:bg-green-700">
+                    class="bg-teal-500 text-white py-2 px-4 rounded-full hover:bg-white-500 text-white focus:outline-none focus:shadow-outline-white active:bg-white">
                     <i class="fas fa-user-plus mr-2"></i> Crear Usuario
                 </button>
             </div>
@@ -23,7 +23,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse($users as $user)
                 @if ($user->id !== Auth::id())
-                    <div class="bg-white rounded-md shadow-md overflow-hidden"
+                    <div class="bg-gray-50 rounded-md shadow-md overflow-hidden"
                         ondblclick="openEditModal('{{ route('users.edit', $user->id) }}')">
                         <div class="p-6">
                             <h2 class="text-xl font-semibold text-gray-800">
@@ -57,6 +57,7 @@
             {{ $users->links() }}
         </div>
 
+        
         <!-- Ventana modal para crear usuario -->
         <div id="createModal" class="modal hidden fixed inset-0 overflow-y-auto flex items-center mt-1 justify-center">
             @include('users.create')

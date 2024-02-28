@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-2">
     <form class="formulario-estilos row g-3" id="etiquetaForm" method="POST" action="{{ route('etiqueta.store') }}">
         @csrf
 
@@ -117,7 +117,7 @@
 
         <!-- Botones -->
         <div class="col-12 mt-3 text-center">
-            <button type="submit" class="btn btn-success mx-2">Enviar</button>
+            <button type="submit" class="btn bg-teal-500 text-white mx-2">Crear</button>
             <button type="reset" class="btn btn-danger mx-2">Limpiar</button>
         </div>
     </form>
