@@ -9,7 +9,7 @@
             <img src="{{ asset('img/logo_reva-01.png') }}" alt="Candado" class="mx-auto h-32 mb-8">
 
             <!-- Título llamativo -->
-            <h1 class="text-5xl font-extrabold text-green-600">¡Acceso Prohibido!</h1>
+            <h1 class="text-5xl font-extrabold text-teal-500">¡Acceso Prohibido!</h1>
 
             <!-- Mensaje explicativo y amigable -->
             <p class="text-2xl text-gray-700 mt-6">

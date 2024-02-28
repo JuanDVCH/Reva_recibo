@@ -4,7 +4,7 @@
         <div class="container mx-auto mt-12 flex">
             <!-- Formulario para editar perfil -->
             <div class="max-w-xl bg-white p-8 border rounded-md shadow-md mr-8">
-                <h2 class="text-2xl font-semibold mb-6">Editar Perfil</h2>
+                <h2 class="text-3xl text-teal-500 font-semibold mb-6">Editar Perfil</h2>
 
                 @if (session('error'))
                     <div class="bg-red-500 text-white p-3 mb-4 rounded-md">
@@ -56,7 +56,7 @@
                     <!-- Botón Guardar Cambios -->
                     <div class="mb-4">
                         <button type="submit"
-                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200">
+                            class="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:border-gray-700 focus:ring focus:ring-gray-200">
                             Guardar Cambios
                         </button>
                     </div>
@@ -65,8 +65,8 @@
 
             <!-- Sección para la creación de nuevos usuarios -->
             <div class="flex-grow bg-white p-8 border rounded-md shadow-md">
-                <h2 class="text-2xl font-semibold mb-6">Usuarios</h2>
-                <a href="{{ route('users.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md">Ver Usuarios</a>
+                <h2 class="text-3xl text-teal-500 font-semibold mb-6">Usuarios</h2>
+                <a href="{{ route('users.index') }}" class="bg-teal-500 text-white px-4 py-2 rounded-md">Ver Usuarios</a>
             </div>
         </div>
 
