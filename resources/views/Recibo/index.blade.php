@@ -11,7 +11,6 @@
                     data-bs-target="#createReceiptModal">
                     Crear recibo <i class="fas fa-plus text"></i>
                 </button>
-
             </div>
         </div>
 
@@ -39,7 +38,7 @@
                             <!-- Botón de detalles siempre al final -->
                             <div class="mt-4">
                                 <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                    class="btn bg-teal-500 text-white btn-sm rounded">Detalles</a>
+                                    class="btn bg-teal-500 text-white  rounded">Detalles</a>
                             </div>
                         </div>
                     </div>

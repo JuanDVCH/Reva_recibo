@@ -4,16 +4,16 @@
     <div class="container mx-auto mt-5 mb-5">
         <div class="bg-white rounded-md overflow-hidden shadow-md">
             <div class="p-4 flex justify-between items-center bg-teal rounded-t-md">
-                <h3 class="text-lg font-semibold text-white">Listado de Etiquetas</h3>
+                <h3 class="text-4xl font-semibold text-white"><i class="fas fa-list-alt"></i>
+                    Formatos de etiqueta
+                </h3>
                 <div class="flex">
-                    <button type="button" class="btn btn-teal ml-2" data-bs-toggle="modal"
-                        data-bs-target="#createTagsModal">
+                    <button type="button" class="btn btn-teal ml-2" data-bs-toggle="modal" data-bs-target="#createTagsModal">
                         Nueva etiqueta
                     </button>
-                    <a href="{{ route('home') }}" class="btn btn-secondary btn-sm ml-2">Volver Atrás</a>
                 </div>
-            </div>
 
+            </div>
             <div class="p-4">
                 <div class="table-responsive">
                     <table class="w-full table table-bordered table-striped table-hover" id="etiquetaTable">
@@ -77,8 +77,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-teal text-white">
                     <h5 class="modal-title">Vista previa del PDF</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        onclick="closePdfModal()">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closePdfModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -128,12 +127,12 @@
                         previous: "Anterior"
                     },
                 },
-                initComplete: function () {
-                    this.api().columns().every(function () {
+                initComplete: function() {
+                    this.api().columns().every(function() {
                         var column = this;
                         var input = document.createElement("input");
                         $(input).appendTo($(column.header()))
-                            .on('keyup change', function () {
+                            .on('keyup change', function() {
                                 column.search($(this).val(), false, false, true).draw();
                             });
                     });
