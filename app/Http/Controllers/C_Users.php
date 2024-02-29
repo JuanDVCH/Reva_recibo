@@ -25,12 +25,7 @@ class C_Users extends Controller
     
         return view('users.index', compact('users', 'roles'));
     }
-    
-    
-    
-    
-    
-
+ 
     public function create()
     {
         $roles = Role::all();
@@ -67,8 +62,6 @@ class C_Users extends Controller
             return redirect()->back()->with('error', 'Error al crear usuario: ' . $e->getMessage());
         }
     }
-
-
 
     public function edit(User $user)
     {

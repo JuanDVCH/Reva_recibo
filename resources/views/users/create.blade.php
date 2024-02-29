@@ -4,34 +4,34 @@
         <h2 class="text-2xl text-teal-500 font-semibold">Crear Nuevo Usuario</h2>
     </div>
 
-    <form onsubmit="return validateForm()" method="post" action="{{ route('users.store') }}" class="grid grid-cols-1 gap-4">
+    <form onsubmit="return validateForm()" method="post" action="{{ route('users.store') }}" class="formulario-estilos row g-2">
         @csrf
 
-        <div>
+        <div class="col-md-6">
             <label for="name" class="block text-sm font-medium text-gray-700">Nombre:</label>
             <input type="text" name="name" id="name" class="mt-1 p-2 w-full border rounded-md" required>
             <div class="text-red-500 text-sm mt-1" id="nameValidationMessage"></div>
         </div>
 
-        <div>
+        <div class="col-md-6">
             <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico:</label>
             <input type="email" name="email" id="email" class="mt-1 p-2 w-full border rounded-md" required>
             <div class="text-red-500 text-sm mt-1" id="emailValidationMessage"></div>
         </div>
 
-        <div>
+        <div class="col-md-6">
             <label for="password" class="block text-sm font-medium text-gray-700">Contraseña:</label>
             <input type="password" name="password" id="password" class="mt-1 p-2 w-full border rounded-md" required>
             <div class="text-red-500 text-sm mt-1" id="passwordValidationMessage"></div>
         </div>
 
-        <div>
+        <div class="col-md-6">
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar Contraseña:</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 p-2 w-full border rounded-md" required>
             <div class="text-red-500 text-sm mt-1" id="confirmPasswordValidationMessage"></div>
         </div>
 
-        <div>
+        <div class="col-md-6">
             <label for="roles" class="block text-sm font-medium text-gray-700">Roles:</label>
             <select name="roles[]" id="roles" multiple class="mt-1 p-2 w-full border rounded-md" required>
                 @foreach ($roles as $role)

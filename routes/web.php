@@ -33,7 +33,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::resource('/', C_Receipts::class)->names('recibo');
         Route::get('/obtener-codigos-cliente/{id}', [C_Receipts::class, 'obtenerCodigosCliente']);
         Route::get('/recibos/filtrar', 'C_Receipts@filtrar')->name('recibos.filtrar');
-
+        Route::put('recibo/update', [C_Receipts::class, 'update'])->name('recibo.update');
     });
 
     // Ruta para gestionar usuarios

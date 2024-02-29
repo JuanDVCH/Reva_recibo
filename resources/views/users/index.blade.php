@@ -57,12 +57,11 @@
             {{ $users->links() }}
         </div>
 
-        
+
         <!-- Ventana modal para crear usuario -->
         <div id="createModal" class="modal hidden fixed inset-0 overflow-y-auto flex items-center mt-1 justify-center">
             @include('users.create')
         </div>
-
 
         <!-- Ventana modal para editar usuario -->
         <div id="editModal" class="modal hidden fixed inset-0 overflow-y-auto flex items-center mt-1 justify-center">
@@ -159,8 +158,10 @@
                 })
                 .catch(error => console.error('Error al cargar el contenido de la modal:', error));
         };
+
         function closeModal() {
-        document.getElementById('editModal').classList.add('hidden');
-    }
+            document.getElementById('editModal').classList.add('hidden');
+        }
     </script>
+    
 @endsection
