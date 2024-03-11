@@ -70,33 +70,25 @@ class C_Receipts extends Controller
 
     public function update(Request $request, M_Receipts $recibo)
     {
-        try {
-            // Validar los datos del formulario
-            $request->validate([
-                'origin' => 'required|string|max:255',
-                'customer' => 'required|string|max:255',
-                'code_customer' => 'required|string|max:255',
-                'driver' => 'required|string|max:255',
-                'plate' => 'required|string|max:255',
-                'num_vehicle' => 'required|string|max:255',
-                // Asegúrate de incluir las reglas de validación necesarias para otros campos si es necesario
-            ]);
+        // Validación de la solicitud, si es necesario
+        $request->validate([
+            'delivery_date' => 'required|date',
+            'origin' => 'required|string',
+            'customer' => 'required|string',
+            'code_customer' => 'required|string',
+            'driver' => 'required|string',
+            'plate' => 'required|string',
+            'num_vehicle' => 'nullable|string',
+            // Agrega las reglas de validación necesarias para otros campos
+        ]);
     
-            // Actualizar el modelo con los datos del formulario y guardar automáticamente en la base de datos
-            $recibo->origin = $request->input('origin');
-            $recibo->customer = $request->input('customer');
-            $recibo->code_customer = $request->input('code_customer');
-            $recibo->driver = $request->input('driver');
-            $recibo->plate = $request->input('plate');
-            $recibo->num_vehicle = $request->input('num_vehicle');
-            $recibo->save();    
-            // Redireccionar a la vista index con un mensaje de éxito
-            return redirect()->route('recibo.index')->with('success', 'Recibo actualizado correctamente.');
-        } catch (\Exception $e) {
-            // Manejar errores y redireccionar con un mensaje de error
-            return redirect()->route('recibo.index')->with('error', 'Error al actualizar recibo: ' . $e->getMessage());
-        }
+        // Actualiza el recibo con los datos de la solicitud
+        $recibo->update($request->all());
+    
+        // Puedes devolver una respuesta o redirigir a una vista después de la actualización
+        return redirect()->route('recibo.index')->with('success', 'Recibo actualizado correctamente');
     }
+    
     
     
     
