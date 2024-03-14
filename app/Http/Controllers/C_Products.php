@@ -16,37 +16,31 @@ class C_Products extends Controller
         try {
             // Obtener el número de pedido de la solicitud
             $orderNumber = $request->input('order_num', null);
-
-            // Agregar un mensaje de depuración para verificar el número de orden
-            Log::info("Order Number (provided): $orderNumber");
-
+    
             // Obtener productos basados en el número de pedido (si se proporciona)
             $productos = $orderNumber
                 ? M_Products::where('order_num', $orderNumber)->where('state', 1)->with('M_codeProducts')->get()
                 : collect();
-
-            // Agregar un mensaje de depuración para verificar la cantidad de productos
-            Log::info("Productos Count: " . $productos->count());
-
+    
             // Obtener todos los recibos con estado 1
             $recibos = M_Receipts::where('state', 1)->get();
-
+    
             // Obtener todos los SKUs y descripciones disponibles
             $skus = M_codeProducts::pluck('sku');
             $descripciones = M_codeProducts::pluck('description');
-
+    
             // Almacenar SKUs y descripciones en la sesión para su uso posterior
-            session(['skus' => $skus, 'descriptions' => $descripciones]);
-
+            session(['skus' => $skus, 'descripciones' => $descripciones]);
+    
             // Pasar datos a la vista
             return view('Productos.index', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
         } catch (\Exception $e) {
-            // Manejar excepciones proporcionando detalles en el log y mostrando un mensaje de consola
-            Log::error("Error en ControllerCreateProducts@index: " . $e->getMessage());
-            Log::error($e->getTraceAsString()); // Mostrar el rastreo de la pila en la consola
+            // Manejar excepciones
             return back()->withErrors(['error' => 'Ha ocurrido un error.']);
         }
     }
+    
+    
 
     public function create()
     {

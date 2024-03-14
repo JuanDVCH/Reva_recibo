@@ -36,7 +36,7 @@
         </div>
         <div class="col-md-4">
             <label for="inputplate" class="form-label">Placa del vehículo</label>
-            <input type="text" class="form-control" id="inputplate" name="plate" required>
+            <input type="text" class="form-control" id="inputplate" name="plate" >
         </div>
         <div class="col-md-4">
             <label for="inputnum_vehicle" class="form-label">Impronta</label>
@@ -67,14 +67,15 @@
         // Script para seleccionar automáticamente el código del cliente
         $('#customer').change(function() {
             var selectedCode = $(this).find(':selected').data('code');
-            $('#inputcode_customer').val(selectedCode);
+            $('#inputcode_customer').val(selectedCode || ''); // Manejo especial si no se selecciona ningún cliente
         });
 
         // Seleccionar automáticamente al cargar la página
         var selectedCode = $('#customer').find(':selected').data('code');
-        $('#inputcode_customer').val(selectedCode);
+        $('#inputcode_customer').val(selectedCode || ''); // Manejo especial si no se selecciona ningún cliente
     });
 </script>
+
 
 <script>
     // Obtén la referencia al elemento de entrada de fecha

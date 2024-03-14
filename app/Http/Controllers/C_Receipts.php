@@ -11,13 +11,24 @@ class C_Receipts extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $recibos = M_Receipts::where('state', '1')->paginate(8);
-        $suppliers = M_Suppliers::all(); // Obtén todos los proveedores
+        $query = M_Receipts::where('state', '1');
+
+        // Verificar si hay un filtro de cliente
+        if ($request->filled('cliente')) {
+            $query->where('customer', 'LIKE', '%' . $request->input('cliente') . '%');
+        }
+
+        // Obtener los recibos paginados
+        $recibos = $query->paginate(42);
+
+        // Obtener todos los proveedores
+        $suppliers = M_Suppliers::all();
 
         return view('Recibo.index', compact('recibos', 'suppliers'));
     }
+
 
     public function filtrar(Request $request)
     {
@@ -81,15 +92,22 @@ class C_Receipts extends Controller
             'num_vehicle' => 'nullable|string',
             // Agrega las reglas de validación necesarias para otros campos
         ]);
-    
+
         // Actualiza el recibo con los datos de la solicitud
         $recibo->update($request->all());
-    
+
         // Puedes devolver una respuesta o redirigir a una vista después de la actualización
         return redirect()->route('recibo.index')->with('success', 'Recibo actualizado correctamente');
     }
-    
-    
-    
-    
+
+    public function searchByDate(Request $request)
+    {
+        $date = $request->input('date');
+
+        $recibos = M_Receipts::whereDate('delivery_date', $date)->get();
+
+        return view('receipts.index', compact('recibos'));
+    }
+
+
 }

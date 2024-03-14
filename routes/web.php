@@ -31,6 +31,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::group(['prefix' => 'recibo'], function () {
         // Rutas relacionadas con los recibos
         Route::resource('/', C_Receipts::class)->names('recibo');
+        Route::get('/recibos', [C_Receipts::class, 'index'])->name('recibos.index');
         Route::get('/obtener-codigos-cliente/{id}', [C_Receipts::class, 'obtenerCodigosCliente']);
         Route::get('/recibos/filtrar', 'C_Receipts@filtrar')->name('recibos.filtrar');
         Route::put('recibo/update', [C_Receipts::class, 'update'])->name('recibo.update');
@@ -39,6 +40,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Ruta para gestionar usuarios
     Route::group(['prefix' => 'users', 'middleware' => 'Administrador'], function () {
         Route::resource('users', C_Users::class);
+        Route::get('/check-email-exists', [C_Users::class, 'checkEmailExists']);
+
     });
 
 
@@ -75,5 +78,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Ruta para asignar el rol de administrador
     Route::get('/assign-admin-role', [RolePermissionController::class, 'assignAdminRole']);
 
-
+    // Ruta para cerrar sesión en todos los dispositivos
+    Route::get('/logout/all', 'Auth\LoginController@logoutAllDevices')->name('logout.all');
 });

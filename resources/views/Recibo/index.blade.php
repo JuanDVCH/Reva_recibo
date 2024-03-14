@@ -13,19 +13,39 @@
         </div>
 
         <div class="p-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="listaRecibos">
+            <div class="mb-4">
+                <form id="filtroForm" class="flex items-center">
+                    <div class="flex flex-col mr-4">
+                        <label for="filtroNumeroFormato" class="block text-sm font-medium text-gray-700">Buscar por Número
+                            de Formato:</label>
+                        <input type="text" id="filtroNumeroFormato" class="form-input mt-1">
+                    </div>
+                    <div class="flex flex-col mr-4">
+                        <label for="filtroFecha" class="block text-sm font-medium text-gray-700">Buscar por Fecha:</label>
+                        <input type="date" id="filtroFecha" class="form-input mt-1">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="filtroCliente" class="block text-sm font-medium text-gray-700">Buscar por
+                            Cliente:</label>
+                        <input type="text" id="filtroCliente" class="form-input mt-1">
+                    </div>
+                </form>
+            </div>
+            <div class="p-43 mb-10">
+                {{ $recibos->appends(request()->input())->links() }}
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="listaRecibos">
                 @forelse ($recibos as $recibo)
                     <div class="relative bg-gray-100 rounded-md overflow-hidden shadow-md recibo-container">
                         <div class="p-4 overflow-y-auto">
-                            <!-- Contenido del recibo -->
-                            <h1 class="text-lg font-semibold"> Número de formato</h1>
-                            <p>{{ $recibo->order_num }}</p>
+                            <h1 class="text-lg font-semibold">Número de formato</h1>
+                            <p class="numero-formato">{{ $recibo->order_num }}</p>
                             <h1 class="text-lg font-semibold">Fecha:</h1>
-                            <p>{{ $recibo->delivery_date }}</p>
+                            <p class="fecha">{{ $recibo->delivery_date }}</p>
                             <h1 class="text-lg font-semibold">Origen:</h1>
                             <p>{{ $recibo->origin }}</p>
                             <h1 class="text-lg font-semibold">Cliente:</h1>
-                            <p>{{ $recibo->customer }}</p>
+                            <p class="cliente">{{ $recibo->customer }}</p>
                             <h1 class="text-lg font-semibold">Código del cliente:</h1>
                             <p>{{ $recibo->code_customer }}</p>
                             <h1 class="text-lg font-semibold">Conductor:</h1>
@@ -34,7 +54,6 @@
                             <p>{{ $recibo->plate }}</p>
                             <h1 class="text-lg font-semibold">Impronta</h1>
                             <p>{{ $recibo->num_vehicle }}</p>
-                            <!-- Botón de opciones  -->
                             <div class="absolute top-0 right-0 m-2">
                                 <div class="dropdown">
                                     <button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -59,13 +78,11 @@
             </div>
         </div>
 
-        <!-- Mostrar la paginación -->
-        <div class="p-4">
+        <div class="p-43">
             {{ $recibos->appends(request()->input())->links() }}
         </div>
     </div>
 
-    <!-- Ventana modal de edición -->
     <div class="modal fade" id="editReceiptModal" tabindex="-1" role="dialog" aria-labelledby="editReceiptModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -76,13 +93,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @include('recibo.edit') <!-- Asegúrate de tener un formulario de edición separado -->
+                    @include('recibo.edit')
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Ventana modal de creación -->
     <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog" aria-labelledby="createReceiptModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -104,12 +120,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var recibos = document.querySelectorAll('.recibo-container');
+            const filtroNumeroFormato = document.getElementById('filtroNumeroFormato');
+            const filtroFecha = document.getElementById('filtroFecha');
+            const filtroCliente = document.getElementById('filtroCliente');
 
-            recibos.forEach(function(recibo) {
-                recibo.addEventListener('dblclick', function() {
-                    // Abre la ventana modal de edición al hacer doble clic
-                    $('#editReceiptModal').modal('show');
+            const listaRecibos = document.getElementById('listaRecibos');
+
+            [filtroNumeroFormato, filtroFecha, filtroCliente].forEach(input => {
+                input.addEventListener('input', () => {
+                    const numeroFormato = filtroNumeroFormato.value.trim().toLowerCase();
+                    const fecha = filtroFecha.value;
+                    const cliente = filtroCliente.value.trim().toLowerCase();
+
+                    Array.from(listaRecibos.children).forEach(recibo => {
+                        const numeroFormatoRecibo = recibo.querySelector('.numero-formato')
+                            .textContent.trim().toLowerCase();
+                        const fechaRecibo = recibo.querySelector('.fecha').textContent;
+                        const clienteRecibo = recibo.querySelector('.cliente').textContent
+                            .trim().toLowerCase();
+
+                        const mostrarRecibo =
+                            (!numeroFormato || numeroFormatoRecibo.includes(
+                            numeroFormato)) &&
+                            (!fecha || fechaRecibo.includes(fecha)) &&
+                            (!cliente || clienteRecibo.includes(cliente));
+
+                        recibo.style.display = mostrarRecibo ? 'block' : 'none';
+                    });
                 });
             });
         });
@@ -117,5 +154,22 @@
         function closePdfModal() {
             $('#createReceiptModal').modal('hide');
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroCliente = document.getElementById('filtroCliente');
+
+            filtroCliente.addEventListener('input', () => {
+                const cliente = filtroCliente.value.trim();
+
+                fetch(`/recibos?cliente=${cliente}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('listaRecibos').innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
     </script>
 @endsection
