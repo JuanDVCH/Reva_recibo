@@ -9,7 +9,9 @@ class M_Receipts extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = "receipts";
-    protected $fillable = ['delivery_date', 'origin', 'customer', 'code_customer', 'driver', 'plate', 'num_vehicle', 'state'];
+    protected $primaryKey = 'order_num';
+
+    protected $fillable = ['order_num', 'delivery_date', 'origin', 'customer', 'code_customer', 'driver', 'plate', 'num_vehicle', 'state'];
 
     // Dentro de Model_Receipt.php
 

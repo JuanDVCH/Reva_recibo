@@ -109,5 +109,13 @@ class C_Receipts extends Controller
         return view('receipts.index', compact('recibos'));
     }
 
+    public function marcarComoFinalizado(Request $request, $order_num)
+    {
+    $recibo = M_Receipts::findOrFail($order_num);
+    $recibo->state = 0;
+    $recibo->save();
+
+    return redirect()->route('recibo.index')->with('success', 'Recibo marcado como finalizado');
+}
 
 }

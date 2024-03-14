@@ -62,9 +62,16 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                            class="dropdown-item">Detalles</a>
-                                        <a class="dropdown-item"
-                                            href="{{ route('recibo.index', ['id' => $recibo->id]) }}">Eliminar</a>
+                                            class="dropdown-item">Detalles
+                                        </a>
+                                        <a href="{{ route('etiqueta.index') }}" class="dropdown-item">Etiquetas
+                                        </a>
+                                        <form class="dropdown-item" action="{{ route('recibo.marcarFinalizado', ['order_num' => $recibo->order_num]) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit">finalizado</button>
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +148,7 @@
 
                         const mostrarRecibo =
                             (!numeroFormato || numeroFormatoRecibo.includes(
-                            numeroFormato)) &&
+                                numeroFormato)) &&
                             (!fecha || fechaRecibo.includes(fecha)) &&
                             (!cliente || clienteRecibo.includes(cliente));
 

@@ -13,8 +13,7 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap">
                 <div class="lg:pt-12 pt-6 w-full md:w-6/12 px-4 text-center">
-                    <div
-                        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg overflow-hidden h-full">
+                    <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg overflow-hidden h-full">
                         <div class="px-4 py-5 flex-auto">
                             <div
                                 class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-teal-500">
@@ -32,29 +31,8 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="pt-12 w-full md:w-6/12 px-4 text-center">
-                    <div
-                        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg overflow-hidden h-full">
-                        <div class="px-4 py-5 flex-auto">
-                            <div
-                                class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-teal-500">
-                                <i class="fas fa-award"></i>
-                            </div>
-                            <h6 class="text-5xl font-semibold text-teal-500">Formato de etiquetas</h6>
-                            <p class="text-2xl mt-2 mb-4 text-gray-600">
-                                Crear formatos de etiquetas para clasificar las estibas correspondientes.
-                            </p>
-                            <a href="{{ route('etiqueta.index') }}"
-                                class="btn home bg-teal-500 hover:bg-teal-500 transition duration-300 ease-in-out rounded-full">
-                                <i class="fas fa-plus-circle mr-2"></i> Crear
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-
             </div>
+            
             <div class="flex flex-wrap items-center mt-32">
                 <div class="w-full md:w-5/12 px-4 mr-auto ml-auto">
                     <h3 class="text-5xl mb-2 font-semibold leading-normal text-teal-500">
