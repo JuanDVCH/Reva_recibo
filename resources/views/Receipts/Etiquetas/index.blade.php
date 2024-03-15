@@ -8,9 +8,14 @@
                     Formatos de etiqueta
                 </h3>
                 <div class="flex">
-                    <button type="button" class="btn btn-teal ml-2" data-bs-toggle="modal" data-bs-target="#createTagsModal">
-                        Nueva etiqueta
+
+                    <button type="button" class="btn btn-outline-light btn-lg rounded-pill mr-2" data-bs-toggle="modal"
+                        data-bs-target="#createTagsModal">
+                        Crear etiqueta <i class="fas fa-plus"></i>
                     </button>
+                    <a href="{{ route('Receipts.recibo.index') }}" class="btn btn-outline-light btn-lg rounded-pill">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
                 </div>
 
             </div>
@@ -97,7 +102,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @include('etiquetas.form')
+                    @include('Receipts.etiquetas.form')
                 </div>
             </div>
         </div>

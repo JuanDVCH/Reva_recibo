@@ -26,45 +26,25 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Ruta para cerrar sesión
     Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-
-    // Rutas agrupadas por recursos
+    // Rutas agrupadas para recibos
     Route::group(['prefix' => 'recibo'], function () {
-        // Rutas relacionadas con los recibos
         Route::resource('/', C_Receipts::class)->names('recibo');
-        Route::get('/recibos', [C_Receipts::class, 'index'])->name('recibos.index');
+        Route::get('/recibo', [C_Receipts::class, 'index'])->name('Receipts.recibo.index');
+        Route::get('/finalizados', [C_Receipts::class, 'finalizados'])->name('recibos.finalizados');
         Route::get('/obtener-codigos-cliente/{id}', [C_Receipts::class, 'obtenerCodigosCliente']);
         Route::get('/recibos/filtrar', 'C_Receipts@filtrar')->name('recibos.filtrar');
-        Route::put('recibo/update', [C_Receipts::class, 'update'])->name('recibo.update');
         Route::put('recibo/marcar-finalizado/{order_num}', [C_Receipts::class, 'marcarComoFinalizado'])->name('recibo.marcarFinalizado');
     });
-
-    // Ruta para gestionar usuarios
-    Route::group(['prefix' => 'users', 'middleware' => 'Administrador'], function () {
-        Route::resource('users', C_Users::class);
-        Route::get('/check-email-exists', [C_Users::class, 'checkEmailExists']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'profile', 'middleware' => 'Administrador'], function () {
-        // Rutas para editar y actualizar el perfil del usuario
-        Route::get('profile/edit', [C_profile::class, 'edit'])->name('profile.edit');
-        Route::put('profile/update', [C_profile::class, 'update'])->name('profile.update');
-    });
-
-
-
+    
     // Rutas agrupadas para productos
     Route::group(['prefix' => 'productos'], function () {
-        // Rutas relacionadas con la gestión de productos
         Route::resource('/', C_Products::class)->names('productos');
+        Route::get('/indexfin', [C_Products::class, 'indexfin'])->name('indexfin');
         Route::post('/obtener-info-recibo', [C_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
         Route::get('/obtener-productos-por-orden/{orderNum}', [C_Products::class, 'obtenerProductosPorOrden'])
             ->name('obtener.productos.por.orden');
         Route::post('/obtener-sku-por-descripcion', [C_Products::class, 'obtenerSkuPorDescripcion'])->name('obtenerSkuPorDescripcion');
     });
-
     // Rutas agrupadas para etiquetas
     Route::group(['prefix' => 'etiquetas'], function () {
         // Rutas relacionadas con la gestión de etiquetas
@@ -76,9 +56,23 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('/obtener-info-reciboetiquetas', [C_Tags::class, 'obtenerInfoReciboetiquetas'])->name('obtenerInfoReciboetiquetas');
     });
 
+    // Ruta para gestionar usuarios
+    Route::group(['prefix' => 'users', 'middleware' => 'Administrador'], function () {
+        Route::resource('users', C_Users::class);
+        Route::get('/check-email-exists', [C_Users::class, 'checkEmailExists']);
+
+    });
+
+    // Rutas para editar y actualizar el perfil del usuario
+    Route::group(['prefix' => 'profile', 'middleware' => 'Administrador'], function () {
+        Route::get('profile/edit', [C_profile::class, 'edit'])->name('profile.edit');
+        Route::put('profile/update', [C_profile::class, 'update'])->name('profile.update');
+    });
+
     // Ruta para asignar el rol de administrador
     Route::get('/assign-admin-role', [RolePermissionController::class, 'assignAdminRole']);
 
     // Ruta para cerrar sesión en todos los dispositivos
     Route::get('/logout/all', 'Auth\LoginController@logoutAllDevices')->name('logout.all');
+
 });

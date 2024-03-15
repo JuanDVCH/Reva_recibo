@@ -20,14 +20,40 @@ class C_Receipts extends Controller
             $query->where('customer', 'LIKE', '%' . $request->input('cliente') . '%');
         }
 
-        // Obtener los recibos paginados
-        $recibos = $query->paginate(42);
+        // Obtener todos los recibos 
+        $recibos = $query->get();
+
+        // Obtener el total de recibos
+        $totalRecibos = $recibos->count();
 
         // Obtener todos los proveedores
         $suppliers = M_Suppliers::all();
 
-        return view('Recibo.index', compact('recibos', 'suppliers'));
+        return view('Receipts.Recibo.index', compact('recibos', 'suppliers', 'totalRecibos'));
     }
+
+
+    public function finalizados(Request $request)
+    {
+        $query = M_Receipts::where('state', '0');
+
+        // Verificar si hay un filtro de cliente
+        if ($request->filled('cliente')) {
+            $query->where('customer', 'LIKE', '%' . $request->input('cliente') . '%');
+        }
+
+        // Obtener todos los recibos 
+        $recibos = $query->get();
+
+        // Obtener el total de recibos
+        $totalRecibos = $recibos->count();
+
+        // Obtener todos los proveedores
+        $suppliers = M_Suppliers::all();
+
+        return view('Receipts.Recibo.finalizados', compact('recibos', 'suppliers', 'totalRecibos'));
+    }
+
 
 
     public function filtrar(Request $request)
@@ -38,7 +64,7 @@ class C_Receipts extends Controller
             return $query->where('order_num', 'LIKE', '%' . $numeroFormato . '%');
         })->get();
 
-        return view('recibo.lista_recibos', ['recibos' => $recibos]);
+        return view('Receipts.recibo.lista_recibos', ['recibos' => $recibos]);
     }
 
     /**
@@ -48,7 +74,7 @@ class C_Receipts extends Controller
     {
         $suppliers = M_Suppliers::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
 
-        return view('Recibo.create', compact('suppliers'));
+        return view('Receipts.Recibo.create', compact('suppliers'));
     }
 
     /**
@@ -62,7 +88,7 @@ class C_Receipts extends Controller
         $recibo->state = 1;
         $recibo->save();
 
-        return redirect(route('recibo.index'));
+        return redirect(route('Receipts.recibo.index'));
     }
 
     public function obtenerCodigosCliente($id)
@@ -76,7 +102,7 @@ class C_Receipts extends Controller
     {
         $suppliers = M_Suppliers::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
 
-        return view('Recibo.edit', compact('recibo', 'suppliers'));
+        return view('Receipts.Recibo.edit', compact('recibo', 'suppliers'));
     }
 
     public function update(Request $request, M_Receipts $recibo)
@@ -106,16 +132,16 @@ class C_Receipts extends Controller
 
         $recibos = M_Receipts::whereDate('delivery_date', $date)->get();
 
-        return view('receipts.index', compact('recibos'));
+        return view('Receipts.receipts.index', compact('recibos'));
     }
 
     public function marcarComoFinalizado(Request $request, $order_num)
     {
-    $recibo = M_Receipts::findOrFail($order_num);
-    $recibo->state = 0;
-    $recibo->save();
+        $recibo = M_Receipts::findOrFail($order_num);
+        $recibo->state = 0;
+        $recibo->save();
 
-    return redirect()->route('recibo.index')->with('success', 'Recibo marcado como finalizado');
-}
+        return redirect()->route('Receipts.recibo.index')->with('success', 'Recibo marcado como finalizado');
+    }
 
 }

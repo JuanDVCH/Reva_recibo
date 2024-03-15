@@ -6,7 +6,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-8">
-            @include('etiquetas.form', ['recibos' => $recibos])
+            @include('Receipts.etiquetas.form', ['recibos' => $recibos])
         </div>
     </div>
 </div>

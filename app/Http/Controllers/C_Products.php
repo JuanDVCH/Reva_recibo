@@ -33,7 +33,36 @@ class C_Products extends Controller
             session(['skus' => $skus, 'descripciones' => $descripciones]);
     
             // Pasar datos a la vista
-            return view('Productos.index', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
+            return view('Receipts.Productos.index', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
+        } catch (\Exception $e) {
+            // Manejar excepciones
+            return back()->withErrors(['error' => 'Ha ocurrido un error.']);
+        }
+    }
+
+    public function indexfin(Request $request)
+    {
+        try {
+            // Obtener el número de pedido de la solicitud
+            $orderNumber = $request->input('order_num', null);
+    
+            // Obtener productos basados en el número de pedido (si se proporciona)
+            $productos = $orderNumber
+                ? M_Products::where('order_num', $orderNumber)->where('state', 1)->with('M_codeProducts')->get()
+                : collect();
+    
+            // Obtener todos los recibos con estado 1
+            $recibos = M_Receipts::where('state', 1)->get();
+    
+            // Obtener todos los SKUs y descripciones disponibles
+            $skus = M_codeProducts::pluck('sku');
+            $descripciones = M_codeProducts::pluck('description');
+    
+            // Almacenar SKUs y descripciones en la sesión para su uso posterior
+            session(['skus' => $skus, 'descripciones' => $descripciones]);
+    
+            // Pasar datos a la vista
+            return view('Receipts.Productos.indexfin', compact('productos', 'orderNumber', 'recibos', 'skus', 'descripciones'));
         } catch (\Exception $e) {
             // Manejar excepciones
             return back()->withErrors(['error' => 'Ha ocurrido un error.']);
@@ -57,7 +86,7 @@ class C_Products extends Controller
         session(['descripciones' => $descripciones]);
 
         // Configurar la vista con los datos necesarios antes de la condición
-        return view('Productos.create', compact('recibos', 'skus', 'descripciones'));
+        return view('Receipts.Productos.create', compact('recibos', 'skus', 'descripciones'));
     }
 
     public function obtenerSkus(Request $request)
@@ -117,7 +146,7 @@ class C_Products extends Controller
             $producto->save();
             
             // Redirección después de guardar
-            return redirect(route('create.index'));
+            return redirect(route('Receipts.create.index'));
         } catch (\Exception $e) {
             // Manejo del error
             return back()->withInput()->withErrors(['error' => $e->getMessage()]);

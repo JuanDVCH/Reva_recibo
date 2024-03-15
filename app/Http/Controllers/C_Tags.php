@@ -29,7 +29,7 @@ class C_Tags extends Controller
         $recibos = M_Receipts::where('state', 1)->get();
         $productos = M_Products::where('state', 1)->get();
 
-        return view('etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
+        return view('Receipts.etiquetas.index', compact('etiquetas', 'productos', 'recibos'));
     }
 
 
@@ -37,7 +37,7 @@ class C_Tags extends Controller
     {
         $recibos = M_Receipts::where('state', 1)->get();
         $productos = M_Products::where('state', 1)->get();
-        return view('etiquetas.create', compact('recibos', 'productos'));
+        return view('Receipts.etiquetas.create', compact('recibos', 'productos'));
     }
 
     public function store(Request $request)
@@ -87,7 +87,7 @@ class C_Tags extends Controller
             $etiqueta->state = 1; // Suponiendo que 'state' es el nombre correcto del atributo
             $etiqueta->save();
 
-            return redirect()->route('etiqueta.index')->with('success', 'Recibo creado exitosamente.');
+            return redirect()->route('Receipts.etiqueta.index')->with('success', 'Recibo creado exitosamente.');
         } catch (\Exception $e) {
             // Log del error
             Log::error($e->getMessage());
@@ -104,7 +104,7 @@ class C_Tags extends Controller
     {
         $etiqueta = M_Tags::where('order_num', $order_num)->first();
 
-        return view('etiquetas.show', compact('etiqueta'));
+        return view('Receipts.etiquetas.show', compact('etiqueta'));
     }
 
     public function imprimir($id_tag)
@@ -112,10 +112,10 @@ class C_Tags extends Controller
         $etiqueta = M_Tags::find($id_tag);
 
         // Generar el PDF con la librería PDF de Laravel
-        $pdf = PDF::loadView('etiquetas.imprimir', compact('etiqueta'));
+        $pdf = PDF::loadView('Receipts.etiquetas.imprimir', compact('etiqueta'));
 
         // Descargar el PDF directamente
-        return $pdf->stream('etiqueta.pdf');
+        return $pdf->stream('Receipts.etiqueta.pdf');
     }
 
 

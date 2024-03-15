@@ -12,13 +12,12 @@
                 <div class="mt-2 text-lg font-semibold text-white">Recibo N°: {{ $orderNumber }}</div>
             </div>
             <div class="flex space-x-4">
-                <button type="button" class="btn btn-teal" data-bs-toggle="modal" data-bs-target="#createProductsModal">
-                    Crear nuevo producto
-                </button>
-                <button type="button" class="btn btn-teal" onclick="exportToCSV()">
+                <button type="button" class="btn btn-outline-light btn-lg rounded-pill mr-2" onclick="exportToCSV()">
                     Exportar a CSV
                 </button>
-                <a href="{{ route('recibo.index') }}" class="btn btn-secondary btn-sm">Volver Atrás</a>
+                <a href="{{ route('Receipts.recibo.index') }}" class="btn btn-outline-light btn-lg rounded-pill">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
             </div>
         </div>
         <!-- Muestra la tabla de productos -->
@@ -69,20 +68,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="createProductsModal" tabindex="-1" role="dialog" aria-labelledby="createProductsModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-teal text-white">
-                <h1 class="text-2xl font-semibold">Crear nuevo producto</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                @include('productos.form')
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Incluye el archivo de estilos -->
 <link rel="stylesheet" href="{{ asset('css/table-styles.css') }}">
