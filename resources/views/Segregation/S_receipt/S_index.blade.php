@@ -5,7 +5,7 @@
         <!-- Encabezado de la sección -->
         <div class="bg-white rounded-md overflow-hidden shadow-md">
             <div class="p-4 flex justify-between items-center bg-teal rounded-t-md">
-                <h3 class="text-4xl font-semibold text-white"><i class="fas fa-list-alt"></i> Formatos de recibo</h3>
+                <h3 class="text-4xl font-semibold text-white"><i class="fas fa-list-alt"></i> Formatos de recibo del área de segregación</h3>
                 <!-- Botón para abrir el modal de creación de recibo -->
                 <div class="flex">
                     <button type="button" class="btn btn-outline-light btn-lg rounded-pill mr-2" data-bs-toggle="modal"
@@ -86,22 +86,16 @@
                     <div class="relative bg-gray-100 rounded-md overflow-hidden shadow-md recibo-container">
                         <div class="p-4 overflow-y-auto">
                             <!-- Detalles de cada recibo -->
+                            <h1 class="text-lg font-semibold">Número de formato</h1>
+                            <p class="numero-formato">{{ $recibo->format_number }}</p>
                             <h1 class="text-lg font-semibold">Número de recibo</h1>
                             <p class="numero-formato">{{ $recibo->order_num }}</p>
                             <h1 class="text-lg font-semibold">Fecha:</h1>
                             <p class="fecha">{{ $recibo->delivery_date }}</p>
-                            <h1 class="text-lg font-semibold">Origen:</h1>
-                            <p>{{ $recibo->origin }}</p>
                             <h1 class="text-lg font-semibold">Cliente:</h1>
                             <p class="cliente">{{ $recibo->customer }}</p>
                             <h1 class="text-lg font-semibold">Código del cliente:</h1>
                             <p>{{ $recibo->code_customer }}</p>
-                            <h1 class="text-lg font-semibold">Conductor:</h1>
-                            <p>{{ $recibo->driver }}</p>
-                            <h1 class="text-lg font-semibold">Placa del vehículo</h1>
-                            <p>{{ $recibo->plate }}</p>
-                            <h1 class="text-lg font-semibold">Impronta</h1>
-                            <p>{{ $recibo->num_vehicle }}</p>
                             <!-- Dropdown para opciones adicionales -->
                             <div class="absolute top-0 right-0 m-2">
                                 <div class="dropdown">
@@ -145,19 +139,18 @@
         <p class="font-semibold">¡Recibo marcado como finalizado!</p>
     </div>
 
-
     <!-- Modal para crear recibo -->
     <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog"
         aria-labelledby="createReceiptModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="text-2xl text-teal-500 font-semibold" id="createReceiptModalLabel">Crear Nuevo formato de
+                    <h2 class="text-2xl text-teal-500 font-semibold" id="createReceiptModalLabel">Segregación: Crear Nuevo formato de
                         recibo</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @include('Receipts.recibo.form')
+                    @include('Segregation.S_receipt.S_form')
                 </div>
             </div>
         </div>

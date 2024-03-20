@@ -1,29 +1,32 @@
 <?php
-namespace App\Models;
 
+namespace App\Models\M_Segregation;
+
+use App\Models\M_codeProducts;
+use App\Models\M_Products;
+use App\Models\M_Suppliers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class M_Receipts extends Model
+class M_S_Receipts extends Model
 {
-    use HasFactory;
     public $timestamps = false;
-    protected $table = "receipts";
-    protected $primaryKey = 'order_num';
+    protected $table = "s_receipts";
+    protected $primaryKey = 'format_number';
 
-    protected $fillable = ['order_num', 'delivery_date', 'origin', 'customer', 'code_customer', 'driver', 'plate', 'imprint', 'state'];
+    protected $fillable = ['format_number', 'order_num', 'delivery_date', 'customer', 'code_customer', 'state'];
 
     // Dentro de Model_Receipt.php
 
-    public function productos()
+    public function s_productos()
     {
-        return $this->hasMany(M_Products::class, 'order_num', 'order_num')
+        return $this->hasMany(M_S_Products::class, 'order_num', 'order_num')
             ->with('recibo:order_num,delivery_date,code_customer');
     }
 
-    public function etiquetas()
+    public function s_etiquetas()
     {
-        return $this->hasMany(M_Tags::class, 'order_num', 'order_num')
+        return $this->hasMany(M_S_Tags::class, 'order_num', 'order_num')
             ->with('recibo:order_num,delivery_date,customer');
     }
     public function M_codeProducts()

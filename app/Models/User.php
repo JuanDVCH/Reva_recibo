@@ -51,5 +51,11 @@ class User extends Authenticatable
         // y que cada rol tiene un campo 'nombre'.
         return $this->roles()->where('nombre', 'Administrador')->exists();
     }
+    public function isRecibo()
+    {
+        // Supongamos que tienes una relación roles() para obtener los roles del usuario
+        // y que cada rol tiene un campo 'nombre'.
+        return $this->roles()->where('nombre', 'Recibo')->exists();
+    }
 
 }

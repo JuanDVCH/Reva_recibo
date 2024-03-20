@@ -107,46 +107,4 @@
             </div>
         </div>
     </div>
-
-    {{-- Inicializa DataTables para tu tabla --}}
-    <script>
-        $(document).ready(function() {
-            $('#etiquetaTable').DataTable({
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Buscar...",
-                    info: "Mostrando _START_ al _END_ de _TOTAL_ registros",
-                    lengthMenu: "Mostrar _MENU_ registros por página",
-                    paginate: {
-                        first: "Primero",
-                        last: "Último",
-                        next: "Siguiente",
-                        previous: "Anterior"
-                    },
-                },
-                initComplete: function() {
-                    this.api().columns().every(function() {
-                        var column = this;
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.header()))
-                            .on('keyup change', function() {
-                                column.search($(this).val(), false, false, true).draw();
-                            });
-                    });
-                },
-                "paging": true,
-                "ordering": true,
-                "info": true,
-                "border": false,
-            });
-        });
-    </script>
 @endsection

@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\C_Segregation;
 
-use App\Models\M_Receipts;
+use App\Models\M_Segregation\M_S_Receipts;
 use App\Models\M_Suppliers;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class C_Receipts extends Controller
+class C_S_Receipts extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $query = M_Receipts::where('state', '1');
+        $query = M_S_Receipts::where('state', '1');
 
         // Verificar si hay un filtro de cliente
         if ($request->filled('cliente')) {
@@ -29,13 +27,13 @@ class C_Receipts extends Controller
         // Obtener todos los proveedores
         $suppliers = M_Suppliers::all();
 
-        return view('Receipts.Recibo.index', compact('recibos', 'suppliers', 'totalRecibos'));
+        return view('Segregation.S_receipt.S_index', compact('recibos', 'suppliers', 'totalRecibos'));
     }
 
 
     public function finalizados(Request $request)
     {
-        $query = M_Receipts::where('state', '0');
+        $query = M_S_Receipts::where('state', '0');
 
         // Verificar si hay un filtro de cliente
         if ($request->filled('cliente')) {
@@ -60,7 +58,7 @@ class C_Receipts extends Controller
     {
         $numeroFormato = $request->input('numero_formato');
 
-        $recibos = M_Receipts::when($numeroFormato, function ($query) use ($numeroFormato) {
+        $recibos = M_S_Receipts::when($numeroFormato, function ($query) use ($numeroFormato) {
             return $query->where('order_num', 'LIKE', '%' . $numeroFormato . '%');
         })->get();
 
@@ -74,7 +72,7 @@ class C_Receipts extends Controller
     {
         $suppliers = M_Suppliers::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
 
-        return view('Receipts.Recibo.create', compact('suppliers'));
+        return view('Segregation.S_receipt.S_create', compact('suppliers'));
     }
 
     /**
@@ -82,14 +80,14 @@ class C_Receipts extends Controller
      */
     public function store(Request $request)
     {
-        $recibo = new M_Receipts($request->all());
+        $recibo = new M_S_Receipts($request->all());
         $recibo->state = 1;
         $recibo->save();
-    
-        return redirect()->route('Receipts.recibo.index')->with('nuevoRecibo', true);
+
+        return redirect()->route('Segregation.S_receipt.S_index')->with('nuevoRecibo', true);
     }
-    
-    
+
+
     public function obtenerCodigosCliente($id)
     {
         $codigosClientes = M_Suppliers::where('id', $id)->pluck('code', 'id');
@@ -97,50 +95,25 @@ class C_Receipts extends Controller
         return response()->json($codigosClientes);
     }
 
-    public function edit(M_Receipts $recibo)
-    {
-        $suppliers = M_Suppliers::orderBy('name', 'asc')->get(); // Ordenar proveedores alfabéticamente
 
-        return view('Receipts.Recibo.edit', compact('recibo', 'suppliers'));
-    }
-
-    public function update(Request $request, M_Receipts $recibo)
-    {
-        // Validación de la solicitud, si es necesario
-        $request->validate([
-            'delivery_date' => 'required|date',
-            'origin' => 'required|string',
-            'customer' => 'required|string',
-            'code_customer' => 'required|string',
-            'driver' => 'required|string',
-            'plate' => 'required|string',
-            'imprint' => 'nullable|string',
-            // Agrega las reglas de validación necesarias para otros campos
-        ]);
-
-        // Actualiza el recibo con los datos de la solicitud
-        $recibo->update($request->all());
-
-        // Puedes devolver una respuesta o redirigir a una vista después de la actualización
-        return redirect()->route('recibo.index')->with('success', 'Recibo actualizado correctamente');
-    }
 
     public function searchByDate(Request $request)
     {
         $date = $request->input('date');
 
-        $recibos = M_Receipts::whereDate('delivery_date', $date)->get();
+        $recibos = M_S_Receipts::whereDate('delivery_date', $date)->get();
 
-        return view('Receipts.receipts.index', compact('recibos'));
+        return view('Segregation.S_receipt.S_index', compact('recibos'));
     }
 
     public function marcarComoFinalizado(Request $request, $order_num)
     {
-        $recibo = M_Receipts::findOrFail($order_num);
+        $recibo = M_S_Receipts::findOrFail($order_num);
         $recibo->state = 0;
         $recibo->save();
 
-        return redirect()->route('Receipts.recibo.index')->with('success', 'Recibo marcado como finalizado');
+        return redirect()->route('Segregation.S_receipt.S_index')->with('success', 'Recibo marcado como finalizado');
     }
-
 }
+
+

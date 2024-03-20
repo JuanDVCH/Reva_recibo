@@ -10,20 +10,28 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         // Crear rol de administrador si no existe
-        if (!Role::where('name', 'admin')->exists()) {
-            Role::create(['name' => 'admin']);
+        if (!Role::where('name', 'Administrador')->exists()) {
+            Role::create(['name' => 'Administrador']);
         }
-    
-        // Crear rol de operario si no existe
-        if (!Role::where('name', 'operario')->exists()) {
-            Role::create(['name' => 'operario']);
+        // Crear rol de Segregación si no existe
+        if (!Role::where('name', 'Recibo')->exists()) {
+            Role::create(['name' => 'Recibo']);
         }
-    
+        // Crear rol de Segregación si no existe
+        if (!Role::where('name', 'Segregacion')->exists()) {
+            Role::create(['name' => 'Segregacion']);
+        }
+
+        // Crear rol de Desnaturalización si no existe
+        if (!Role::where('name', 'Desnaturalizacion')->exists()) {
+            Role::create(['name' => 'Desnaturalizacion']);
+        }
+
         // Crear rol de supervisor si no existe
-        if (!Role::where('name', 'supervisor')->exists()) {
-            Role::create(['name' => 'supervisor']);
+        if (!Role::where('name', 'Plasticos')->exists()) {
+            Role::create(['name' => 'Plasticos']);
         }
     }
-    
+
 
 }

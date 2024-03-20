@@ -1,13 +1,9 @@
 <div class="container mt-2">
-    <form method="POST" action="{{ route('recibo.store') }}" class="formulario-estilos row g-3">
+    <form method="POST" action="{{ route('s_recibo.store') }}" class="formulario-estilos row g-3">
         @csrf
         <div class="col-md-6">
             <label for="inputdelivery_date" class="form-label">Fecha</label>
             <input type="date" class="form-control" id="inputdelivery_date" name="delivery_date" required>
-        </div>
-        <div class="col-md-6">
-            <label for="inputorigin" class="form-label">Origen</label>
-            <input type="text" class="form-control" id="inputorigin" name="origin">
         </div>
         <div class="col-md-6 d-flex">
             <div class="me-2 flex-grow-1">
@@ -30,18 +26,6 @@
         <div class="col-md-6">
             <label for="inputcode_customer" class="form-label">Código del cliente</label>
             <input type="text" class="form-control" id="inputcode_customer" name="code_customer" required readonly>
-        </div>
-        <div class="col-md-4">
-            <label for="inputdriver" class="form-label">Nombre del conductor</label>
-            <input type="text" class="form-control" id="inputdriver" name="driver" required>
-        </div>
-        <div class="col-md-4">
-            <label for="inputplate" class="form-label">Placa del vehículo</label>
-            <input type="text" class="form-control" id="inputplate" name="plate">
-        </div>
-        <div class="col-md-4">
-            <label for="inputimprint" class="form-label">Impronta</label>
-            <input type="text" class="form-control" id="inputimprint" name="imprint">
         </div>
         <div class="col-12 mt-3 text-center">
             <button type="submit" class="btn bg-teal-500 mx-2 text-white">Enviar</button>
