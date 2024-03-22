@@ -35,7 +35,8 @@ class C_Receipts extends Controller
 
     public function finalizados(Request $request)
     {
-        $query = M_Receipts::where('state', '0');
+        $query = M_Receipts::whereIn('state', [0, 2, 3]);
+
 
         // Verificar si hay un filtro de cliente
         if ($request->filled('cliente')) {

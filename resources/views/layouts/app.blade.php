@@ -76,7 +76,12 @@
                 <!-- Barra de navegación de Bootstrap -->
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ url('/home') }}">Inicio</a>
-                    <a class="navbar-brand" href="{{ route('recibo.index') }}">Recibos</a>
+                    @role('Recibo|Administrador')
+                        <a class="navbar-brand" href="{{ route('recibo.index') }}">Recibos</a>
+                    @endrole
+                    @role('Segregacion|Administrador')
+                        <a class="navbar-brand" href="{{ route('Segregation.recibo.index') }}">Segregación</a>
+                    @endrole
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                         aria-label="{{ __('Toggle navigation') }}">

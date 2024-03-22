@@ -1,5 +1,6 @@
 <?php
 // Importación de controladores y clases necesarias
+use App\Http\Controllers\C_Segregation\C_S_Products;
 use App\Http\Controllers\C_Tags;
 use App\Http\Controllers\C_Receipts;
 use App\Http\Controllers\C_Segregation\C_S_Receipts;
@@ -40,16 +41,28 @@ Route::middleware(['web', 'auth'])->group(function () {
     });
 
     // Rutas agrupadas para recibos de segregacion
-Route::group(['prefix' => 'users', 'middleware' => 'CheckRole:Segregacion|Administrador'], function () {
-    Route::group(['prefix' => 's_recibo'], function () {
-        Route::resource('/', C_S_Receipts::class)->names('s_recibo');
-        Route::get('/recibo', [C_S_Receipts::class, 'index'])->name('Segregation.recibo.index');
-        Route::get('/finalizados', [C_S_Receipts::class, 'finalizados'])->name('s_recibos.finalizados');
-        Route::get('/obtener-codigos-cliente/{id}', [C_S_Receipts::class, 'obtenerCodigosCliente']);
-        Route::get('/recibos/filtrar', 'C_S_Receipts@filtrar')->name('s_recibos.filtrar');
-        Route::put('recibo/marcar-finalizado/{order_num}', [C_S_Receipts::class, 'marcarComoFinalizado'])->name('s_recibo.marcarFinalizado');
+    Route::group(['prefix' => 'users', 'middleware' => 'CheckRole:Segregacion|Administrador'], function () {
+        Route::group(['prefix' => 's_recibo'], function () {
+            Route::resource('/', C_S_Receipts::class)->names('s_recibo');
+            Route::get('/product_for_segregation', [C_S_Receipts::class, 'product_for_segregation'])->name('Segregation.recibo.product_for_segregation');
+            Route::get('/num_format', [C_S_Receipts::class, 'num_format'])->name('Segregation.recibo.Num_format');
+            Route::get('/index', [C_S_Receipts::class, 'index'])->name('Segregation.recibo.index');
+        });
     });
-});
+
+
+    // Rutas agrupadas para productos
+    Route::group(['prefix' => 'users', 'middleware' => 'CheckRole:Segregacion|Administrador'], function () {
+        Route::group(['prefix' => 's_product'], function () {
+            Route::resource('/', C_S_Products::class)->names('s_product');
+            Route::get('/product_for_segregation', [C_S_Products::class, 'product_for_segregation'])->name('s_product.product_for_segregation');
+            Route::get('/indexfin', [C_S_Products::class, 'indexfin'])->name('indexfin');
+            Route::post('/obtener-info-recibo', [C_S_Products::class, 'obtenerInfoRecibo'])->name('obtenerInfoRecibo');
+            Route::get('/obtener-productos-por-orden/{orderNum}', [C_S_Products::class, 'obtenerProductosPorOrden'])
+                ->name('obtener.productos.por.orden');
+            Route::post('/obtener-sku-por-descripcion', [C_S_Products::class, 'obtenerSkuPorDescripcion'])->name('obtenerSkuPorDescripcion');
+        });
+    });
 
 
     // Rutas agrupadas para productos

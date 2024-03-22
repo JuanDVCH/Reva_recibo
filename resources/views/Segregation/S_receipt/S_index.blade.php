@@ -1,158 +1,84 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto mt-5 mb-5">
+    <!-- Encabezado de la sección -->
+    <div class="container mx-auto mt-5 mb-8">
         <!-- Encabezado de la sección -->
         <div class="bg-white rounded-md overflow-hidden shadow-md">
             <div class="p-4 flex justify-between items-center bg-teal rounded-t-md">
-                <h3 class="text-4xl font-semibold text-white"><i class="fas fa-list-alt"></i> Formatos de recibo del área de segregación</h3>
-                <!-- Botón para abrir el modal de creación de recibo -->
-                <div class="flex">
-                    <button type="button" class="btn btn-outline-light btn-lg rounded-pill mr-2" data-bs-toggle="modal"
-                        data-bs-target="#createReceiptModal">
-                        Crear recibo <i class="fas fa-plus"></i>
-                    </button>
-                    <a href="{{ route('recibos.finalizados') }}" class="btn btn-outline-light btn-lg rounded-pill">
-                        Ver finalizados <i class="fas fa-list"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Formulario de filtrado -->
-        <div class="p-4">
-            <div class="mb-4">
-                <form id="filtroForm" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <!-- Input para filtrar por número de formato -->
-                    <div class="relative">
-                        <input type="text" id="filtroNumeroFormato"
-                            class="form-input rounded-lg pl-4 pr-10 py-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            placeholder="Buscar por Número de Formato">
-                        <label for="filtroNumeroFormato"
-                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600">
-                            <svg class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M9.293 10.707a1 1 0 0 0 1.414-1.414l5-5a1 1 0 1 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414z"
-                                    clip-rule="evenodd" />
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </label>
-                    </div>
-                    <!-- Input para filtrar por año -->
-                    <div class="relative">
-                        <input type="number" id="filtroAnio"
-                            class="form-input rounded-lg pl-4 pr-10 py-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            placeholder="Año">
-                        <label for="filtroAnio" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600">
-                            <svg class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M9.293 10.707a1 1 0 0 0 1.414-1.414l5-5a1 1 0 1 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414z"
-                                    clip-rule="evenodd" />
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </label>
-                    </div>
-                    <!-- Input para filtrar por cliente -->
-                    <div class="relative">
-                        <input type="text" id="filtroCliente"
-                            class="form-input rounded-lg pl-4 pr-10 py-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            placeholder="Buscar por Cliente">
-                        <label for="filtroCliente" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600">
-                            <svg class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M9.293 10.707a1 1 0 0 0 1.414-1.414l5-5a1 1 0 1 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414z"
-                                    clip-rule="evenodd" />
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </label>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Lista de recibos -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="listaRecibos">
-                <!-- Iteración sobre los recibos para mostrarlos -->
-                @forelse ($recibos as $recibo)
-                    <div class="relative bg-gray-100 rounded-md overflow-hidden shadow-md recibo-container">
-                        <div class="p-4 overflow-y-auto">
-                            <!-- Detalles de cada recibo -->
-                            <h1 class="text-lg font-semibold">Número de formato</h1>
-                            <p class="numero-formato">{{ $recibo->format_number }}</p>
-                            <h1 class="text-lg font-semibold">Número de recibo</h1>
-                            <p class="numero-formato">{{ $recibo->order_num }}</p>
-                            <h1 class="text-lg font-semibold">Fecha:</h1>
-                            <p class="fecha">{{ $recibo->delivery_date }}</p>
-                            <h1 class="text-lg font-semibold">Cliente:</h1>
-                            <p class="cliente">{{ $recibo->customer }}</p>
-                            <h1 class="text-lg font-semibold">Código del cliente:</h1>
-                            <p>{{ $recibo->code_customer }}</p>
-                            <!-- Dropdown para opciones adicionales -->
-                            <div class="absolute top-0 right-0 m-2">
-                                <div class="dropdown">
-                                    <button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <!-- Opciones del dropdown -->
-                                        <a href="{{ route('productos.index', ['order_num' => $recibo->order_num]) }}"
-                                            class="dropdown-item">Detalles
-                                        </a>
-                                        <a href="{{ route('etiqueta.index') }}" class="dropdown-item">Etiquetas
-                                        </a>
-                                        <form class="dropdown-item" id="marcarFinalizadoForm{{ $recibo->order_num }}"
-                                            action="{{ route('recibo.marcarFinalizado', ['order_num' => $recibo->order_num]) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de que deseas marcar este recibo como finalizado?');">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="marcar-finalizado-btn">Finalizado</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <!-- Mensaje mostrado si no hay recibos -->
-                    <div class="w-full p-4">
-                        <p class="text-gray-600">No hay datos disponibles</p>
-                    </div>
-                @endforelse
+                <h3 class="text-4xl font-semibold text-white"><i class="fas fa-list-alt"></i> Formatos de recibo del área de
+                    segregación</h3>
             </div>
         </div>
     </div>
 
-    <!-- Alerta de finalizado -->
-    <div class="fixed bottom-0 right-0 p-6 mb-8 mr-8 bg-green-500 text-white rounded-md shadow-md hidden"
-        id="finalizadoAlert">
-        <p class="font-semibold">¡Recibo marcado como finalizado!</p>
-    </div>
 
-    <!-- Modal para crear recibo -->
-    <div class="modal fade" id="createReceiptModal" tabindex="-1" role="dialog"
-        aria-labelledby="createReceiptModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="text-2xl text-teal-500 font-semibold" id="createReceiptModalLabel">Segregación: Crear Nuevo formato de
-                        recibo</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @include('Segregation.S_receipt.S_form')
-                </div>
+    <div class="container mx-auto flex justify-center items-start">
+        <!-- Selector de vista -->
+        <div class="flex flex-col justify-start items-start mr-8">
+            <div id="vistaRecibos"
+                class="text-lg font-medium text-gray-700 cursor-pointer border-b-2 border-transparent hover:border-indigo-500 transition duration-300 ease-in-out flex items-center px-4 py-2 rounded-md mb-4">
+                <span class="mr-2"><i class="fas fa-receipt"></i></span>
+                <span class="block uppercase tracking-wide">Productos por segregar</span>
+            </div>
+            <div id="vistaOtra"
+                class="text-lg font-medium text-gray-700 cursor-pointer border-b-2 border-transparent hover:border-indigo-500 transition duration-300 ease-in-out flex items-center px-4 py-2 rounded-md">
+                <span class="mr-2"><i class="fas fa-cogs"></i></span>
+                <span class="block uppercase tracking-wide">Formato de segregación</span>
             </div>
         </div>
+
+        <!-- Área de visualización -->
+        <div id="vistaContainer" class="bg-white rounded-md shadow-md flex-grow p-4">
+            <!-- Aquí se cargará la vista seleccionada -->
+        </div>
     </div>
+
+    <!-- Elemento para mostrar el nombre de la vista seleccionada -->
+    <div id="nombreVistaSeleccionada" class="text-center text-gray-600 mt-4"></div>
+
+    <script>
+        // Función para cargar la vista de Recibos al cargar la página
+        window.addEventListener('load', function() {
+            loadView("{{ route('Segregation.recibo.product_for_segregation') }}", "Recibos");
+            // Marcar la opción de Recibos como seleccionada al cargar la página
+            document.getElementById('vistaRecibos').classList.add('selected');
+        });
+
+        // Evento click para cargar la vista de Recibos
+        document.getElementById('vistaRecibos').addEventListener('click', function() {
+            loadView("{{ route('Segregation.recibo.product_for_segregation') }}", "Recibo del producto");
+            // Remover la clase 'selected' de todas las opciones
+            document.querySelectorAll('.flex div').forEach(opcion => {
+                opcion.classList.remove('selected');
+            });
+            // Agregar la clase 'selected' solo a la opción de Recibos
+            this.classList.add('selected');
+        });
+
+        // Evento click para cargar la otra vista
+        document.getElementById('vistaOtra').addEventListener('click', function() {
+            loadView("{{ route('Segregation.recibo.Num_format') }}", "Formato de segregación");
+            // Remover la clase 'selected' de todas las opciones
+            document.querySelectorAll('.flex div').forEach(opcion => {
+                opcion.classList.remove('selected');
+            });
+            // Agregar la clase 'selected' solo a la opción de Otra vista
+            this.classList.add('selected');
+        });
+
+        // Función para cargar las vistas y mostrar el nombre de la vista seleccionada
+        function loadView(route, nombreVista) {
+            fetch(route)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('vistaContainer').innerHTML = data;
+                    // Actualizar el nombre de la vista seleccionada
+                    document.getElementById('nombreVistaSeleccionada').textContent = nombreVista;
+                })
+                .catch(error => {
+                    console.error('Error al cargar la vista:', error);
+                });
+        }
+    </script>
 @endsection

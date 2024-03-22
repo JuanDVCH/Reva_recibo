@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\M_Segregation\M_S_Product_for_segregation;
 use Illuminate\Support\Facades\Session;
 use App\Models\M_Products;
 use App\Models\M_codeProducts;
@@ -138,6 +139,18 @@ class C_Products extends Controller
             $producto->criterium = $request->criterium;
             $producto->notes = $request->notes;
             $producto->code_customer = $request->code_customer;
+
+            // Asignar el valor '1' al campo 'state'
+            $producto->state = 1;
+
+            // Intentar guardar el producto
+            $producto->save();
+            
+            $producto = new M_S_Product_for_segregation();
+            $producto->sku = $request->sku;
+            $producto->description = $request->description;
+            $producto->net_weight = $request->net_weight;
+            $producto->order_num = $request->orden_num;
 
             // Asignar el valor '1' al campo 'state'
             $producto->state = 1;
